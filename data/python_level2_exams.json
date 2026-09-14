@@ -1,0 +1,676 @@
+{
+  "course_id": "course-python-level-2",
+  "exams": [
+    {
+      "exam_id": "exam-pyl2-ch01",
+      "chapter_id": "chap-pyl2-01",
+      "chapter_number": 1,
+      "title": "Chapter 1 Exam",
+      "pass_threshold": 60,
+      "questions": [
+        {
+          "id": "q-ch01-01",
+          "type": "MCQ",
+          "question": "What does `\"Hello World\"[6:]` return?",
+          "options": [
+            {
+              "id": "A",
+              "text": "World"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch01-02",
+          "type": "MCQ",
+          "question": "What does `\"hello\".replace(\"l\", \"r\")` return?",
+          "options": [
+            {
+              "id": "A",
+              "text": "herlo"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch01-03",
+          "type": "MCQ",
+          "question": "`\"one,two,three\".split(\",\")` returns:",
+          "options": [
+            {
+              "id": "A",
+              "text": "`"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch01-04",
+          "type": "MCQ",
+          "question": "What does `f\"{99.5:.0f}\"` produce?",
+          "options": [
+            {
+              "id": "A",
+              "text": "99.5"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch01-05",
+          "type": "Coding",
+          "question": "Write a function `reverse_words(sentence)` that takes a sentence string, reverses the order of words (not letters), and returns the result. Example: `\"Hello World Python\"` → `\"Python World Hello\"`. Hint: use `.split()`, reverse the list, and `.join()`.\n\n---\n\n---",
+          "options": [],
+          "correct": "A",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "exam_id": "exam-pyl2-ch02",
+      "chapter_id": "chap-pyl2-02",
+      "chapter_number": 2,
+      "title": "Chapter 2 Exam",
+      "pass_threshold": 60,
+      "questions": [
+        {
+          "id": "q-ch02-01",
+          "type": "MCQ",
+          "question": "`d = {\"a\": 1, \"b\": 2}`. What does `d.get(\"c\", 99)` return?",
+          "options": [
+            {
+              "id": "A",
+              "text": "`KeyError`  B) `None`  C) `99`"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch02-02",
+          "type": "MCQ",
+          "question": "Which method returns key-value pairs that can be unpacked in a for loop?",
+          "options": [
+            {
+              "id": "A",
+              "text": "`.keys()`  B) `.values()`  C) `.items()`"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch02-03",
+          "type": "MCQ",
+          "question": "`d = {\"x\": 10}`. After `d.pop(\"x\")`, what is `len(d)`?",
+          "options": [
+            {
+              "id": "A",
+              "text": "1  B) 10  C) 0"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch02-04",
+          "type": "MCQ",
+          "question": "`scores = {\"Ali\": 80, \"May\": 95, \"Tom\": 60}`. What does `max(scores, key=scores.get)` return?",
+          "options": [
+            {
+              "id": "A",
+              "text": "`95`  B) `"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch02-05",
+          "type": "Coding",
+          "question": "Write a function `word_count(sentence)` that returns a dictionary where each key is a unique word from the sentence and each value is how many times that word appears. Example: `\"the cat sat on the mat\"` → `{'the': 2, 'cat': 1, 'sat': 1, 'on': 1, 'mat': 1}`.\n\n---\n\n---",
+          "options": [],
+          "correct": "A",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "exam_id": "exam-pyl2-ch03",
+      "chapter_id": "chap-pyl2-03",
+      "chapter_number": 3,
+      "title": "Chapter 3 Exam",
+      "pass_threshold": 60,
+      "questions": [
+        {
+          "id": "q-ch03-01",
+          "type": "MCQ",
+          "question": "`t = (1, 2, 3)`. What happens if you run `t[0] = 99`?",
+          "options": [
+            {
+              "id": "A",
+              "text": "`t` becomes `(99, 2, 3)`  B) `TypeError`"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch03-02",
+          "type": "MCQ",
+          "question": "`s = set()`. Which correctly adds \"hello\" to the set?",
+          "options": [
+            {
+              "id": "A",
+              "text": "`s["
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch03-03",
+          "type": "MCQ",
+          "question": "`{1,2,3} & {2,3,4,5}` returns:",
+          "options": [
+            {
+              "id": "A",
+              "text": "`{1,2,3,4,5}`  B) `{1,4,5}`  C) `{2,3}`"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch03-04",
+          "type": "MCQ",
+          "question": "You need to store 5 configuration values that must never change during the program. Which is most appropriate?",
+          "options": [
+            {
+              "id": "A",
+              "text": "List  B) Dictionary  C) Set  D) Tuple"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch03-05",
+          "type": "Coding",
+          "question": "Write a function `unique_chars(word)` that returns a **set** of unique characters in the word, then write another function `shared_chars(word1, word2)` that returns characters appearing in **both** words using a single set operation. Example: `shared_chars(\"python\", \"typhoon\")` → `{'t', 'y', 'o', 'n'}`.\n\n---\n\n---",
+          "options": [],
+          "correct": "A",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "exam_id": "exam-pyl2-ch04",
+      "chapter_id": "chap-pyl2-04",
+      "chapter_number": 4,
+      "title": "Chapter 4 Exam",
+      "pass_threshold": 60,
+      "questions": [
+        {
+          "id": "q-ch04-01",
+          "type": "MCQ",
+          "question": "What does `open(\"data.txt\", \"w\")` do if \"data.txt\" already exists?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Appends to the end  B) Raises an error  C) Erases the file and starts empty"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch04-02",
+          "type": "MCQ",
+          "question": "`f.readlines()` returns:",
+          "options": [
+            {
+              "id": "A",
+              "text": "A single string  B) A list of strings, one per line"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch04-03",
+          "type": "MCQ",
+          "question": "Why does every line read from a file need `.strip()`?",
+          "options": [
+            {
+              "id": "A",
+              "text": "To convert it from bytes  B) To remove the invisible `\\n` at the end"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch04-04",
+          "type": "MCQ",
+          "question": "You want to add today's log entry without erasing yesterday's. Which mode?",
+          "options": [
+            {
+              "id": "A",
+              "text": "`"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch04-05",
+          "type": "Coding",
+          "question": "Write a function `count_words_in_file(filename)` that opens a text file and returns the total number of words across all lines. If the file doesn't exist, return 0. Test it by creating a short text file first.\n\n---\n\n---",
+          "options": [],
+          "correct": "A",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "exam_id": "exam-pyl2-ch05",
+      "chapter_id": "chap-pyl2-05",
+      "chapter_number": 5,
+      "title": "Chapter 5 Exam",
+      "pass_threshold": 60,
+      "questions": [
+        {
+          "id": "q-ch05-01",
+          "type": "MCQ",
+          "question": "`from math import sqrt, pi`. What does `print(sqrt(pi))` output?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Error — can't sqrt pi  B) `1.7724...`"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch05-02",
+          "type": "MCQ",
+          "question": "`random.sample([\"a\",\"b\",\"c\",\"d\"], 3)` returns:",
+          "options": [
+            {
+              "id": "A",
+              "text": "One random letter  B) Three letters — possibly with repeats  C) Three **unique** letters from the list"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch05-03",
+          "type": "MCQ",
+          "question": "What does `datetime.date.today().strftime(\"%A\")` return?",
+          "options": [
+            {
+              "id": "A",
+              "text": "The current time  B) The name of today's day of the week"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch05-04",
+          "type": "MCQ",
+          "question": "Which statement correctly checks whether \"scores.csv\" exists before opening it?",
+          "options": [
+            {
+              "id": "A",
+              "text": "`if exists("
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch05-05",
+          "type": "Coding",
+          "question": "Write a function `days_until_birthday(day, month)` that takes a birthday's day and month, figures out the next occurrence of that birthday (might be this year or next), and returns the number of days until it. Use `datetime.date` and `timedelta`.\n\n---\n\n---",
+          "options": [],
+          "correct": "A",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "exam_id": "exam-pyl2-ch06",
+      "chapter_id": "chap-pyl2-06",
+      "chapter_number": 6,
+      "title": "Chapter 6 Exam",
+      "pass_threshold": 60,
+      "questions": [
+        {
+          "id": "q-ch06-01",
+          "type": "MCQ",
+          "question": "What does a bare `except:` (no type) catch?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Only ValueError  B) Only RuntimeError  C) All exceptions, including system ones"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch06-02",
+          "type": "MCQ",
+          "question": "The `else` clause in try/except runs when:",
+          "options": [
+            {
+              "id": "A",
+              "text": "An exception is caught  B) No exception was raised"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch06-03",
+          "type": "MCQ",
+          "question": "`finally` runs:",
+          "options": [
+            {
+              "id": "A",
+              "text": "Only when no exception occurs  B) Only when an exception occurs  C) Always"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch06-04",
+          "type": "MCQ",
+          "question": "You want to stop your function if the input is negative and tell the caller it's invalid. You should:",
+          "options": [
+            {
+              "id": "A",
+              "text": "`return False`  B) `print("
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch06-05",
+          "type": "Coding",
+          "question": "Write a function `safe_open_and_count(filename)` that tries to open a file, counts its words, and returns the count. Handle `FileNotFoundError` (return 0), `PermissionError` (return -1), and use `finally` to print \"Attempted to read [filename]\" regardless of outcome.",
+          "options": [],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch06-06",
+          "type": "Coding",
+          "question": "Write a `get_positive_float(prompt)` function that keeps asking until the user enters a positive number. Handle `ValueError`, reject 0 and negative numbers with a descriptive message, and return the valid value.\n\n---\n\n---",
+          "options": [],
+          "correct": "A",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "exam_id": "exam-pyl2-ch07",
+      "chapter_id": "chap-pyl2-07",
+      "chapter_number": 7,
+      "title": "Chapter 7 Exam",
+      "pass_threshold": 60,
+      "questions": [
+        {
+          "id": "q-ch07-01",
+          "type": "MCQ",
+          "question": "`[x**2 for x in range(1, 5)]` produces:",
+          "options": [
+            {
+              "id": "A",
+              "text": "`[1, 4, 9, 16, 25]`  B) `[1, 4, 9, 16]`"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch07-02",
+          "type": "MCQ",
+          "question": "`[x for x in [10, 25, 7, 42, 3] if x > 10]` produces:",
+          "options": [
+            {
+              "id": "A",
+              "text": "`[25, 42]`"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch07-03",
+          "type": "MCQ",
+          "question": "What does `{k: v*2 for k, v in {\"a\":1,\"b\":2}.items()}` produce?",
+          "options": [
+            {
+              "id": "A",
+              "text": "`{"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch07-04",
+          "type": "MCQ",
+          "question": "`{\"apple\",\"banana\",\"Apple\",\"BANANA\"}` — how many items in this set?",
+          "options": [
+            {
+              "id": "A",
+              "text": "4  B) 2  C) 3"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch07-05",
+          "type": "Coding",
+          "question": "Write one line of code that, given a list of strings `words`, produces a dictionary where each key is a word (lowercased) and each value is its length — but only for words longer than 3 characters.\n\n---\n\n---",
+          "options": [],
+          "correct": "A",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "exam_id": "exam-pyl2-ch08",
+      "chapter_id": "chap-pyl2-08",
+      "chapter_number": 8,
+      "title": "Chapter 8 Exam",
+      "pass_threshold": 60,
+      "questions": [
+        {
+          "id": "q-ch08-01",
+          "type": "MCQ",
+          "question": "A variable defined inside a function is accessible:",
+          "options": [
+            {
+              "id": "A",
+              "text": "Everywhere in the module  B) Only inside that function"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch08-02",
+          "type": "MCQ",
+          "question": "`def func(a, b=10, c=20):` — which call is INVALID?",
+          "options": [
+            {
+              "id": "A",
+              "text": "`func(1)`  B) `func(1, 2)`  C) `func(b=5, a=1)`  D) `func(b=5, 1)`"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch08-03",
+          "type": "MCQ",
+          "question": "In `def f(*args)`, `args` is of type:",
+          "options": [
+            {
+              "id": "A",
+              "text": "list  B) tuple"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch08-04",
+          "type": "MCQ",
+          "question": "`sorted([\"banana\",\"apple\",\"fig\"], key=lambda w: len(w))` returns:",
+          "options": [
+            {
+              "id": "A",
+              "text": "`["
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch08-05",
+          "type": "Coding",
+          "question": "Write a function `flexible_average(*numbers, round_to=2)` that accepts any number of values, calculates their average, and rounds it to `round_to` decimal places. Example: `flexible_average(80, 95, 72, 88, round_to=1)` → `83.8`.\n\n---\n\n---",
+          "options": [],
+          "correct": "A",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "exam_id": "exam-pyl2-ch09",
+      "chapter_id": "chap-pyl2-09",
+      "chapter_number": 9,
+      "title": "Chapter 9 Exam",
+      "pass_threshold": 60,
+      "questions": [
+        {
+          "id": "q-ch09-01",
+          "type": "MCQ",
+          "question": "What is the difference between a class and an instance?",
+          "options": [
+            {
+              "id": "A",
+              "text": "No difference — they're the same  B) A class is the blueprint; an instance is an object built from it"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch09-02",
+          "type": "MCQ",
+          "question": "Why does every method in a class need `self` as the first parameter?",
+          "options": [
+            {
+              "id": "A",
+              "text": "It's just convention — can be omitted  B) Python passes the object automatically as the first argument"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch09-03",
+          "type": "MCQ",
+          "question": "`def __str__(self):` is used for:",
+          "options": [
+            {
+              "id": "A",
+              "text": "Comparing two objects  B) Deleting the object  C) Defining what `print(object)` displays"
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch09-04",
+          "type": "MCQ",
+          "question": "Which correctly creates a Student with name \"Ahmed\" and score 95?",
+          "options": [
+            {
+              "id": "A",
+              "text": "`Student = ("
+            }
+          ],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch09-05",
+          "type": "Coding",
+          "question": "Write a `BankAccount` class with: `__init__(self, owner, balance=0)`, `deposit(self, amount)`, `withdraw(self, amount)` (reject if insufficient funds), `__str__` showing owner and balance. Create two accounts, deposit and withdraw, and print both.",
+          "options": [],
+          "correct": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q-ch09-06",
+          "type": "Coding",
+          "question": "Add a class method `class_average(students)` to the Student class (or standalone function) that takes a list of Student objects and returns the average score. Use it to find the class average for a roster of 5 students.\n\n---\n\n---",
+          "options": [],
+          "correct": "A",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "exam_id": "exam-pyl2-ch10",
+      "chapter_id": "chap-pyl2-10",
+      "chapter_number": 10,
+      "title": "Chapter 10 Exam",
+      "pass_threshold": 60,
+      "questions": [
+        {
+          "id": "q-ch10-01",
+          "type": "MCQ",
+          "question": "What makes a Python program \"production-quality\"?",
+          "options": [
+            {
+              "id": "A",
+              "text": "It has more than 100 lines of code"
+            },
+            {
+              "id": "B",
+              "text": "It uses classes and OOP"
+            },
+            {
+              "id": "C",
+              "text": "It persists data, handles all user errors gracefully, and solves a genuine problem"
+            },
+            {
+              "id": "D",
+              "text": "It imports many modules"
+            }
+          ],
+          "correct": "C",
+          "explanation": "A real program is defined by reliability and usefulness: persistence, robustness, and solving a genuine problem."
+        }
+      ]
+    }
+  ]
+}

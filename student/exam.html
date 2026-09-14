@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter Assessment - SPS Code Orbit</title>
+  <link rel="stylesheet" href="../css/global.css?v=2.0">
+  <link rel="stylesheet" href="../css/components.css?v=2.0">
+  <link rel="stylesheet" href="../css/responsive.css?v=1.2">
+  <link rel="stylesheet" href="../css/exam.css?v=2.0">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .attempt-counter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-full, 9999px);
+      padding: 0.35rem 0.85rem;
+      font-size: 0.8rem;
+      font-family: var(--font-mono, monospace);
+      font-weight: 700;
+      color: #94A3B8;
+    }
+
+    .review-q-card {
+      background: #0A0E1A;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-lg, 12px);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+
+    .review-opt-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-md, 8px);
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .review-opt-correct {
+      background: rgba(16, 185, 129, 0.12) !important;
+      border-color: rgba(16, 185, 129, 0.4) !important;
+      color: #34D399;
+      font-weight: 700;
+    }
+
+    .review-opt-wrong {
+      background: rgba(239, 68, 68, 0.12) !important;
+      border-color: rgba(239, 68, 68, 0.4) !important;
+      color: #F87171;
+      font-weight: 600;
+    }
+
+    .explanation-callout {
+      background: rgba(30, 41, 59, 0.6);
+      border-left: 3px solid #38BDF8;
+      border-radius: 4px;
+      padding: 0.85rem 1rem;
+      margin-top: 0.85rem;
+      font-size: 0.85rem;
+      color: #CBD5E1;
+      line-height: 1.5;
+    }
+  </style>
+  <script src="/data/python_level2_curriculum.js?v=5.0"></script>
+  <script src="/data/python_level2_exams.js?v=5.0"></script>
+</head>
+<body style="background: #070A14; min-height: 100vh;">
+
+  <!-- ========================================================================
+       0. IMMERSIVE DEEP-SPACE UNIVERSE & SWIRLING NEBULAE BACKDROP
+       ======================================================================== -->
+  <div class="space-universe-backdrop" aria-hidden="true">
+    <div class="starfield-layer"></div>
+    <div class="starfield-layer-dense"></div>
+    <div class="nebula-swirl-container">
+      <div class="nebula-cloud nebula-blue"></div>
+      <div class="nebula-cloud nebula-purple"></div>
+      <div class="nebula-cloud nebula-pink"></div>
+      <div class="nebula-cloud nebula-cyan-lower"></div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       1. THE "ORBIT" EFFECT: WINDING NEON ORBITAL PATHS CONNECTING SECTIONS
+       ======================================================================== -->
+  <svg class="orbital-paths-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 3200" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="cyanPurpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#38bdf8" />
+        <stop offset="50%" stop-color="#818cf8" />
+        <stop offset="100%" stop-color="#c084fc" />
+      </linearGradient>
+      <linearGradient id="purplePinkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#c084fc" />
+        <stop offset="50%" stop-color="#f472b6" />
+        <stop offset="100%" stop-color="#38bdf8" />
+      </linearGradient>
+    </defs>
+    <path 
+      d="M 1200 250 C 1050 480, 750 620, 350 780 S -50 1020, 280 1220 S 980 1280, 1150 1480" 
+      class="orbital-path-line orbital-path-cyan"
+    />
+  </svg>
+
+  <!-- Exam Top Navigation -->
+  <header style="background: rgba(7, 10, 20, 0.65); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 10;">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <a href="/student/courses.html" id="exam-header-exit-btn" class="btn btn-secondary btn-sm" style="padding: 0.4rem 0.8rem;">
+        <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+        <span>Exit Exam</span>
+      </a>
+      <div style="font-weight: 700; color: var(--text-main); font-size: 1.1rem;" id="exam-nav-title">Chapter Assessment</div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <div id="exam-attempts-badge-top" class="attempt-counter-pill">
+        <i data-lucide="shield-alert" style="width: 14px; height: 14px; color: #38BDF8;"></i>
+        <span id="attempts-top-text">Attempts: 3 / 3</span>
+      </div>
+      <div class="exam-timer-box" id="exam-timer-display">
+        <i data-lucide="timer" style="width: 18px; height: 18px;"></i>
+        <span id="timer-text">15:00</span>
+      </div>
+    </div>
+  </header>
+
+  <main style="padding: 2.5rem 1.5rem 5rem;">
+    <div class="exam-container">
+
+      <!-- Exam Banner -->
+      <div class="exam-banner" id="exam-banner-card">
+        <div class="exam-banner-left">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.35rem;">
+            <span style="font-size: 0.8rem; font-weight: 800; color: #38BDF8; letter-spacing: 0.05em; text-transform: uppercase;" id="exam-mode-tag">
+              Assessment Mode
+            </span>
+            <span id="exam-best-badge-pill" style="display: none;"></span>
+          </div>
+          <h1 id="exam-banner-title">Chapter Assessment Quiz</h1>
+          <p id="exam-banner-desc">Comprehensive chapter assessment covering core topics and code evaluation.</p>
+        </div>
+        <div style="background: rgba(255,255,255,0.08); border-radius: var(--radius-md); padding: 1rem 1.5rem; text-align: center; min-width: 140px;">
+          <div style="font-size: 1.75rem; font-weight: 800; color: #38BDF8;" id="exam-xp-reward-text">+50 XP</div>
+          <div style="font-size: 0.8rem; color: #94A3B8;">Passing Reward</div>
+        </div>
+      </div>
+
+      <!-- Active Exam View -->
+      <div id="exam-active-view">
+        <!-- Progress bar & Question Pagination Bar -->
+        <div class="exam-progress-card" style="flex-direction: column; gap: 0.75rem; align-items: stretch;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-weight: 600; color: var(--text-main); font-size: 0.9rem;" id="q-counter-label">Question 1 of 5</div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <span style="font-size: 0.8rem; color: #94A3B8; font-family: var(--font-mono, monospace);" id="attempt-info-label">Attempt 1 of 3</span>
+              <div style="width: 180px;" class="progress-bar-container">
+                <div class="progress-bar-fill" style="width: 20%;" id="exam-progress-bar"></div>
+              </div>
+            </div>
+          </div>
+          <!-- Question Quick Jump / Pagination Bar -->
+          <div id="q-pagination-bar" style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; padding-top: 0.5rem; border-top: 1px solid rgba(255, 255, 255, 0.08);"></div>
+        </div>
+
+        <!-- Question Card -->
+        <div class="question-card" id="question-card-container">
+          <div class="question-header-row">
+            <div class="question-num-tag" id="q-tag">QUESTION 1</div>
+            <div class="question-points-badge" id="q-points">10 Points</div>
+          </div>
+
+          <div class="question-prompt" id="q-prompt">Loading question...</div>
+
+          <div class="question-code-block" id="q-code" style="display: none;"></div>
+
+          <div class="options-list" id="q-options-list"></div>
+        </div>
+
+        <!-- Bottom Actions -->
+        <div class="exam-nav-bar">
+          <button class="btn btn-secondary" onclick="prevExamQuestion()" id="btn-exam-prev" disabled>
+            <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+            <span>Previous</span>
+          </button>
+
+          <div style="display: flex; gap: 0.75rem;">
+            <button class="btn btn-primary" onclick="nextExamQuestion()" id="btn-exam-next">
+              <span>Next Question</span>
+              <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Card View (Displayed After Submission) -->
+      <div id="exam-result-view" style="display: none;">
+        <div class="exam-result-card">
+          <div class="result-trophy-icon" id="result-trophy-box">
+            <i data-lucide="award" style="width: 44px; height: 44px;"></i>
+          </div>
+          <h2 style="font-size: 2rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem;" id="result-title-text">Exam Completed!</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 1.25rem; max-width: 600px;" id="result-desc-text">
+            Evaluation completed. Review your score and badge status below.
+          </p>
+
+          <!-- Official Badge Display -->
+          <div id="result-badge-display"></div>
+
+          <!-- Score & Stats -->
+          <div style="display: flex; gap: 2.5rem; justify-content: center; align-items: center; margin-bottom: 1.5rem;">
+            <div>
+              <div style="font-size: 0.8rem; color: #94A3B8; text-transform: uppercase; font-weight: 700; margin-bottom: 0.2rem;">Attempt Score</div>
+              <div class="result-score-big" id="result-score-text" style="font-size: 2.8rem; margin: 0;">100%</div>
+            </div>
+            <div style="border-left: 1px solid rgba(255,255,255,0.1); padding-left: 2.5rem;">
+              <div style="font-size: 0.8rem; color: #94A3B8; text-transform: uppercase; font-weight: 700; margin-bottom: 0.2rem;">Highest Recorded</div>
+              <div class="result-score-big" id="result-highest-score-text" style="font-size: 2.8rem; margin: 0; color: #34D399;">100%</div>
+            </div>
+          </div>
+
+          <div class="result-xp-reward" id="result-xp-pill">
+            <i data-lucide="star" style="fill: #2563EB; width: 20px; height: 20px;"></i>
+            <span id="result-xp-text">+50 XP Earned</span>
+          </div>
+
+          <div style="font-size: 0.85rem; color: #94A3B8; margin-bottom: 1.75rem; font-family: var(--font-mono, monospace);" id="result-attempts-left-note">
+            Attempts remaining: 2 of 3
+          </div>
+
+          <!-- Action Buttons -->
+          <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;" id="result-actions-bar">
+            <button onclick="retryExam()" id="btn-retry-exam" class="btn btn-primary">
+              <i data-lucide="rotate-ccw" style="width: 16px; height: 16px;"></i>
+              <span>Try Again (Improve Score)</span>
+            </button>
+            <a href="/student/course.html" id="result-back-course-btn" class="btn btn-secondary">
+              <i data-lucide="book-open" style="width: 16px; height: 16px;"></i>
+              <span>Back to Course</span>
+            </a>
+            <a href="/student/dashboard.html" class="btn btn-secondary">
+              <i data-lucide="home" style="width: 16px; height: 16px;"></i>
+              <span>Dashboard</span>
+            </a>
+          </div>
+
+          <!-- Question-by-Question Graded Review -->
+          <div id="result-questions-review" style="width: 100%; margin-top: 2.5rem; text-align: left; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem;"></div>
+        </div>
+      </div>
+
+      <!-- Locked Review Mode View (When all 3 attempts used or review requested) -->
+      <div id="exam-review-view" style="display: none;">
+        <div class="review-mode-banner">
+          <div>
+            <div id="review-banner-tag" style="font-size: 0.8rem; font-weight: 800; color: #FBBF24; letter-spacing: 0.05em; text-transform: uppercase;">
+              Exam Locked • Review Mode
+            </div>
+            <h2 id="review-banner-title" style="font-size: 1.25rem; font-weight: 800; color: #FFFFFF; margin-top: 0.2rem;">
+              All 3 Attempts Completed
+            </h2>
+            <p id="review-banner-desc" style="font-size: 0.85rem; color: #94A3B8; margin-top: 0.2rem;">
+              You have completed all permitted attempts for this chapter exam. Review questions, correct answers, and explanations below.
+            </p>
+          </div>
+          <div id="review-banner-badge"></div>
+        </div>
+
+        <!-- Review Question Cards Container -->
+        <div id="review-questions-list"></div>
+
+        <!-- Review Mode Exit Action Bar -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; gap: 1rem; flex-wrap: wrap;" id="review-actions-bar">
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <a href="/student/course.html" id="review-back-course-btn" class="btn btn-primary">
+              <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+              <span>Return to Course Chapters</span>
+            </a>
+            <a href="/student/dashboard.html" class="btn btn-secondary">
+              <i data-lucide="home" style="width: 16px; height: 16px;"></i>
+              <span>Student Dashboard</span>
+            </a>
+          </div>
+          <div id="review-retake-btn-wrap"></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="/js/session.js?v=5.0"></script>
+  <script src="/js/theme.js?v=5.0"></script>
+  <script>
+    let examData = null;
+    let questionsList = [];
+    let currentQIndex = 0;
+    let userAnswers = {};
+    let chapterIdParam = '';
+    let examIdParam = '';
+    let examId = '';
+    let timerInterval = null;
+    let secondsLeft = 15 * 60;
+
+    const INDICATORS = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const user = await window.session.requireAuth(['student', 'teacher', 'admin']);
+      if (!user) return;
+      if (window.lucide) window.lucide.createIcons();
+
+      const urlParams = new URLSearchParams(window.location.search);
+      chapterIdParam = urlParams.get('chapter_id') || '';
+      examIdParam = urlParams.get('exam_id') || urlParams.get('id') || urlParams.get('slug') || '';
+      examId = examIdParam || chapterIdParam;
+
+      await loadExam();
+    });
+
+    async function loadExam() {
+      try {
+        const queryParams = new URLSearchParams();
+        if (chapterIdParam) queryParams.set('chapter_id', chapterIdParam);
+        if (examIdParam) {
+          queryParams.set('exam_id', examIdParam);
+          queryParams.set('id', examIdParam);
+        }
+
+        const res = await window.apiFetch(`/api/exams/get.php?${queryParams.toString()}`);
+        let json = null;
+        try {
+          json = await res.json();
+        } catch (e) {
+          showErrorState('Server returned a non-JSON response.');
+          return;
+        }
+
+        if ((!json.success && json.status !== 'success') || !json.data) {
+          showErrorState(json.error || json.message || 'Failed to load exam data.');
+          return;
+        }
+
+        examData = json.data.exam;
+        questionsList = json.data.questions || [];
+
+        if (questionsList.length === 0) {
+          showErrorState('No questions found for this exam.');
+          return;
+        }
+
+        // Set Course Back Links
+        const courseUrl = examData.course_id ? `/student/course.html?id=${encodeURIComponent(examData.course_id)}` : '/student/courses.html';
+        document.getElementById('exam-header-exit-btn').href = courseUrl;
+        document.getElementById('result-back-course-btn').href = courseUrl;
+        document.getElementById('review-back-course-btn').href = courseUrl;
+
+        // Set Nav & Banner Titles
+        document.title = `${examData.title} - SPS Code Orbit`;
+        document.getElementById('exam-nav-title').textContent = examData.title;
+        document.getElementById('exam-banner-title').textContent = examData.title;
+        if (examData.description) {
+          document.getElementById('exam-banner-desc').textContent = examData.description;
+        }
+
+        // Update Top Attempts Pill
+        const attemptsLeft = examData.attempts_left !== undefined ? examData.attempts_left : 3;
+        const maxAttempts = examData.max_attempts || 3;
+        const attemptsUsed = examData.attempts_count || 0;
+        document.getElementById('attempts-top-text').textContent = `Attempts: ${attemptsLeft} of ${maxAttempts} left`;
+        document.getElementById('attempt-info-label').textContent = `Attempt ${Math.min(attemptsUsed + 1, maxAttempts)} of ${maxAttempts}`;
+
+        // If best score exists, display it on banner
+        if (examData.best_score !== null && examData.best_score !== undefined) {
+          const badgeEl = document.getElementById('exam-best-badge-pill');
+          badgeEl.style.display = 'inline-block';
+          const badgeInfo = getBadgeStyle(examData.official_badge);
+          badgeEl.innerHTML = `
+            <span class="exam-badge-container ${badgeInfo.className}" style="padding: 0.25rem 0.75rem; font-size: 0.75rem; margin-bottom: 0;">
+              <i data-lucide="${badgeInfo.icon}" style="width: 14px; height: 14px;"></i>
+              <span>BEST: ${examData.best_score}% (${badgeInfo.label})</span>
+            </span>
+          `;
+        }
+
+        // Check if in REVIEW MODE (attempts exhausted or completed attempt exists and not retrying)
+        const isRetry = new URLSearchParams(window.location.search).get('retry') === '1';
+        if (!isRetry && (examData.is_review_mode || attemptsLeft <= 0 || (attemptsUsed > 0 && examData.has_passed))) {
+          enterReviewMode();
+          return;
+        }
+
+        // Otherwise, render question and start timer
+        renderQuestion();
+        startTimer();
+
+      } catch (err) {
+        console.error(err);
+        showErrorState('Network error connecting to the examination server.');
+      }
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function getBadgeStyle(badgeName) {
+      const b = (badgeName || '').toUpperCase();
+      if (b === 'PERFECT') {
+        return {
+          label: 'PERFECT',
+          className: 'exam-badge-perfect',
+          icon: 'award',
+          color: '#10B981',
+          desc: 'Mastery achieved! Flawless conceptual and practical execution.'
+        };
+      } else if (b === 'CLEAR') {
+        return {
+          label: 'CLEAR',
+          className: 'exam-badge-clear',
+          icon: 'check-circle',
+          color: '#22D3EE',
+          desc: 'Excellent! Solid understanding of chapter competencies.'
+        };
+      } else if (b === 'PASS') {
+        return {
+          label: 'PASS',
+          className: 'exam-badge-clear', // use clear's styling or similar
+          icon: 'check',
+          color: '#3B82F6',
+          desc: 'Exam passed! You have met the minimum requirements.'
+        };
+      } else {
+        return {
+          label: 'NEEDS RETRY',
+          className: 'exam-badge-needs-improvement',
+          icon: 'alert-circle',
+          color: '#FBBF24',
+          desc: 'Passing threshold not met. Additional practice recommended.'
+        };
+      }
+    }
+
+    function startTimer() {
+      const display = document.getElementById('timer-text');
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (secondsLeft <= 0) {
+          clearInterval(timerInterval);
+          submitExam();
+          return;
+        }
+        secondsLeft--;
+        const m = Math.floor(secondsLeft / 60);
+        const s = secondsLeft % 60;
+        display.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+      }, 1000);
+    }
+
+    function isQuestionAnswered(q, idx) {
+      if (!q) return false;
+      const ans = (userAnswers[q.id] !== undefined && userAnswers[q.id] !== null) ? userAnswers[q.id] : userAnswers[idx];
+      if (q.question_type === 'essay') {
+        return typeof ans === 'string' && ans.trim().length >= 5;
+      } else {
+        return ans !== undefined && ans !== null && String(ans).trim() !== '';
+      }
+    }
+
+    function areAllQuestionsAnswered() {
+      return questionsList.length > 0 && questionsList.every((q, idx) => isQuestionAnswered(q, idx));
+    }
+
+    function renderQuestionPagination() {
+      const bar = document.getElementById('q-pagination-bar');
+      if (!bar || !questionsList || !questionsList.length) return;
+
+      bar.innerHTML = questionsList.map((q, idx) => {
+        const isAns = isQuestionAnswered(q, idx);
+        const isCurrent = (idx === currentQIndex);
+        let style = `padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 0.35rem; font-family: var(--font-mono, monospace);`;
+
+        if (isCurrent) {
+          style += ` background: rgba(56, 189, 248, 0.25); color: #38BDF8; border: 1.5px solid #38BDF8; box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);`;
+        } else if (isAns) {
+          style += ` background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.4);`;
+        } else {
+          style += ` background: rgba(255, 255, 255, 0.05); color: #94A3B8; border: 1px solid rgba(255, 255, 255, 0.15);`;
+        }
+
+        const icon = isAns ? `<i data-lucide="check-circle-2" style="width: 13px; height: 13px;"></i>` : (isCurrent ? `<i data-lucide="circle-dot" style="width: 13px; height: 13px;"></i>` : `<i data-lucide="circle" style="width: 13px; height: 13px;"></i>`);
+
+        return `
+          <button style="${style}" onclick="jumpToQuestion(${idx})" type="button">
+            ${icon}
+            <span>Q${idx + 1}</span>
+          </button>
+        `;
+      }).join('');
+
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function jumpToQuestion(idx) {
+      if (idx >= 0 && idx < questionsList.length) {
+        currentQIndex = idx;
+        renderQuestion();
+      }
+    }
+
+    function updateNavigationButtons() {
+      const prevBtn = document.getElementById('btn-exam-prev');
+      const nextBtn = document.getElementById('btn-exam-next');
+      if (!nextBtn) return;
+
+      if (prevBtn) prevBtn.disabled = (currentQIndex === 0);
+
+      const isLastQuestion = (currentQIndex === questionsList.length - 1);
+      const currentQ = questionsList[currentQIndex];
+      const currentAnswered = isQuestionAnswered(currentQ, currentQIndex);
+      const allAnswered = areAllQuestionsAnswered();
+
+      if (isLastQuestion) {
+        nextBtn.innerHTML = `<span>Submit Exam</span> <i data-lucide="check-circle" style="width: 16px; height: 16px;"></i>`;
+        nextBtn.disabled = !allAnswered;
+        if (!allAnswered) {
+          const unansweredCount = questionsList.filter((q, idx) => !isQuestionAnswered(q, idx)).length;
+          nextBtn.title = `Please answer all questions before submitting (${unansweredCount} remaining).`;
+        } else {
+          nextBtn.title = "Submit your completed assessment for grading.";
+        }
+      } else {
+        nextBtn.innerHTML = `<span>Next Question</span> <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>`;
+        nextBtn.disabled = !currentAnswered;
+        if (!currentAnswered) {
+          nextBtn.title = "Select an option to proceed to the next question.";
+        } else {
+          nextBtn.title = "";
+        }
+      }
+
+      renderQuestionPagination();
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function renderQuestion() {
+      if (!questionsList[currentQIndex]) return;
+      const q = questionsList[currentQIndex];
+
+      document.getElementById('q-counter-label').textContent = `Question ${currentQIndex + 1} of ${questionsList.length}`;
+      document.getElementById('q-tag').textContent = `QUESTION ${currentQIndex + 1}`;
+      document.getElementById('q-points').textContent = `${q.points || 10} Points`;
+      document.getElementById('q-prompt').innerHTML = window.formatInlineQuestionText ? window.formatInlineQuestionText(q.question_text) : escapeHtml(q.question_text);
+
+      const codeBlock = document.getElementById('q-code');
+      if (q.code && q.code.trim()) {
+        codeBlock.style.display = 'block';
+        codeBlock.textContent = q.code;
+      } else {
+        codeBlock.style.display = 'none';
+      }
+
+      document.getElementById('exam-progress-bar').style.width = `${((currentQIndex + 1) / questionsList.length) * 100}%`;
+
+      const list = document.getElementById('q-options-list');
+
+      if (q.question_type === 'essay') {
+        const val = (userAnswers[q.id] !== undefined && userAnswers[q.id] !== null) ? userAnswers[q.id] : (userAnswers[currentQIndex] || '');
+        list.innerHTML = `
+          <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: var(--radius-lg, 12px); padding: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; color: #38BDF8; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.75rem;">
+              <i data-lucide="edit-3" style="width: 16px; height: 16px;"></i>
+              <span>Short Answer Response (Keyword Auto-Graded)</span>
+            </div>
+            <textarea 
+              id="essay-input-field" 
+              rows="6" 
+              style="width: 100%; background: #070A14; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; padding: 1rem; color: #FFFFFF; font-family: inherit; font-size: 0.95rem; line-height: 1.6; resize: vertical; box-sizing: border-box;"
+              placeholder="Type your explanation here... Include relevant tags, syntax rules, and concepts from this chapter."
+              oninput="saveEssayAnswer('${q.id}', this.value)"
+            >${escapeHtml(val)}</textarea>
+            <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #94A3B8; display: flex; justify-content: space-between;">
+              <span>💡 Tip: Technical keywords will be evaluated automatically upon submission.</span>
+              <span id="essay-char-count">${val.length} characters</span>
+            </div>
+          </div>
+        `;
+      } else {
+        const currentSelectedKey = userAnswers[q.id] !== undefined ? userAnswers[q.id] : userAnswers[currentQIndex];
+
+        list.innerHTML = (q.options || []).map((opt, i) => {
+          const optText = (typeof opt === 'object' && opt !== null) ? (opt.text || opt.label || opt.value || JSON.stringify(opt)) : opt;
+          const optKey = (typeof opt === 'object' && opt !== null && opt.key) ? opt.key : (INDICATORS[i] || String(i));
+          const isSelected = (currentSelectedKey === optKey || currentSelectedKey === i || String(currentSelectedKey) === String(optKey));
+
+          return `
+            <div class="option-choice-item ${isSelected ? 'selected' : ''}" onclick="selectExamOption('${optKey}')">
+              <div class="option-indicator">${optKey}</div>
+              <div class="option-text">${window.formatInlineQuestionText ? window.formatInlineQuestionText(optText) : escapeHtml(optText)}</div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      updateNavigationButtons();
+    }
+
+    function saveEssayAnswer(qId, val) {
+      userAnswers[qId] = val;
+      userAnswers[currentQIndex] = val;
+      const countEl = document.getElementById('essay-char-count');
+      if (countEl) countEl.textContent = `${val.length} characters`;
+      updateNavigationButtons();
+    }
+
+    function selectExamOption(key) {
+      const q = questionsList[currentQIndex];
+      if (q) {
+        userAnswers[q.id] = key;
+        userAnswers[currentQIndex] = key;
+        renderQuestion();
+      }
+    }
+
+    function prevExamQuestion() {
+      if (currentQIndex > 0) {
+        currentQIndex--;
+        renderQuestion();
+      }
+    }
+
+    function nextExamQuestion() {
+      const q = questionsList[currentQIndex];
+      if (!isQuestionAnswered(q, currentQIndex)) {
+        alert('Please answer the current question before proceeding.');
+        return;
+      }
+
+      if (currentQIndex < questionsList.length - 1) {
+        currentQIndex++;
+        renderQuestion();
+      } else {
+        submitExam();
+      }
+    }
+
+    async function submitExam() {
+      if (!areAllQuestionsAnswered()) {
+        const unansweredIndices = questionsList
+          .map((q, idx) => !isQuestionAnswered(q, idx) ? (idx + 1) : null)
+          .filter(Boolean);
+        alert(`Please answer all questions before submitting. Unanswered question(s): ${unansweredIndices.join(', ')}`);
+        return;
+      }
+
+      if (timerInterval) clearInterval(timerInterval);
+
+      const nextBtn = document.getElementById('btn-exam-next');
+      if (nextBtn) {
+        nextBtn.disabled = true;
+        nextBtn.innerHTML = `<span>Grading Assessment...</span>`;
+      }
+
+      // Build complete answers payload mapped by both ID and index
+      const answersPayload = {};
+      questionsList.forEach((q, idx) => {
+        const val = (userAnswers[q.id] !== undefined && userAnswers[q.id] !== null) ? userAnswers[q.id] : userAnswers[idx];
+        if (val !== undefined && val !== null) {
+          answersPayload[q.id] = val;
+          answersPayload[idx] = val;
+          answersPayload[idx + 1] = val;
+        }
+      });
+
+      try {
+        const res = await window.apiFetch('/api/exams/submit.php', {
+          method: 'POST',
+          body: JSON.stringify({
+            exam_id: (examData && examData.id) ? examData.id : examId,
+            chapter_id: chapterIdParam || (examData && examData.chapter_id) || '',
+            answers: answersPayload
+          })
+        });
+
+        const json = await res.json();
+
+        if (!json.success || !json.data) {
+          alert('Submission Error: ' + (json.message || json.error || 'Unknown error occurred.'));
+          if (nextBtn) {
+            nextBtn.disabled = false;
+            nextBtn.innerHTML = `<span>Submit Exam</span> <i data-lucide="check-circle" style="width: 16px; height: 16px;"></i>`;
+          }
+          return;
+        }
+
+        const result = json.data;
+
+        // Display results view
+        document.getElementById('exam-active-view').style.display = 'none';
+        document.getElementById('exam-timer-display').style.display = 'none';
+        const resultView = document.getElementById('exam-result-view');
+        resultView.style.display = 'block';
+
+        // Update Scores
+        document.getElementById('result-score-text').textContent = `${result.score}%`;
+        document.getElementById('result-highest-score-text').textContent = `${result.highest_score}%`;
+
+        // Evaluate passing based on Highest Recorded Score
+        const passingThreshold = result.passing_score_percent || 60;
+        const isHighestPassed = (result.highest_passed !== undefined)
+          ? result.highest_passed
+          : (result.highest_score >= passingThreshold);
+
+        // Badge styling for highest recorded badge
+        const highestBadgeName = result.highest_badge || (result.highest_score == 100 ? 'PERFECT' : (result.highest_score >= 80 ? 'CLEAR' : (result.highest_score >= passingThreshold ? 'PASS' : 'NEEDS_RETRY')));
+        const highestBadgeInfo = getBadgeStyle(highestBadgeName);
+
+        document.getElementById('result-badge-display').innerHTML = `
+          <div class="exam-badge-container ${highestBadgeInfo.className}">
+            <i data-lucide="${highestBadgeInfo.icon}" style="width: 20px; height: 20px;"></i>
+            <span>OFFICIAL BADGE: ${highestBadgeInfo.label}</span>
+          </div>
+        `;
+
+        const titleEl = document.getElementById('result-title-text');
+        const descEl = document.getElementById('result-desc-text');
+        const xpEl = document.getElementById('result-xp-pill');
+        const retryBtn = document.getElementById('btn-retry-exam');
+        const noteEl = document.getElementById('result-attempts-left-note');
+        const trophyBox = document.getElementById('result-trophy-box');
+
+        if (isHighestPassed) {
+          titleEl.textContent = 'Assessment Passed!';
+          titleEl.style.color = '#34D399';
+          if (trophyBox) {
+            trophyBox.style.background = 'rgba(16, 185, 129, 0.15)';
+            trophyBox.style.borderColor = '#10B981';
+            trophyBox.style.color = '#34D399';
+          }
+          if (result.score >= passingThreshold) {
+            descEl.textContent = `Congratulations! You passed this attempt with ${result.score}%. Your highest recorded score is ${result.highest_score}%.`;
+          } else {
+            descEl.textContent = `You scored ${result.score}% on this attempt. However, your Highest Recorded Score is ${result.highest_score}% (${highestBadgeInfo.label}), so your overall passing status and chapter unlock progress are fully retained!`;
+          }
+          xpEl.style.display = 'inline-flex';
+          document.getElementById('result-xp-text').textContent = `+${result.xp_awarded || 50} XP Earned`;
+
+          // Sync exam lesson completion to local and backend stores
+          const targetExamId = (examData && examData.id) ? examData.id : examId;
+          const examLessonId = targetExamId.startsWith('exam-') ? targetExamId : `exam-${targetExamId}`;
+          if (window.CURRICULUM_INDEX && typeof window.CURRICULUM_INDEX.markLessonCompleted === 'function') {
+            window.CURRICULUM_INDEX.markLessonCompleted(examLessonId, result.xp_awarded || 50);
+          }
+          if (window.SessionManager && typeof window.SessionManager.fetchProgress === 'function') {
+            window.SessionManager.fetchProgress();
+          }
+        } else {
+          titleEl.textContent = 'Passing Score Not Met';
+          titleEl.style.color = '#F87171';
+          if (trophyBox) {
+            trophyBox.style.background = 'rgba(239, 68, 68, 0.15)';
+            trophyBox.style.borderColor = '#EF4444';
+            trophyBox.style.color = '#F87171';
+          }
+          descEl.textContent = `You scored ${result.score}%. A minimum of ${passingThreshold}% is required to pass. Your highest score is ${result.highest_score}%.`;
+          xpEl.style.display = 'none';
+        }
+
+        // Attempts note and retry button handling
+        if (result.can_retry && result.attempts_left > 0) {
+          noteEl.textContent = `Attempt ${result.attempts_used} of ${result.max_attempts} completed • ${result.attempts_left} attempt${result.attempts_left === 1 ? '' : 's'} remaining to improve score.`;
+          retryBtn.style.display = 'inline-flex';
+        } else {
+          noteEl.textContent = `All ${result.max_attempts} attempts completed. Official chapter badge: ${highestBadgeInfo.label}.`;
+          retryBtn.style.display = 'none';
+        }
+
+        // Render detailed Question Review with answers and explanations
+        if (result.review && result.review.length > 0) {
+          let reviewHtml = `
+            <h3 style="font-size: 1.15rem; font-weight: 800; color: #FFFFFF; margin-bottom: 1rem;">
+              Question Performance &amp; Explanations (${result.review.length})
+            </h3>
+            <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+          `;
+
+          result.review.forEach((item, idx) => {
+            const isCorrect = item.is_correct === 1 || item.is_correct === true;
+            const qDetail = questionsList.find(q => q.id === item.question_id) || {};
+            const isEssay = item.question_type === 'essay' || qDetail.question_type === 'essay';
+
+            reviewHtml += `
+              <div style="background: rgba(255,255,255,0.02); border: 1px solid ${isCorrect ? 'rgba(16, 185, 129, 0.35)' : 'rgba(239, 68, 68, 0.35)'}; border-radius: var(--radius-md); padding: 1.1rem 1.25rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span style="font-size: 0.85rem; font-weight: 800; color: #38BDF8; font-family: var(--font-mono);">
+                    QUESTION ${idx + 1} • ${isEssay ? 'SHORT ANSWER ESSAY' : 'MULTIPLE CHOICE'}
+                  </span>
+                  <span style="font-size: 0.8rem; font-weight: 800; color: ${isCorrect ? '#34D399' : '#F87171'}; display: inline-flex; align-items: center; gap: 0.35rem;">
+                    <i data-lucide="${isCorrect ? 'check-circle' : 'x-circle'}" style="width: 15px; height: 15px;"></i>
+                    ${isCorrect ? 'Passed (+ ' + item.points_earned + ' / ' + item.points_possible + ' pts)' : 'Needs Improvement (' + item.points_earned + ' / ' + item.points_possible + ' pts)'}
+                  </span>
+                </div>
+
+                ${qDetail.question_text ? `<p style="font-size: 0.95rem; font-weight: 600; color: #FFFFFF; margin-bottom: 0.5rem;">${escapeHtml(qDetail.question_text)}</p>` : ''}
+                
+                ${isEssay ? `
+                  <div style="margin-bottom: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.85rem;">
+                    <div style="font-size: 0.75rem; font-weight: 800; color: #94A3B8; text-transform: uppercase; margin-bottom: 0.25rem;">Your Written Response:</div>
+                    <div style="font-size: 0.9rem; color: #E2E8F0; white-space: pre-wrap;">${escapeHtml(item.submitted_answer || 'No response provided')}</div>
+                  </div>
+
+                  <div class="explanation-callout" style="border-left-color: #10B981; background: rgba(16, 185, 129, 0.08); margin-bottom: 0.5rem;">
+                    <strong style="color: #34D399; display: block; margin-bottom: 0.25rem;">✓ MODEL ANSWER:</strong>
+                    <div style="color: #F1F5F9; white-space: pre-wrap; line-height: 1.5;">${escapeHtml(item.model_answer || qDetail.model_answer || 'See instructor notes.')}</div>
+                  </div>
+                ` : `
+                  <div style="display: flex; gap: 1rem; font-size: 0.8rem; color: #94A3B8; margin-bottom: 0.5rem; font-family: var(--font-mono);">
+                    <span>Your Answer: <strong style="color: ${isCorrect ? '#34D399' : '#F87171'};">${item.submitted_answer || 'None'}</strong></span>
+                    <span>Correct Key: <strong style="color: #34D399;">${item.correct_answer || 'N/A'}</strong></span>
+                  </div>
+                `}
+
+                ${item.explanation ? `
+                  <div class="explanation-callout">
+                    <strong>Explanation:</strong> ${escapeHtml(item.explanation)}
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          });
+
+          reviewHtml += `</div>`;
+          document.getElementById('result-questions-review').innerHTML = reviewHtml;
+        }
+
+        if (window.lucide) window.lucide.createIcons();
+
+      } catch (err) {
+        console.error(err);
+        alert('Network error submitting exam. Please try again.');
+        if (nextBtn) {
+          nextBtn.disabled = false;
+          nextBtn.innerHTML = `<span>Submit Answers</span> <i data-lucide="check" style="width: 16px; height: 16px;"></i>`;
+        }
+      }
+    }
+
+    function retryExam() {
+      // Reset user state and reload questions for next attempt
+      userAnswers = {};
+      currentQIndex = 0;
+      secondsLeft = 15 * 60;
+      document.getElementById('exam-result-view').style.display = 'none';
+      document.getElementById('exam-timer-display').style.display = 'flex';
+      document.getElementById('exam-active-view').style.display = 'block';
+
+      loadExam();
+    }
+
+    async function resetAttemptCycle() {
+      if (!confirm('By resetting, you confirm you have completed the required chapter review and studied the material. This will archive previous attempts and start a fresh set of 3 official attempts. Would you like to proceed?')) {
+        return;
+      }
+      try {
+        const res = await window.apiFetch('/api/exams/reset_attempts.php', {
+          method: 'POST',
+          body: JSON.stringify({
+            exam_id: (examData && examData.id) ? examData.id : examId
+          })
+        });
+        const json = await res.json();
+        if (json.success || json.status === 'success') {
+          alert(json.data.message || 'Your attempts have been reset successfully!');
+          window.location.reload();
+        } else {
+          alert('Error: ' + (json.message || 'Failed to reset attempts.'));
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Failed to connect to server for resetting attempts.');
+      }
+    }
+
+    function enterReviewMode() {
+      document.getElementById('exam-active-view').style.display = 'none';
+      document.getElementById('exam-result-view').style.display = 'none';
+      document.getElementById('exam-timer-display').style.display = 'none';
+      document.getElementById('exam-review-view').style.display = 'block';
+
+      const attemptsLeft = examData.attempts_left !== undefined ? examData.attempts_left : 3;
+      const maxAttempts = examData.max_attempts || 3;
+      const attemptsUsed = examData.attempts_count || 0;
+
+      const tagEl = document.getElementById('review-banner-tag');
+      const titleEl = document.getElementById('review-banner-title');
+      const descEl = document.getElementById('review-banner-desc');
+
+      if (attemptsLeft > 0) {
+        if (tagEl) tagEl.textContent = 'Chapter Passed • Review Mode';
+        if (titleEl) titleEl.textContent = `Completed in ${attemptsUsed} of ${maxAttempts} Attempts`;
+        if (descEl) descEl.textContent = 'You have successfully passed this chapter assessment! You can review the correct options and explanations below, or choose to retry to improve your score.';
+      } else {
+        if (tagEl) tagEl.textContent = 'Exam Locked • Review Mode';
+        if (titleEl) titleEl.textContent = 'All 3 Attempts Completed';
+        if (descEl) descEl.textContent = 'You have completed all permitted attempts for this chapter exam. Review questions, correct answers, and explanations below.';
+      }
+
+      const badgeInfo = getBadgeStyle(examData.official_badge);
+      document.getElementById('review-banner-badge').innerHTML = `
+        <div class="exam-badge-container ${badgeInfo.className}" style="margin: 0;">
+          <i data-lucide="${badgeInfo.icon}" style="width: 20px; height: 20px;"></i>
+          <span>${badgeInfo.label} (${examData.best_score || 0}%)</span>
+        </div>
+      `;
+
+      // Retake Exam Button in action bar if attempts left
+      const retakeWrap = document.getElementById('review-retake-btn-wrap');
+      if (retakeWrap) {
+        if (attemptsLeft > 0) {
+          const retakeUrl = `/student/exam.html?id=${encodeURIComponent(examId)}&chapter_id=${encodeURIComponent(chapterIdParam)}&retry=1`;
+          retakeWrap.innerHTML = `
+            <a href="${retakeUrl}" class="btn btn-primary" style="background: linear-gradient(135deg, #F59E0B, #EF4444); border: none;">
+              <i data-lucide="rotate-ccw" style="width: 16px; height: 16px;"></i>
+              <span>Retake Exam (${attemptsLeft} Left)</span>
+            </a>
+          `;
+        } else if (examData.best_score === null || examData.best_score < 60) {
+          // If 3 attempts completed but failed (< 60%), allow a review/repeat cycle to reset eligibility
+          retakeWrap.innerHTML = `
+            <button onclick="resetAttemptCycle()" class="btn btn-primary" style="background: linear-gradient(135deg, #10B981, #059669); border: none; display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <i data-lucide="refresh-cw" style="width: 16px; height: 16px;"></i>
+              <span>Restudy Chapter &amp; Reset Attempts</span>
+            </button>
+          `;
+        } else {
+          retakeWrap.innerHTML = '';
+        }
+      }
+
+      // Render all questions with correct answers & explanations
+      const container = document.getElementById('review-questions-list');
+      container.innerHTML = questionsList.map((q, idx) => {
+        const correctKey = q.correct_answer || 'A';
+        const explanation = q.explanation || 'Detailed explanation will be provided by your instructor.';
+        const isEssay = q.question_type === 'essay';
+
+        if (isEssay) {
+          return `
+            <div class="review-q-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <span class="question-num-tag">QUESTION ${idx + 1} OF ${questionsList.length} • SHORT ANSWER ESSAY</span>
+                <span class="question-points-badge">${q.points || 25} Points</span>
+              </div>
+
+              <div class="question-prompt" style="font-size: 1.05rem; margin-bottom: 0.85rem;">
+                ${escapeHtml(q.question_text)}
+              </div>
+
+              <div class="explanation-callout" style="border-left-color: #10B981; background: rgba(16, 185, 129, 0.08); margin-bottom: 0.75rem;">
+                <strong style="color: #34D399; display: block; margin-bottom: 0.25rem;">✓ MODEL ANSWER:</strong>
+                <div style="color: #F1F5F9; white-space: pre-wrap; line-height: 1.5;">${escapeHtml(q.model_answer || 'See instructor notes.')}</div>
+              </div>
+
+              <div class="explanation-callout">
+                <strong>Official Explanation:</strong> ${escapeHtml(explanation)}
+              </div>
+            </div>
+          `;
+        }
+
+        const optionsHtml = (q.options || []).map((opt, oIdx) => {
+          const optText = (typeof opt === 'object' && opt !== null) ? (opt.text || opt.label || opt.value || JSON.stringify(opt)) : opt;
+          const optKey = (typeof opt === 'object' && opt !== null && opt.key) ? opt.key : (INDICATORS[oIdx] || String(oIdx));
+          const isCorrect = (optKey === correctKey);
+
+          return `
+            <div class="review-opt-item ${isCorrect ? 'review-opt-correct' : ''}">
+              <div class="option-indicator" style="${isCorrect ? 'background: #10B981; color: #000; border-color: #10B981;' : ''}">${optKey}</div>
+              <div style="flex: 1;">${escapeHtml(optText)}</div>
+              ${isCorrect ? `<span style="font-size: 0.75rem; font-weight: 800; color: #34D399; font-family: var(--font-mono);">CORRECT ANSWER</span>` : ''}
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div class="review-q-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <span class="question-num-tag">QUESTION ${idx + 1} OF ${questionsList.length}</span>
+              <span class="question-points-badge">${q.points || 10} Points</span>
+            </div>
+
+            <div class="question-prompt" style="font-size: 1.05rem; margin-bottom: 0.85rem;">
+              ${escapeHtml(q.question_text)}
+            </div>
+
+            ${q.code ? `
+              <div class="question-code-block" style="margin-bottom: 1rem;">${escapeHtml(q.code)}</div>
+            ` : ''}
+
+            <div style="margin-bottom: 0.5rem;">
+              ${optionsHtml}
+            </div>
+
+            <div class="explanation-callout">
+              <strong>Official Explanation:</strong> ${escapeHtml(explanation)}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function showErrorState(msg) {
+      document.getElementById('exam-active-view').innerHTML = `
+        <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-lg); padding: 2rem; text-align: center;">
+          <i data-lucide="alert-circle" style="width: 48px; height: 48px; color: #EF4444; margin-bottom: 1rem;"></i>
+          <h3 style="color: #F87171; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Unable to Open Exam</h3>
+          <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">${msg}</p>
+          <a href="/student/dashboard.html" class="btn btn-secondary">Return to Dashboard</a>
+        </div>
+      `;
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      const div = document.createElement('div');
+      div.textContent = String(str);
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Chapters &amp; Directory - SPS Code Orbit</title>
+  <link rel="stylesheet" href="../css/global.css?v=2.0">
+  <link rel="stylesheet" href="../css/components.css?v=2.0">
+  <link rel="stylesheet" href="../css/responsive.css?v=1.2">
+  <link rel="stylesheet" href="../css/dashboard.css?v=2.0">
+  <link rel="stylesheet" href="../css/lesson.css?v=2.0">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Custom High-Contrast Chapter Directory Styles */
+    .chapters-layout-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .chapters-layout-grid > * {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    @media (max-width: 992px) {
+      .chapters-layout-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .chapter-dir-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .chapter-dir-card {
+      background: rgba(16, 23, 42, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-lg, 12px);
+      padding: 1.25rem 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .chapter-dir-card:hover {
+      border-color: rgba(34, 211, 238, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .chapter-dir-card.is-active {
+      border-color: #22D3EE;
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.1) 0%, rgba(10, 14, 26, 0.95) 100%);
+      box-shadow: 0 0 20px rgba(34, 211, 238, 0.2);
+    }
+
+    /* Chapter Badges - Strictly Chapter Level */
+    .chapter-badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: var(--radius-full, 9999px);
+      font-size: 0.75rem;
+      font-weight: 800;
+      font-family: var(--font-mono, monospace);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .badge-perfect {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+    }
+
+    .badge-clear {
+      background: rgba(34, 211, 238, 0.15);
+      color: #38BDF8;
+      border: 1px solid rgba(34, 211, 238, 0.4);
+      box-shadow: 0 0 12px rgba(34, 211, 238, 0.25);
+    }
+
+    .badge-bad,
+    .badge-needs-improvement {
+      background: rgba(245, 158, 11, 0.15);
+      color: #FBBF24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .badge-in-progress {
+      background: rgba(245, 158, 11, 0.15);
+      color: #FBBF24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .badge-locked {
+      background: rgba(100, 116, 139, 0.15);
+      color: #94A3B8;
+      border: 1px solid rgba(100, 116, 139, 0.3);
+    }
+
+    /* Right Side Chapter Detail Panel */
+    .chapter-detail-container {
+      background: rgba(16, 23, 42, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-lg, 12px);
+      padding: 1.75rem;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
+      overflow-wrap: break-word;
+    }
+
+    .predict-options-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .predict-options-wrap .btn {
+      white-space: normal !important;
+      text-align: left !important;
+      justify-content: flex-start !important;
+      align-items: flex-start !important;
+      word-break: break-word !important;
+      line-height: 1.5 !important;
+      height: auto !important;
+      padding: 0.75rem 1rem !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    .predict-options-wrap .btn strong {
+      flex-shrink: 0;
+    }
+
+    .predict-options-wrap .btn span {
+      flex: 1;
+      min-width: 0;
+    }
+
+    pre, code {
+      max-width: 100%;
+      box-sizing: border-box;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .exam-status-box {
+      background: linear-gradient(135deg, rgba(30, 27, 75, 0.8) 0%, rgba(10, 14, 26, 0.9) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      border-radius: var(--radius-md, 8px);
+      padding: 1.25rem 1.5rem;
+      margin: 1.25rem 0;
+    }
+
+    .attempt-history-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .attempt-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      font-family: var(--font-mono, monospace);
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-secondary);
+    }
+
+    /* Lesson List inside Chapter Panel */
+    .lessons-list-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .lesson-item-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md, 8px);
+      padding: 1rem 1.25rem;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .lesson-item-card:hover {
+      background: rgba(37, 99, 235, 0.1);
+      border-color: rgba(37, 99, 235, 0.4);
+      transform: translateX(4px);
+    }
+
+    .lesson-item-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .lesson-num-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.85rem;
+      font-family: var(--font-mono, monospace);
+      color: #38BDF8;
+      flex-shrink: 0;
+    }
+
+    .lesson-item-title {
+      font-weight: 700;
+      color: #FFFFFF;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .lesson-item-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted, #94A3B8);
+    }
+
+    /* Mobile Slide-out Drawer Modal */
+    .mobile-drawer-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 999;
+      justify-content: flex-end;
+    }
+
+    .mobile-drawer-overlay.is-active {
+      display: flex;
+    }
+
+    .mobile-drawer-content {
+      width: 100%;
+      max-width: 500px;
+      height: 100%;
+      background: #0A0E1A;
+      border-left: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       0. IMMERSIVE DEEP-SPACE UNIVERSE & SWIRLING NEBULAE BACKDROP
+       ======================================================================== -->
+  <div class="space-universe-backdrop" aria-hidden="true">
+    <div class="starfield-layer"></div>
+    <div class="starfield-layer-dense"></div>
+    <div class="nebula-swirl-container">
+      <div class="nebula-cloud nebula-blue"></div>
+      <div class="nebula-cloud nebula-purple"></div>
+      <div class="nebula-cloud nebula-pink"></div>
+      <div class="nebula-cloud nebula-cyan-lower"></div>
+    </div>
+  </div>
+
+  <div class="app-shell" style="position: relative; z-index: 10;">
+    <aside id="app-sidebar"></aside>
+
+    <div class="main-wrapper">
+      <!-- Top Header Bar with Breadcrumb -->
+      <header class="top-header" style="height: 60px;">
+        <div class="breadcrumb-nav">
+          <a href="/student/courses.html">My Courses</a>
+          <span>/</span>
+          <span style="color: var(--text-main); font-weight: 600;" id="breadcrumb-course-name">Course Chapters</span>
+        </div>
+
+        <div class="header-actions">
+          <a href="/student/courses.html" class="btn btn-secondary btn-sm" style="border-radius: var(--radius-full); padding: 0.4rem 1rem;">
+            <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i>
+            <span>All Courses</span>
+          </a>
+          <a href="/student/profile.html">
+            <img src="https://ui-avatars.com/api/?name=User&background=E0E7FF&color=4338CA" alt="Profile" class="header-user-avatar" style="width: 36px; height: 36px;">
+          </a>
+        </div>
+      </header>
+
+      <!-- Main Page Content -->
+      <main class="page-content" style="max-width: 1200px; margin: 0 auto; width: 100%;">
+        
+        <!-- Main Course Header Banner -->
+        <div class="chapter-header-card" id="course-header-card">
+          <div class="chapter-header-left">
+            <div class="chapter-icon-badge" id="course-icon-badge" style="background: rgba(37, 99, 235, 0.15); color: #60A5FA; border: 1px solid rgba(37, 99, 235, 0.3);">
+              <i data-lucide="code" style="width: 24px; height: 24px;"></i>
+            </div>
+            <div class="chapter-header-titles">
+              <h1 id="course-title-text">Course Loading...</h1>
+              <p id="course-desc-text">Interactive coding curriculum designed for your academic level.</p>
+              <div style="margin-top: 0.5rem;" id="course-academic-tier-badge">
+                <span class="badge badge-secondary-track">Academic Tier</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="chapter-progress-box">
+            <div class="chapter-progress-label">Overall Progress</div>
+            <div class="chapter-progress-val" id="course-progress-pct">0%</div>
+            <div class="progress-bar-container" style="height: 6px;">
+              <div class="progress-bar-fill" id="course-progress-fill" style="width: 0%;"></div>
+            </div>
+            <div class="chapter-progress-sub" id="course-completed-lessons-sub">0 of 0 lessons completed</div>
+            <div id="course-action-btn-wrap" style="margin-top: 0.75rem;"></div>
+          </div>
+        </div>
+
+        <!-- Section Title Bar -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+          <div>
+            <h2 style="font-size: 1.35rem; font-weight: 800; color: #FFFFFF; letter-spacing: -0.01em;">Course Chapters</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">Select a chapter on the left to view its lessons and chapter assessment status.</p>
+          </div>
+        </div>
+
+        <!-- 2-Column Chapters Grid Layout -->
+        <div class="chapters-layout-grid">
+          
+          <!-- Left Column: Chapter Directory List -->
+          <div class="chapter-dir-list" id="chapter-directory-list">
+            <div style="text-align: center; color: var(--text-muted); padding: 3rem 1rem; background: #0A0E1A; border-radius: var(--radius-md);">
+              Loading chapters...
+            </div>
+          </div>
+
+          <!-- Right Column: Active Selected Chapter Details Panel -->
+          <div class="chapter-detail-container" id="chapter-detail-panel">
+            <div style="text-align: center; color: var(--text-muted); padding: 4rem 1rem;">
+              Select a chapter from the list to view lessons and take chapter exams.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Capstone Project Container -->
+        <div id="course-capstone-container" style="margin-top: 2rem;"></div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Mobile Drawer Overlay for Small Screens -->
+  <div class="mobile-drawer-overlay" id="mobile-chapter-drawer" onclick="closeMobileChapterDrawer(event)">
+    <div class="mobile-drawer-content" onclick="event.stopPropagation()">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem;">
+        <h3 style="font-size: 1.1rem; font-weight: 800; color: #FFFFFF;" id="mobile-drawer-title">Chapter Lessons</h3>
+        <button class="btn btn-secondary btn-sm" onclick="closeMobileChapterDrawer()">
+          <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+        </button>
+      </div>
+      <div id="mobile-drawer-body"></div>
+    </div>
+  </div>
+
+  <!-- Celebration Modal Overlay -->
+  <div id="celebration-modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(7, 10, 20, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 99999; align-items: center; justify-content: center; padding: 1.5rem;">
+    <div style="background: linear-gradient(135deg, rgba(16, 23, 42, 0.98) 0%, rgba(13, 17, 39, 0.98) 100%); border: 1px solid rgba(56, 189, 248, 0.4); box-shadow: 0 0 40px rgba(56, 189, 248, 0.25); border-radius: 16px; width: 100%; max-width: 480px; padding: 2rem; text-align: center; position: relative;">
+      <div style="width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, rgba(56,189,248,0.2), rgba(16,185,129,0.2)); border: 2px solid #38BDF8; color: #38BDF8; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto; font-size: 2rem; box-shadow: 0 0 20px rgba(56,189,248,0.4);">
+        🏆
+      </div>
+
+      <h2 style="font-size: 1.5rem; font-weight: 800; color: #FFFFFF; margin-bottom: 0.5rem;">Chapter Completed!</h2>
+      <p style="font-size: 0.9rem; color: #94A3B8; line-height: 1.5; margin-bottom: 1.5rem;">
+        Congratulations! You completed the lesson, earned your XP, and unlocked the next chapter in your curriculum!
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;">
+        <div>
+          <div style="font-size: 0.75rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Total Earned</div>
+          <div style="font-size: 1.25rem; font-weight: 800; color: #FBBF24;" id="celebration-xp-text">+25 XP</div>
+        </div>
+        <div>
+          <div style="font-size: 0.75rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Course Progress</div>
+          <div style="font-size: 1.25rem; font-weight: 800; color: #34D399;" id="celebration-pct-text">100%</div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="closeCelebrationModal()" style="width: 100%; justify-content: center; padding: 0.85rem; font-weight: 800; border-radius: 9999px; background: linear-gradient(135deg, #38BDF8, #2563EB); border: none; color: #FFF;">
+        <span>Continue Learning 🚀</span>
+      </button>
+    </div>
+  </div>
+
+  <script src="/js/session.js?v=5.0"></script>
+  <script src="/js/theme.js?v=5.0"></script>
+  <script src="/js/components.js?v=5.0"></script>
+  <script src="/data/programming_foundations_curriculum.js?v=5.0"></script>
+  <script src="/data/python_foundations_curriculum.js?v=5.0"></script>
+  <script src="/data/python_level2_curriculum.js?v=5.0"></script>
+  <script src="/data/python_level2_exams.js?v=5.0"></script>
+  <script src="/data/curriculum_index.js?v=5.0"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    window.urlParams = urlParams;
+
+    // Helper to dynamically obtain the requested course ID from URL query
+    function getCurrentCourseId() {
+      const raw = urlParams.get('id') || urlParams.get('course') || urlParams.get('slug') || '';
+      return normalizeCourseId(raw) || raw || 'course-programming-foundations';
+    }
+
+    // Normalize course ID to a known production course (exact ID/slug first)
+    function normalizeCourseId(raw) {
+      if (!raw) return 'course-programming-foundations';
+      const low = String(raw).trim().toLowerCase().replace(/[\s_]+/g, '-');
+
+      // Exact IDs / slugs (3 production courses)
+      if (low === 'course-python-level-2' || low === 'python-level-2' || low === 'python-level2' || low.includes('level-2') || low.includes('level2') || low.includes('pyl2')) {
+        return 'course-python-level-2';
+      }
+      if (low === 'course-python-foundations' || low === 'python-foundations' || low === 'python-foundations' || low.startsWith('pyf-')) {
+        return 'course-python-foundations';
+      }
+      if (low === 'course-programming-foundations' || low === 'programming-foundations' || low.includes('prog') || low.startsWith('pf-')) {
+        return 'course-programming-foundations';
+      }
+
+      // Ambiguous "python" alone → Level 1 foundations (legacy links)
+      if (low.includes('python') || low.startsWith('py')) return 'course-python-foundations';
+      return 'course-programming-foundations';
+    }
+
+    let courseId = getCurrentCourseId();
+    let globalCourseData = null;
+    let selectedChapterId = null;
+
+    function resolveClientCourse(id) {
+      const normId = normalizeCourseId(id) || id || 'course-programming-foundations';
+
+      // 1. Curriculum index resolution
+      if (window.CURRICULUM_INDEX && typeof window.CURRICULUM_INDEX.getCourseByIdOrSlug === 'function') {
+        const c = window.CURRICULUM_INDEX.getCourseByIdOrSlug(normId) || window.CURRICULUM_INDEX.getCourseByIdOrSlug(id);
+        if (c && c.chapters && c.chapters.length > 0) return c;
+      }
+
+      // 2. Direct variable matching
+      if (normId === 'course-programming-foundations' && window.PROGRAMMING_FOUNDATIONS_COURSE) return window.PROGRAMMING_FOUNDATIONS_COURSE;
+      if (normId === 'course-python-foundations' && window.PYTHON_FOUNDATIONS_COURSE) return window.PYTHON_FOUNDATIONS_COURSE;
+      if (normId === 'course-python-level-2' && window.PYTHON_LEVEL2_COURSE) return window.PYTHON_LEVEL2_COURSE;
+
+      // 3. Fallback scan of global list — all production courses
+      const allAvailable = [
+        window.PROGRAMMING_FOUNDATIONS_COURSE,
+        window.PYTHON_FOUNDATIONS_COURSE,
+        window.PYTHON_LEVEL2_COURSE
+      ].filter(Boolean);
+
+      const matched = allAvailable.find(c => c.id === normId || c.slug === normId || c.id === id || c.slug === id);
+      if (matched) return matched;
+
+      // Substring match on title/slug
+      const low = String(normId).toLowerCase();
+      const subMatch = allAvailable.find(c => c.id.toLowerCase().includes(low) || (c.slug && c.slug.toLowerCase().includes(low)) || c.title.toLowerCase().includes(low));
+      if (subMatch) return subMatch;
+
+      return allAvailable.find(c => c.id === normId) || allAvailable[0] || null;
+    }
+
+    function applyCourseData(course) {
+      if (!course) return;
+
+      const completedMap = (window.CURRICULUM_INDEX && typeof window.CURRICULUM_INDEX.getCompletedLessonsMap === 'function')
+        ? window.CURRICULUM_INDEX.getCompletedLessonsMap()
+        : (function() {
+            try { return JSON.parse(localStorage.getItem('sps_orbit_completed_lessons') || '{}'); } catch(e) { return {}; }
+          })();
+
+      let previousChapterExamPassed = true;
+      let totalCompletedLessonsAcrossCourse = 0;
+      let totalLessonsAcrossCourse = 0;
+
+      // Compute thorough chapter and lesson status
+      if (course.chapters && Array.isArray(course.chapters)) {
+        course.chapters.forEach((ch, idx) => {
+          ch.lessons = ch.lessons || [];
+          
+          const regularLessons = ch.lessons.filter(l => !l.is_exam && String(l.id).indexOf('exam-') !== 0 && l.lesson_number !== 5);
+          const existingExam = ch.lessons.find(l => l.is_exam || String(l.id).indexOf('exam-') === 0 || l.lesson_number === 5);
+          
+          const isChapterUnlocked = (idx === 0) || previousChapterExamPassed || ch.is_unlocked === true || ch.badge === 'PERFECT' || ch.badge === 'CLEAR' || ch.badge === 'PASS' || ch.badge === 'IN_PROGRESS' || ch.badge === 'UNLOCKED';
+          let previousLessonCompleted = true;
+          let chapterCompletedCount = 0;
+
+          const formattedRegularLessons = regularLessons.map((l, lIdx) => {
+            totalLessonsAcrossCourse++;
+            // The API is authoritative. Fallback to completedMap ONLY if the API didn't explicitly set is_completed to false (which it usually does).
+            // Actually, if course is from API, `l.is_completed` is the truth. 
+            const isCompleted = !!(l.is_completed || l.status === 'completed');
+            const isUnlocked = isCompleted || (isChapterUnlocked && ((lIdx === 0) || previousLessonCompleted));
+
+            if (isCompleted) {
+              chapterCompletedCount++;
+              totalCompletedLessonsAcrossCourse++;
+              previousLessonCompleted = true;
+            } else {
+              previousLessonCompleted = false;
+            }
+
+            return {
+              ...l,
+              id: l.id,
+              chapter_id: ch.id,
+              slug: l.slug,
+              lesson_number: l.lesson_number || lIdx + 1,
+              title: l.title,
+              duration_minutes: l.duration || l.duration_minutes || 10,
+              xp_reward: l.xp || l.xp_reward || 25,
+              is_completed: isCompleted,
+              is_unlocked: isUnlocked,
+              is_current: !isCompleted && isUnlocked,
+              status: isCompleted ? 'completed' : (isUnlocked ? 'unlocked' : 'locked')
+            };
+          });
+
+          const allRegularCompleted = formattedRegularLessons.length > 0 && formattedRegularLessons.every(l => l.is_completed);
+          const examPassed = (ch.exam && (ch.exam.best_score >= 60 || ch.exam.passed)) || ch.badge === 'PERFECT' || ch.badge === 'CLEAR' || ch.badge === 'PASS';
+          const isExamUnlocked = examPassed || (isChapterUnlocked && (formattedRegularLessons.length === 0 || allRegularCompleted));
+          const examLessonId = (ch.exam && ch.exam.id) ? ch.exam.id : `exam-${ch.id}`;
+
+          totalLessonsAcrossCourse++;
+          if (examPassed) {
+            totalCompletedLessonsAcrossCourse++;
+          }
+
+          const examLesson = {
+            id: examLessonId,
+            chapter_id: ch.id,
+            slug: `exam-${ch.slug || ch.id}`,
+            lesson_number: formattedRegularLessons.length + 1,
+            title: `Lesson ${formattedRegularLessons.length + 1}: Chapter ${ch.chapter_number || idx + 1} Final Exam & Assessment`,
+            duration_minutes: 15,
+            xp_reward: 50,
+            is_exam: true,
+            is_completed: examPassed,
+            is_unlocked: isExamUnlocked,
+            is_current: !examPassed && isExamUnlocked,
+            status: examPassed ? 'completed' : (isExamUnlocked ? 'unlocked' : 'locked')
+          };
+
+          ch.lessons = [...formattedRegularLessons, examLesson];
+          ch.total_count = ch.lessons.length;
+          ch.completed_count = chapterCompletedCount + (examPassed ? 1 : 0);
+          ch.is_unlocked = isChapterUnlocked;
+
+          // Chapter Badge determination
+          if (!isChapterUnlocked) {
+            ch.badge = 'LOCKED';
+            ch.status = 'LOCKED';
+          } else if (examPassed) {
+            if (ch.exam && ch.exam.best_score == 100) ch.badge = 'PERFECT';
+            else if (ch.exam && ch.exam.best_score >= 80) ch.badge = 'CLEAR';
+            else if (ch.exam && ch.exam.best_score >= 60) ch.badge = 'PASS';
+            else ch.badge = ch.badge === 'PERFECT' ? 'PERFECT' : (ch.badge === 'CLEAR' ? 'CLEAR' : (ch.badge === 'PASS' ? 'PASS' : 'PASS'));
+            ch.status = 'COMPLETED';
+          } else if (chapterCompletedCount > 0) {
+            ch.badge = 'IN_PROGRESS';
+            ch.status = 'IN_PROGRESS';
+          } else {
+            ch.badge = 'UNLOCKED';
+            ch.status = 'IN_PROGRESS';
+          }
+
+          previousChapterExamPassed = examPassed;
+        });
+      }
+
+      course.total_lessons = totalLessonsAcrossCourse || course.total_lessons || 50;
+      course.completed_lessons = totalCompletedLessonsAcrossCourse;
+      course.progress = course.total_lessons > 0 ? Math.round((course.completed_lessons / course.total_lessons) * 100) : 0;
+
+      globalCourseData = course;
+
+      // Populate Breadcrumb & Course Header
+      const title = course.title || 'Course Details';
+      const desc = course.description || 'Interactive coding curriculum designed for your academic level.';
+      const groupName = course.academic_group_name || course.academic_group || course.academicGroupLabel || 'Preparatory';
+
+      const bcEl = document.getElementById('breadcrumb-course-name');
+      if (bcEl) bcEl.textContent = title;
+      const titleEl = document.getElementById('course-title-text');
+      if (titleEl) titleEl.textContent = title;
+      const descEl = document.getElementById('course-desc-text');
+      if (descEl) descEl.textContent = desc;
+      
+      const badgeEl = document.getElementById('course-academic-tier-badge');
+      if (badgeEl) {
+        badgeEl.innerHTML = `<span class="badge badge-secondary-track">${groupName}</span>`;
+      }
+
+      // Overall Progress
+      const pct = course.progress || 0;
+      const pctEl = document.getElementById('course-progress-pct');
+      if (pctEl) pctEl.textContent = `${pct}%`;
+      const fillEl = document.getElementById('course-progress-fill');
+      if (fillEl) fillEl.style.width = `${pct}%`;
+      const subEl = document.getElementById('course-completed-lessons-sub');
+      if (subEl) subEl.textContent = `${course.completed_lessons || 0} of ${course.total_lessons || (course.chapters ? course.chapters.reduce((acc, c) => acc + (c.lessons ? c.lessons.length : 5), 0) : 50)} lessons completed`;
+
+      const actionWrap = document.getElementById('course-action-btn-wrap');
+      if (actionWrap) {
+        if (pct >= 100) {
+          actionWrap.innerHTML = `
+            <button onclick="scrollToDirectory()" class="btn btn-secondary btn-sm" style="width: 100%; justify-content: center; font-size: 0.8rem; padding: 0.45rem 0.8rem; border-radius: 6px;">
+              <i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i>
+              <span>Review Course</span>
+            </button>
+          `;
+        } else {
+          actionWrap.innerHTML = `
+            <button onclick="continueOrStartCourse()" class="btn btn-primary btn-sm" style="width: 100%; justify-content: center; font-size: 0.8rem; padding: 0.45rem 0.8rem; border-radius: 6px;">
+              <i data-lucide="play" style="width: 14px; height: 14px;"></i>
+              <span>${pct > 0 ? 'Continue Learning' : 'Start Course'}</span>
+            </button>
+          `;
+        }
+      }
+
+      // Default selected chapter: first chapter or currently selected
+      if (course.chapters && course.chapters.length > 0) {
+        if (!selectedChapterId || !course.chapters.some(ch => ch.id === selectedChapterId)) {
+          const firstInProg = course.chapters.find(ch => ch.badge === 'IN_PROGRESS' || ch.badge === 'UNLOCKED') || course.chapters[0];
+          selectedChapterId = firstInProg ? firstInProg.id : course.chapters[0].id;
+        }
+      }
+
+      renderChapterDirectoryList();
+      renderActiveChapterPanel();
+
+      // Render Capstone Project if available
+      if (course.capstone_project) {
+        const cap = course.capstone_project;
+        const capEl = document.getElementById('course-capstone-container');
+        if (capEl) {
+          capEl.innerHTML = `
+            <div class="special-action-card" style="border-left-color: #6366F1; background: #0A0E1A;">
+              <div class="special-card-left">
+                <div class="special-icon-box" style="background: rgba(99, 102, 241, 0.15); color: #818CF8;">
+                  <i data-lucide="award" style="width: 24px; height: 24px;"></i>
+                </div>
+                <div class="special-info">
+                  <h4 style="font-size: 1.1rem; font-weight: 800; color: #FFFFFF;">${cap.title}</h4>
+                  <p style="font-size: 0.85rem; color: #94A3B8;">${cap.description || 'Complete all chapters to submit your final capstone project!'}</p>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <span class="badge" style="background: rgba(245,158,11,0.2); color: #FBBF24; margin-bottom: 0.5rem; display: inline-block;">+${cap.xp_reward || 150} XP</span>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      courseId = getCurrentCourseId();
+      // Wait for the API response in loadCourseDetails instead of rendering a client fallback prematurely.
+
+      try {
+        if (window.session && typeof window.session.requireAuth === 'function') {
+          await window.session.requireAuth(['student']);
+        }
+        if (typeof window.renderSidebar === 'function') {
+          window.renderSidebar('my-courses');
+        }
+      } catch (e) {
+        console.warn('Session init notice', e);
+      }
+
+      await loadCourseDetails();
+      checkCelebrationModal();
+    });
+
+    function handleLockedLessonClick(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      showToast('🔒 Locked! Please complete the previous lesson first!', 'warning');
+    }
+
+    function checkCelebrationModal() {
+      const params = (typeof urlParams !== 'undefined' && urlParams) ? urlParams : (window.urlParams || new URLSearchParams(window.location.search));
+      if (params.get('celebration') === 'true') {
+        const modal = document.getElementById('celebration-modal-overlay');
+        if (modal) {
+          modal.style.display = 'flex';
+          const xpEl = document.getElementById('celebration-xp-text');
+          if (xpEl && window.CURRICULUM_INDEX) {
+            xpEl.textContent = `+${window.CURRICULUM_INDEX.getUserXp() || 25} XP`;
+          }
+          const pctEl = document.getElementById('celebration-pct-text');
+          if (pctEl && globalCourseData) {
+            pctEl.textContent = `${globalCourseData.progress || 0}%`;
+          }
+        }
+      }
+      if (params.get('locked_warning') === 'true') {
+        showToast('🔒 Locked! Please complete the previous lesson first!', 'warning');
+        const cleanUrl = window.location.pathname + '?id=' + encodeURIComponent(courseId);
+        window.history.replaceState({}, document.title, cleanUrl);
+      }
+    }
+
+    function closeCelebrationModal() {
+      const modal = document.getElementById('celebration-modal-overlay');
+      if (modal) modal.style.display = 'none';
+      const cleanUrl = window.location.pathname + '?id=' + encodeURIComponent(courseId);
+      window.history.replaceState({}, document.title, cleanUrl);
+    }
+
+    async function loadCourseDetails() {
+      try {
+        let course = null;
+
+        // Try API fetch
+        try {
+          const res = await window.apiFetch(`/api/courses/get.php?id=${encodeURIComponent(courseId)}&_t=${Date.now()}`);
+          if (res && res.ok) {
+            const json = await res.json();
+            if (json && json.success && json.data && json.data.chapters && json.data.chapters.length > 0) {
+              course = json.data;
+              // Sync completed lessons to localStorage so client tracking is 100% accurate
+              if (window.CURRICULUM_INDEX && typeof window.CURRICULUM_INDEX.syncCompletedLessonsToStorage === 'function' && Array.isArray(course.chapters)) {
+                const completedIds = [];
+                course.chapters.forEach(ch => {
+                  (ch.lessons || []).forEach(l => {
+                    if (l.is_completed || l.status === 'completed') {
+                      completedIds.push(l.id);
+                    }
+                  });
+                });
+                // We must also merge this with existing completed lessons to not wipe other courses' progress
+                // Since this page only knows about the current course, this might overwrite others if we aren't careful.
+                // Wait! To make backend fully authoritative, we shouldn't wipe other courses if we only have one course.
+                // Let's rely on dashboard/courses page to full-sync, and here we just use the API response.
+                // Or better, let's just NOT sync to local storage here since the API is authoritative!
+              }
+            }
+          }
+        } catch (apiErr) {
+          console.warn('API fetch warning, using local curriculum fallback', apiErr);
+        }
+
+        // Fallback to local curriculum index
+        if (!course) {
+          course = resolveClientCourse(courseId);
+        }
+
+        if (course) {
+          applyCourseData(course);
+        }
+      } catch (e) {
+        console.error('Error in loadCourseDetails', e);
+      }
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function renderChapterDirectoryList() {
+      const container = document.getElementById('chapter-directory-list');
+      if (!container || !globalCourseData || !globalCourseData.chapters) return;
+
+      container.innerHTML = globalCourseData.chapters.map((ch, idx) => {
+        const isActive = ch.id === selectedChapterId;
+        const chNumStr = String(ch.chapter_number || idx + 1).padStart(2, '0');
+
+        let badgeHtml = '';
+        if (ch.badge === 'PERFECT') {
+          badgeHtml = `<span class="chapter-badge-tag badge-perfect">◆ PERFECT</span>`;
+        } else if (ch.badge === 'CLEAR') {
+          badgeHtml = `<span class="chapter badge-tag badge-clear" style="background: rgba(34, 211, 238, 0.1); color: #22D3EE; border: 1px solid rgba(34, 211, 238, 0.3);">◆ CLEAR</span>`;
+        } else if (ch.badge === 'PASS') {
+          badgeHtml = `<span class="chapter-badge-tag badge-clear">◆ PASS</span>`;
+        } else if (ch.badge === 'NEEDS_RETRY' || ch.badge === 'NEEDS_IMPROVEMENT') {
+          badgeHtml = `<span class="chapter-badge-tag badge-needs-improvement">● NEEDS RETRY</span>`;
+        } else if (ch.badge === 'IN_PROGRESS' || ch.badge === 'UNLOCKED') {
+          badgeHtml = `<span class="chapter-badge-tag badge-in-progress">● IN PROGRESS</span>`;
+        } else {
+          badgeHtml = `<span class="chapter-badge-tag badge-locked">🔒 LOCKED</span>`;
+        }
+
+        return `
+          <div class="chapter-dir-card ${isActive ? 'is-active' : ''}" onclick="selectChapter('${ch.id}')">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+              <span style="font-size: 0.75rem; font-weight: 800; color: #38BDF8; font-family: var(--font-mono, monospace);">
+                CHAPTER ${chNumStr} ${ch.icon_symbol || '🚀'}
+              </span>
+              ${badgeHtml}
+            </div>
+            
+            <h3 style="font-size: 1.05rem; font-weight: 800; color: #FFFFFF; margin-bottom: 0.35rem; line-height: 1.3;">
+              ${ch.title}
+            </h3>
+            
+            <p style="font-size: 0.8rem; color: var(--text-muted, #94A3B8); line-height: 1.4; margin-bottom: 0.75rem;">
+              ${ch.description || 'Master core coding concepts and complete the chapter assessment.'}
+            </p>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #64748B;">
+              <span><i data-lucide="book-open" style="width: 14px; height: 14px; vertical-align: middle;"></i> ${ch.total_count || ch.lessons.length} Lessons</span>
+              <span style="color: #60A5FA; font-weight: 700; display: inline-flex; align-items: center; gap: 0.25rem;">
+                View Chapter <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function selectChapter(chapterId) {
+      if (globalCourseData && globalCourseData.chapters) {
+        const ch = globalCourseData.chapters.find(c => c.id === chapterId);
+        if (ch && ch.badge === 'LOCKED') {
+          showToast('🔒 Chapter Locked! Complete all previous lessons to unlock.', 'warning');
+          return;
+        }
+      }
+      selectedChapterId = chapterId;
+      renderChapterDirectoryList();
+      renderActiveChapterPanel();
+
+      if (window.innerWidth <= 992) {
+        openMobileChapterDrawer();
+      }
+    }
+
+    function renderActiveChapterPanel() {
+      const container = document.getElementById('chapter-detail-panel');
+      if (!container || !globalCourseData || !globalCourseData.chapters) return;
+
+      const selected = globalCourseData.chapters.find(ch => ch.id === selectedChapterId) || globalCourseData.chapters[0];
+      if (!selected) return;
+
+      const chNumStr = String(selected.chapter_number || 1).padStart(2, '0');
+
+      let badgeHtml = '';
+      if (selected.badge === 'PERFECT') {
+        badgeHtml = `<span class="chapter-badge-tag badge-perfect">◆ PERFECT</span>`;
+      } else if (selected.badge === 'CLEAR') {
+        badgeHtml = `<span class="chapter-badge-tag badge-clear" style="background: rgba(34, 211, 238, 0.1); color: #22D3EE; border: 1px solid rgba(34, 211, 238, 0.3);">◆ CLEAR</span>`;
+      } else if (selected.badge === 'PASS') {
+        badgeHtml = `<span class="chapter-badge-tag badge-clear">◆ PASS</span>`;
+      } else if (selected.badge === 'NEEDS_RETRY' || selected.badge === 'NEEDS_IMPROVEMENT') {
+        badgeHtml = `<span class="chapter-badge-tag badge-needs-improvement">● NEEDS RETRY</span>`;
+      } else if (selected.badge === 'IN_PROGRESS' || selected.badge === 'UNLOCKED') {
+        badgeHtml = `<span class="chapter-badge-tag badge-in-progress">● IN PROGRESS</span>`;
+      } else {
+        badgeHtml = `<span class="chapter-badge-tag badge-locked">🔒 LOCKED</span>`;
+      }
+
+      // Render Lessons List
+      const lessons = selected.lessons || [];
+      const lessonsHtml = lessons.length === 0 ? `
+        <div style="text-align: center; color: var(--text-muted); padding: 2rem;">No lessons created for this chapter yet.</div>
+      ` : lessons.map((l, lIdx) => {
+        const lNumStr = String(l.lesson_number || lIdx + 1).padStart(2, '0');
+        const isChapterAccessible = selected.badge !== 'LOCKED' && selected.status !== 'LOCKED' && selected.is_unlocked !== false;
+        const isFirstLessonInChapter = (lIdx === 0 || l.lesson_number === 1);
+        const isLocked = !l.is_unlocked && !l.is_completed && !(isChapterAccessible && isFirstLessonInChapter);
+
+        let statusIconHtml = '';
+        if (l.is_completed) {
+          statusIconHtml = `<span style="color: #34D399; font-size: 0.85rem; font-weight: 800;"><i data-lucide="check-circle" style="width: 18px; height: 18px; vertical-align: middle;"></i> Completed</span>`;
+        } else if (l.is_current) {
+          statusIconHtml = `<span style="color: #38BDF8; font-size: 0.85rem; font-weight: 800;"><i data-lucide="play-circle" style="width: 18px; height: 18px; vertical-align: middle;"></i> Current</span>`;
+        } else if (l.is_unlocked) {
+          statusIconHtml = `<span style="color: #FBBF24; font-size: 0.85rem; font-weight: 800;"><i data-lucide="arrow-right-circle" style="width: 18px; height: 18px; vertical-align: middle;"></i> Start</span>`;
+        } else {
+          statusIconHtml = `<span style="color: #64748B; font-size: 0.85rem; font-weight: 700;"><i data-lucide="lock" style="width: 16px; height: 16px; vertical-align: middle;"></i> Locked</span>`;
+        }
+
+        const isAssessment = l.is_exam || l.lesson_number === 5 || (l.title && (l.title.toLowerCase().includes('assessment') || l.title.toLowerCase().includes('quiz') || l.title.toLowerCase().includes('exam')));
+        const itemExamId = (selected.exam && selected.exam.id) ? selected.exam.id : selected.id;
+        const lessonHref = isAssessment ? `/student/exam.html?id=${encodeURIComponent(itemExamId)}&chapter_id=${encodeURIComponent(selected.id)}&course=${encodeURIComponent(courseId)}` : `/student/lesson.html?id=${encodeURIComponent(l.id)}&course=${encodeURIComponent(courseId)}`;
+
+        if (isLocked) {
+          return `
+            <div class="lesson-item-card is-locked" onclick="handleLockedLessonClick(event, ${isAssessment})" style="opacity: 0.55; cursor: not-allowed; border-color: ${isAssessment ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255,255,255,0.05)'}; background: ${isAssessment ? 'rgba(15,23,42,0.6)' : 'rgba(15,23,42,0.4)'};">
+              <div class="lesson-item-left">
+                <div class="lesson-num-icon" style="background: rgba(255,255,255,0.05); color: #64748B;">
+                  ${isAssessment ? '<i data-lucide="file-text" style="width: 14px; height: 14px;"></i>' : lNumStr}
+                </div>
+                <div>
+                  <div class="lesson-item-title" style="color: #64748B;">${l.title}</div>
+                  <div class="lesson-item-meta" style="color: #475569;">${l.duration_minutes || 15} min • +${l.xp_reward || 50} XP ${isAssessment ? '• 🔒 Complete Lesson 4 to Unlock' : ''}</div>
+                </div>
+              </div>
+              <div>
+                ${statusIconHtml}
+              </div>
+            </div>
+          `;
+        }
+
+        return `
+          <a href="${lessonHref}" class="lesson-item-card" style="${isAssessment ? 'border: 1px solid rgba(56, 189, 248, 0.4); background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 58, 138, 0.3));' : ''}">
+            <div class="lesson-item-left">
+              <div class="lesson-num-icon" style="${isAssessment ? 'background: rgba(56, 189, 248, 0.2); color: #38BDF8; font-weight: 800;' : ''}">
+                ${isAssessment ? '<i data-lucide="award" style="width: 15px; height: 15px;"></i>' : lNumStr}
+              </div>
+              <div>
+                <div class="lesson-item-title" style="${isAssessment ? 'color: #38BDF8; font-weight: 800;' : ''}">${l.title}</div>
+                <div class="lesson-item-meta">${l.duration_minutes || 15} min • +${l.xp_reward || 50} XP ${isAssessment ? '• 🏆 Chapter Assessment' : ''}</div>
+              </div>
+            </div>
+            <div>
+              ${statusIconHtml}
+            </div>
+          </a>
+        `;
+      }).join('');
+
+        const contentHtml = `
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <div>
+              <span style="font-size: 0.75rem; font-weight: 800; color: #38BDF8; font-family: var(--font-mono, monospace);">
+                CHAPTER ${chNumStr} OVERVIEW • <span style="color: ${selected.status === 'COMPLETED' ? '#34D399' : '#FBBF24'};">${(selected.status || 'IN_PROGRESS').replace('_', ' ').toUpperCase()}</span>
+              </span>
+              <h2 style="font-size: 1.4rem; font-weight: 800; color: #FFFFFF; margin-top: 0.2rem;">${selected.title}</h2>
+            </div>
+            <div>
+              ${badgeHtml}
+            </div>
+          </div>
+
+          <p style="font-size: 0.9rem; color: #94A3B8; line-height: 1.5; margin-bottom: 1.25rem;">
+            ${selected.description || 'Master all topics in this chapter and complete the final chapter assessment quiz to earn your chapter badge!'}
+          </p>
+
+          <div>
+            <h3 style="font-size: 1.1rem; font-weight: 800; color: #FFFFFF; margin-bottom: 0.75rem;">
+              Chapter Lessons &amp; Assessment (${lessons.length})
+            </h3>
+            <div class="lessons-list-grid">
+              ${lessonsHtml}
+            </div>
+          </div>
+        `;
+
+        container.innerHTML = contentHtml;
+        document.getElementById('mobile-drawer-body').innerHTML = contentHtml;
+
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      function escapeHtml(text) {
+        if (!text) return '';
+        return text
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function checkChapterPredictAnswer(chosen, correct, explanationEncoded) {
+        const expl = decodeURIComponent(explanationEncoded);
+        const feedbackEl = document.getElementById('predict-feedback-box');
+        if (!feedbackEl) return;
+        feedbackEl.style.display = 'block';
+        if (chosen === correct) {
+          feedbackEl.style.background = 'rgba(16, 185, 129, 0.15)';
+          feedbackEl.style.border = '1px solid rgba(16, 185, 129, 0.4)';
+          feedbackEl.style.color = '#34D399';
+          feedbackEl.innerHTML = `<strong>✓ Correct! Option ${chosen} is right.</strong><br>${expl}`;
+        } else {
+          feedbackEl.style.background = 'rgba(239, 68, 68, 0.15)';
+          feedbackEl.style.border = '1px solid rgba(239, 68, 68, 0.4)';
+          feedbackEl.style.color = '#F87171';
+          feedbackEl.innerHTML = `<strong>Incorrect.</strong> You chose ${chosen}. The correct answer is <strong>${correct}</strong>.<br>${expl}`;
+        }
+      }
+
+      function toggleBugSolution() {
+        const wrap = document.getElementById('bug-solution-wrap');
+        const btnText = document.getElementById('bug-toggle-btn-text');
+        if (!wrap) return;
+        if (wrap.style.display === 'none') {
+          wrap.style.display = 'block';
+          if (btnText) btnText.textContent = 'Hide Solution';
+        } else {
+          wrap.style.display = 'none';
+          if (btnText) btnText.textContent = 'Reveal Solution';
+        }
+      }
+
+    function scrollToDirectory() {
+      const dirEl = document.getElementById('chapter-directory-list');
+      if (dirEl) {
+        dirEl.scrollIntoView({ behavior: 'smooth' });
+      }
+      if (globalCourseData && globalCourseData.chapters && globalCourseData.chapters.length > 0) {
+        selectChapter(globalCourseData.chapters[0].id);
+      }
+    }
+
+    function continueOrStartCourse() {
+      if (!globalCourseData || !globalCourseData.chapters) return;
+      for (const ch of globalCourseData.chapters) {
+        if (ch.lessons && ch.lessons.length > 0) {
+          for (const l of ch.lessons) {
+            if (!l.is_completed && l.is_unlocked) {
+              const isAssessment = l.lesson_number === 5 || (l.title && (l.title.toLowerCase().includes('assessment') || l.title.toLowerCase().includes('quiz') || l.title.toLowerCase().includes('exam')));
+              const itemExamId = (ch.exam && ch.exam.id) ? ch.exam.id : ch.id;
+              window.location.href = isAssessment 
+                ? `/student/exam.html?id=${encodeURIComponent(itemExamId)}&chapter_id=${encodeURIComponent(ch.id)}` 
+                : `/student/lesson.html?id=${encodeURIComponent(l.id)}&course=${encodeURIComponent(courseId)}`;
+              return;
+            }
+          }
+        }
+      }
+      scrollToDirectory();
+    }
+
+    function openMobileChapterDrawer() {
+      document.getElementById('mobile-chapter-drawer').classList.add('is-active');
+    }
+
+    function closeMobileChapterDrawer(e) {
+      document.getElementById('mobile-chapter-drawer').classList.remove('is-active');
+    }
+
+    function handleLockedLessonClick(e, isExam) {
+      if (e && e.preventDefault) e.preventDefault();
+      if (isExam) {
+        showToast('🔒 Complete Lesson 4 to unlock the Chapter Final Exam & Assessment!', 'warning');
+      } else {
+        showToast('🔒 Locked! Please complete the previous lesson first to unlock.', 'warning');
+      }
+    }
+  </script>
+</body>
+</html>

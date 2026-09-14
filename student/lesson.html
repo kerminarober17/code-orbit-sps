@@ -1,0 +1,3230 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Lesson - SPS Code Orbit</title>
+  <link rel="stylesheet" href="../css/global.css?v=2.1">
+  <link rel="stylesheet" href="../css/components.css?v=2.1">
+  <link rel="stylesheet" href="../css/dashboard.css?v=2.1">
+  <link rel="stylesheet" href="../css/lesson.css?v=2.1">
+  <link rel="stylesheet" href="../css/responsive.css?v=1.2">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --bg-dark: #070A14;
+      --card-bg: rgba(16, 23, 42, 0.75);
+      --card-border: rgba(112, 214, 255, 0.25);
+      --accent-blue: #70D6FF;
+      --accent-cyan: #70D6FF;
+      --accent-green: #6EE7B7;
+      --accent-purple: #C084FC;
+      --accent-pink: #FF9EBB;
+      --accent-yellow: #FFE699;
+      --text-main: #FFFFFF;
+      --text-muted: #94A3B8;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 10%, #0D1127 0%, #070A14 100%);
+      color: var(--text-main);
+      font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Fixed Cosmic Background Layer (Z-Index -1 ensures ZERO overlap) */
+    .space-universe-backdrop {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: -1 !important;
+      pointer-events: none !important;
+      overflow: hidden !important;
+    }
+
+    /* SPS Code Orbit Top Nav */
+    .cyber-top-nav {
+      background: rgba(7, 10, 20, 0.9);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(112, 214, 255, 0.15);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .cyber-logo-tag {
+      font-weight: 900;
+      font-size: 1.15rem;
+      letter-spacing: 0.05em;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .cyber-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: #64748B;
+    }
+
+    .cyber-breadcrumb a {
+      color: #94A3B8;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .cyber-breadcrumb a:hover {
+      color: #70D6FF;
+    }
+
+    /* Lesson Stepper Header */
+    .cyber-stepper-bar {
+      background: rgba(13, 17, 39, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.75rem 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      position: relative;
+      z-index: 20;
+    }
+
+    .stepper-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #64748B;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .stepper-node.is-active {
+      color: #70D6FF;
+    }
+
+    .stepper-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #1E293B;
+      color: #94A3B8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .stepper-node.is-active .stepper-circle {
+      background: linear-gradient(135deg, #70D6FF, #C084FC);
+      color: #070A14;
+      box-shadow: 0 0 12px rgba(112, 214, 255, 0.5);
+    }
+
+    /* Lesson Banner Title */
+    .cyber-lesson-banner {
+      background: rgba(16, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(112, 214, 255, 0.25);
+      border-left: 4px solid #70D6FF;
+      border-radius: var(--radius-xl, 22px);
+      padding: 1.25rem 1.75rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 20px rgba(112, 214, 255, 0.1);
+      position: relative;
+      z-index: 10;
+    }
+
+    .lesson-wrapper-narrow {
+      max-width: 900px;
+      margin: 1.5rem auto 4rem auto;
+      padding: 0 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+      box-sizing: border-box;
+      width: 100%;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Dialogue Bubbles & Avatars (Shady vs Cody) */
+    .dialogue-stream-card {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .chat-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .chat-row-shady {
+      flex-direction: row-reverse;
+      margin-left: auto;
+    }
+
+    .chat-row-cody {
+      flex-direction: row;
+      margin-right: auto;
+    }
+
+    .chat-avatar-frame {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      flex-shrink: 0;
+      background: #0F172A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .chat-row-shady .chat-avatar-frame {
+      border-color: #3B82F6;
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+    }
+
+    .chat-row-cody .chat-avatar-frame {
+      border-color: #10B981;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+    }
+
+    .chat-avatar-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .chat-speech-bubble {
+      max-width: 78%;
+      background: #0D1322;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 1rem 1.35rem;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #E2E8F0;
+      position: relative;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    }
+
+    .chat-row-shady .chat-speech-bubble {
+      border-top-right-radius: 4px;
+      border-color: rgba(59, 130, 246, 0.35);
+    }
+
+    .chat-row-cody .chat-speech-bubble {
+      border-top-left-radius: 4px;
+      border-color: rgba(16, 185, 129, 0.35);
+    }
+
+    .chat-speaker-tag {
+      font-size: 0.75rem;
+      font-weight: 800;
+      font-family: var(--font-mono, monospace);
+      margin-bottom: 0.35rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .speaker-shady { color: #60A5FA; }
+    .speaker-cody { color: #34D399; }
+
+    /* Concept Banner Diagrams / Illustrations */
+    .concept-banner-card {
+      background: #0D1322;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+      margin: 1rem 0;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      z-index: 10;
+    }
+
+    .concept-tag {
+      position: absolute;
+      top: -12px;
+      left: 16px;
+      background: #0A0E1A;
+      border: 1px solid #38BDF8;
+      border-radius: 6px;
+      padding: 0.15rem 0.65rem;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #38BDF8;
+      font-family: var(--font-mono, monospace);
+    }
+
+    /* Fixed-Size Code Editor Window with Strict Internal Scrolling */
+    .cyber-ide-container {
+      background: #090D16;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+      position: relative;
+      z-index: 10;
+      max-width: 100%;
+    }
+
+    .cyber-ide-header {
+      background: #050811;
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .ide-os-dots {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot-red { width: 10px; height: 10px; border-radius: 50%; background: #EF4444; }
+    .dot-yellow { width: 10px; height: 10px; border-radius: 50%; background: #F59E0B; }
+    .dot-green { width: 10px; height: 10px; border-radius: 50%; background: #10B981; }
+
+    .ide-tab-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      font-family: var(--font-mono, monospace);
+      color: #94A3B8;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* Task Prompt Box */
+    .ide-task-prompt {
+      background: #0D1322;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.85rem 1.25rem;
+      font-size: 0.9rem;
+      color: #CBD5E1;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    /* Strict Fixed Height Grid for Workspace */
+    .ide-split-workspace {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      height: 380px;
+      max-height: 420px;
+      overflow: hidden;
+    }
+
+    @media (max-width: 768px) {
+      .ide-split-workspace {
+        grid-template-columns: 1fr;
+        height: auto;
+        max-height: 720px;
+      }
+    }
+
+    .ide-code-panel {
+      background: #060913;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .ide-textarea-wrapper {
+      position: relative;
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .ide-line-numbers {
+      padding: 0.85rem 0.55rem;
+      background: #03050C;
+      color: #475569;
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      text-align: right;
+      user-select: none;
+      min-width: 2.5rem;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      height: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .ide-code-stack {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .ide-code-input {
+      position: relative;
+      z-index: 2;
+      display: block;
+      width: 100%;
+      height: 100% !important;
+      max-height: 100% !important;
+      background: #060913;
+      color: #F8FAFC;
+      border: none;
+      outline: none;
+      padding: 0.85rem;
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      resize: none;
+      white-space: pre;
+      tab-size: 2;
+      overflow-y: auto !important;
+      overflow-x: auto !important;
+      box-sizing: border-box;
+      caret-color: #E2E8F0;
+    }
+
+    .ide-code-highlight {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      margin: 0;
+      padding: 0.85rem;
+      overflow: auto;
+      pointer-events: none;
+      white-space: pre;
+      tab-size: 2;
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #E2E8F0;
+      background: transparent;
+      z-index: 1;
+      box-sizing: border-box;
+    }
+
+    .ide-code-input.syntax-on {
+      color: transparent !important;
+      -webkit-text-fill-color: transparent;
+      background: transparent !important;
+    }
+
+    .btn-run-code {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: linear-gradient(135deg, #70D6FF, #C084FC);
+      color: #070A14;
+      border: none;
+      border-radius: 8px;
+      padding: 0.45rem 1.15rem;
+      font-weight: 800;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: 0 4px 12px rgba(112, 214, 255, 0.4);
+      z-index: 10;
+      transition: all 0.2s;
+    }
+
+    .btn-run-code:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(112, 214, 255, 0.6);
+    }
+
+    .ide-console-panel {
+      background: #02040A;
+      display: flex;
+      flex-direction: column;
+      padding: 0.85rem 1.15rem;
+      height: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .console-header {
+      font-size: 0.75rem;
+      font-weight: 800;
+      font-family: var(--font-mono, monospace);
+      color: #64748B;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .console-output-text {
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: 0.85rem;
+      color: #34D399;
+      white-space: pre-wrap;
+      word-break: break-word;
+      flex: 1;
+      height: 100%;
+      overflow-y: auto !important;
+      overflow-x: auto !important;
+    }
+
+    .live-html-preview {
+      width: 100%;
+      height: 100%;
+      min-height: 280px;
+      background: #FFFFFF;
+      border: none;
+      border-radius: 6px;
+      display: block;
+    }
+
+    /* Checkpoint Cards */
+    .checkpoint-card {
+      background: #0D1322;
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.75rem 0;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      position: relative;
+      z-index: 10;
+    }
+
+    .checkpoint-badge-tag {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #38BDF8;
+      font-family: var(--font-mono, monospace);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .checkpoint-question-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin: 0.5rem 0 1.25rem 0;
+      line-height: 1.5;
+    }
+
+    .checkpoint-option-btn {
+      width: 100%;
+      text-align: left;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 0.85rem 1.25rem;
+      color: #E2E8F0;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      cursor: pointer;
+      margin-bottom: 0.65rem;
+      transition: all 0.2s;
+      white-space: normal !important;
+      word-break: break-word !important;
+      line-height: 1.4 !important;
+      box-sizing: border-box;
+    }
+
+    .checkpoint-option-btn:hover:not(:disabled) {
+      background: rgba(56, 189, 248, 0.1);
+      border-color: #38BDF8;
+    }
+
+    .checkpoint-option-btn.is-correct {
+      background: rgba(16, 185, 129, 0.2) !important;
+      border-color: #34D399 !important;
+      color: #34D399 !important;
+      font-weight: 700;
+    }
+
+    .checkpoint-option-btn.is-wrong {
+      background: rgba(239, 68, 68, 0.2) !important;
+      border-color: #F87171 !important;
+      color: #F87171 !important;
+    }
+
+    /* Key Points Footer */
+    .key-points-footer-block {
+      background: linear-gradient(135deg, rgba(16, 23, 42, 0.85) 0%, rgba(13, 17, 39, 0.95) 100%);
+      border: 1px solid rgba(112, 214, 255, 0.3);
+      border-radius: 14px;
+      padding: 1.75rem;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+      position: relative;
+      z-index: 10;
+    }
+
+    .key-point-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      color: #E2E8F0;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 0.5rem;
+    }
+
+    .key-point-bullet {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(59, 130, 246, 0.2);
+      color: #60A5FA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* 8-Block Experience: Visual Diagram Card */
+    .visual-diagram-card {
+      background: #0A0F1D;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      position: relative;
+    }
+    .visual-diagram-pre {
+      background: #050811;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 1.25rem;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.9rem;
+      color: #70D6FF;
+      line-height: 1.45;
+      overflow-x: auto;
+      margin: 1rem 0 0.75rem 0;
+      white-space: pre;
+    }
+
+    /* 8-Block Experience: Concept Cheat Sheet */
+    .summary-takeaways-card {
+      background: linear-gradient(135deg, rgba(13, 27, 42, 0.9) 0%, rgba(10, 15, 29, 0.95) 100%);
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    /* 8-Block Experience: Micro-Quiz Quick Check */
+    .micro-quiz-card {
+      background: #0D1322;
+      border: 1px solid rgba(168, 85, 247, 0.45);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Dedicated Lesson End Visual Summary Banner */
+    .lesson-summary-banner-wrapper {
+      margin: 2rem 0;
+    }
+
+    .lesson-summary-banner-card {
+      background: linear-gradient(135deg, rgba(13, 20, 36, 0.95) 0%, rgba(7, 10, 20, 0.98) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(56, 189, 248, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .banner-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .banner-badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 50px;
+      padding: 0.35rem 0.9rem;
+      color: #38BDF8;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .banner-status-tag {
+      font-size: 0.8rem;
+      color: #94A3B8;
+      font-weight: 600;
+    }
+
+    .banner-image-container {
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #050811;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .lesson-summary-banner-img {
+      width: 100%;
+      max-height: 480px;
+      object-fit: contain;
+      display: block;
+      border-radius: 12px;
+    }
+
+    .banner-caption-footer {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.85rem;
+      color: #94A3B8;
+    }
+
+    .banner-placeholder-box {
+      border: 2px dashed rgba(56, 189, 248, 0.3);
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.4);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+    }
+
+    .banner-placeholder-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+    }
+
+    .banner-placeholder-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 0.35rem;
+    }
+
+    .banner-placeholder-text {
+      font-size: 0.85rem;
+      color: #94A3B8;
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+  
+    .ide-textarea-wrapper { position: relative; }
+    .ide-code-highlight {
+      position: absolute; inset: 0; margin: 0; padding: 0.85rem;
+      overflow: auto; pointer-events: none; white-space: pre; tab-size: 2;
+      font-family: 'Fira Code', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6;
+      color: #E2E8F0; background: transparent; z-index: 1; box-sizing: border-box;
+    }
+    .ide-code-input.syntax-on {
+      position: relative; z-index: 2; color: transparent !important; caret-color: #E2E8F0;
+      background: transparent !important; -webkit-text-fill-color: transparent;
+    }
+    .tok-kw { color: #C678DD; font-weight: 600; }
+    .tok-str { color: #98C379; }
+    .tok-num { color: #D19A66; }
+    .tok-com { color: #7F848E; font-style: italic; }
+    .tok-builtin { color: #61AFEF; }
+    .tok-bool { color: #E5C07B; }
+    .tok-op { color: #56B6C2; }
+    .quiz-code-block {
+      background: #0B1220; border: 1px solid rgba(56,189,248,0.35); border-radius: 10px;
+      padding: 0.85rem 1rem; margin: 0.5rem 0 1rem; font-family: 'Fira Code', Consolas, monospace;
+      font-size: 0.9rem; color: #E2E8F0; white-space: pre; overflow-x: auto;
+    }
+</style>
+</head>
+<body>
+
+  <!-- Background Layer (Z-Index -1 guarantees content is strictly above) -->
+  <div class="space-universe-backdrop" aria-hidden="true">
+    <div class="starfield-layer"></div>
+    <div class="starfield-layer-dense"></div>
+    <div class="nebula-swirl-container">
+      <div class="nebula-cloud nebula-blue"></div>
+      <div class="nebula-cloud nebula-purple"></div>
+    </div>
+  </div>
+
+  <!-- SPS Code Orbit Top Nav -->
+  <header class="cyber-top-nav">
+    <div class="cyber-logo-tag">
+      <i data-lucide="orbit" style="width: 22px; height: 22px; color: #38BDF8;"></i>
+      <span>SPS CODE ORBIT</span>
+    </div>
+
+    <div class="cyber-breadcrumb">
+      <a href="/student/courses.html">Courses</a>
+      <span>/</span>
+      <a href="/student/courses.html" id="breadcrumb-course-link">Course</a>
+      <span>/</span>
+      <span style="color: #F8FAFC; font-weight: 600;" id="breadcrumb-lesson-title">Lesson</span>
+    </div>
+
+    <div>
+      <a href="/student/courses.html" id="back-to-chapter-btn" class="btn btn-secondary btn-sm" style="border-radius: var(--radius-full); padding: 0.4rem 1rem;">
+        <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i>
+        <span>Chapter Directory</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Lesson Stepper Bar -->
+  <div class="cyber-stepper-bar">
+    <div class="stepper-node is-active" onclick="document.getElementById('dialogue-feed-container').scrollIntoView({behavior:'smooth'})">
+      <div class="stepper-circle">1</div>
+      <span>Interactive Stream</span>
+    </div>
+    <div style="width: 40px; height: 2px; background: rgba(255,255,255,0.1);"></div>
+    <div class="stepper-node" id="step-node-2" onclick="document.getElementById('practice-challenge-section')?.scrollIntoView({behavior:'smooth'}) || document.getElementById('dialogue-feed-container').scrollIntoView({behavior:'smooth'})">
+      <div class="stepper-circle">2</div>
+      <span>Practice Editor</span>
+    </div>
+    <div style="width: 40px; height: 2px; background: rgba(255,255,255,0.1);"></div>
+    <div class="stepper-node" id="step-node-review" onclick="document.getElementById('end-checkpoint-section').scrollIntoView({behavior:'smooth'})">
+      <div class="stepper-circle">🏁</div>
+      <span>Checkpoint &amp; Summary</span>
+    </div>
+  </div>
+
+  <!-- Main Lesson Wrap -->
+  <main class="lesson-wrapper-narrow">
+
+    <!-- Lesson Header Banner -->
+    <div class="cyber-lesson-banner">
+      <div>
+        <span style="font-size: 0.75rem; font-weight: 800; color: #38BDF8; font-family: var(--font-mono, monospace);" id="lesson-chapter-label">
+          CHAPTER LESSON
+        </span>
+        <h1 style="font-size: 1.5rem; font-weight: 800; color: #FFFFFF; margin: 0.2rem 0 0 0;" id="lesson-title-display">
+          Loading Lesson...
+        </h1>
+      </div>
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #FBBF24; font-weight: 800;" id="lesson-xp-badge">
+          +25 XP
+        </span>
+        <span id="lesson-completed-status-tag"></span>
+      </div>
+    </div>
+
+    <!-- Dialogue Stream (Shady vs Cody) -->
+    <div class="dialogue-stream-card" id="dialogue-feed-container">
+      <div style="text-align: center; color: var(--text-muted); padding: 3rem;">
+        Loading lesson dialogue stream...
+      </div>
+    </div>
+
+    <!-- DEDICATED LESSON VISUAL SUMMARY BANNER -->
+    <div class="lesson-summary-banner-wrapper" id="lesson-summary-banner-section">
+      <!-- Injected Dynamically by renderLessonSummaryBanner() -->
+    </div>
+
+    <!-- DEDICATED YOUTUBE "WANT TO LEARN MORE?" SECTION -->
+    <div class="youtube-learn-more-wrapper" id="youtube-learn-more-section">
+      <!-- Injected Dynamically by renderYouTubeSection() -->
+    </div>
+
+    <!-- MANDATORY END-OF-LESSON CHECKPOINT QUESTION -->
+    <div class="checkpoint-card" id="end-checkpoint-section">
+      <div class="checkpoint-badge-tag">
+        <i data-lucide="help-circle" style="width: 16px; height: 16px;"></i>
+        <span>MANDATORY CHECKPOINT QUESTION</span>
+      </div>
+      <h3 class="checkpoint-question-title" id="end-checkpoint-question-text">
+        Loading checkpoint question...
+      </h3>
+
+      <div id="end-checkpoint-options-container">
+        <!-- Dynamically generated options -->
+      </div>
+
+      <div id="end-checkpoint-feedback" style="margin-top: 1rem; font-size: 0.85rem; display: none;"></div>
+    </div>
+
+    <!-- Key Points Summary Footer Block -->
+    <div class="key-points-footer-block" id="key-points-summary-section">
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+        <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(59, 130, 246, 0.2); color: #60A5FA; display: flex; align-items: center; justify-content: center;">
+          <i data-lucide="check-square" style="width: 18px; height: 18px;"></i>
+        </div>
+        <div>
+          <h3 style="font-size: 1.15rem; font-weight: 800; color: #FFFFFF; margin: 0;">KEY POINTS OF THE LESSON</h3>
+          <p style="font-size: 0.8rem; color: #94A3B8; margin: 0;">Lesson recap and summary before claiming your XP reward.</p>
+        </div>
+      </div>
+
+      <div id="key-points-list-container">
+        <div class="key-point-item">
+          <div class="key-point-bullet">✓</div>
+          <div>Mastered fundamental syntax rules and logical principles.</div>
+        </div>
+        <div class="key-point-item">
+          <div class="key-point-bullet">✓</div>
+          <div>Executed interactive code and verified output in real-time.</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 1.5rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <button class="btn btn-secondary btn-pill btn-sm" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+          <i data-lucide="arrow-up" style="width: 14px; height: 14px;"></i>
+          <span>Review Lesson Top</span>
+        </button>
+
+        <div style="display: flex; gap: 0.75rem;" id="lesson-action-buttons">
+          <button class="btn btn-primary btn-pill" id="complete-lesson-btn" onclick="submitLessonCompletion()" style="padding: 0.75rem 1.75rem; font-weight: 800;">
+            <i data-lucide="check" style="width: 18px; height: 18px;"></i>
+            <span>Complete Lesson &amp; Claim XP</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="/js/session.js?v=5.0"></script>
+  <script src="/js/theme.js?v=5.0"></script>
+  <script src="/js/code-runner.js?v=6.0"></script>
+  <script src="/data/programming_foundations_curriculum.js?v=5.0"></script>
+  <script src="/data/python_foundations_curriculum.js?v=5.0"></script>
+  <script src="/data/python_level2_curriculum.js?v=5.3"></script>
+  <script src="/data/python_level2_exams.js?v=5.0"></script>
+  <script src="/data/curriculum_index.js?v=5.3"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    window.urlParams = urlParams;
+    let lessonId = urlParams.get('id') || urlParams.get('lesson') || '';
+
+    let lessonData = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!lessonId) {
+        lessonId = 'lesson-pf-1-1';
+      }
+
+      if (lessonId.startsWith('exam-')) {
+        window.location.href = `/student/exam.html?id=${encodeURIComponent(lessonId)}`;
+        return;
+      }
+
+      // Preserve course context from URL when present (Chapter Directory safety net)
+      const courseFromUrl = urlParams.get('course') || urlParams.get('course_id') || '';
+      if (courseFromUrl) {
+        const courseHref = `/student/course.html?id=${encodeURIComponent(courseFromUrl)}`;
+        const bc = document.getElementById('breadcrumb-course-link');
+        const back = document.getElementById('back-to-chapter-btn');
+        if (bc) bc.href = courseHref;
+        if (back) back.href = courseHref;
+      }
+
+      try {
+        if (window.session && window.session.requireAuth) {
+          await window.session.requireAuth(['student']);
+        }
+        await loadLessonFromApi();
+      } catch (e) {
+        console.warn('Backend sync deferred, rendering client fallback:', e);
+        resolveClientLesson(lessonId);
+      }
+    });
+
+    function lookupClientLesson(id) {
+      if (window.CURRICULUM_INDEX && typeof window.CURRICULUM_INDEX.getLessonByIdOrSlug === 'function') {
+        try {
+          return window.CURRICULUM_INDEX.getLessonByIdOrSlug(id);
+        } catch (err) {
+          console.error('getLessonByIdOrSlug failed:', err);
+          return null;
+        }
+      }
+      return null;
+    }
+
+    function resolveClientLesson(id) {
+      try {
+        const found = lookupClientLesson(id);
+        if (found) {
+          applyLessonData(found);
+          return true;
+        }
+      } catch (err) {
+        console.error('resolveClientLesson apply failed:', err);
+      }
+
+      // Default fallback
+      const fallback = {
+        id: id || 'lesson-pf-1-1',
+        title: '1.1: Technology in Everyday Life',
+        course_id: 'course-programming-foundations',
+        course_title: 'Programming Foundations — Start Here',
+        chapter_number: 1,
+        chapter_title: 'Chapter 1: Technology All Around Us',
+        xp_reward: 25,
+        predict_question: {
+          question: 'What makes a pocket calculator "technology" compared to paper and pencil?',
+          options: {
+            A: 'It is smaller in size',
+            B: 'It runs software that computes mathematical operations automatically',
+            C: 'It is more expensive',
+            D: 'It has a glass screen'
+          },
+          correct: 'B',
+          explanation: 'A calculator contains a microchip running programmed software instructions to process numbers automatically.'
+        },
+        blocks: [
+          {
+            block_type: 'dialogue',
+            content: {
+              shady: 'I woke up to my phone\'s alarm, took the elevator down, and hopped on the bus. Just an ordinary morning! 😅',
+              cody: 'Look closely, Shady! Every single moment of your morning was powered by technology running code written by programmers!'
+            }
+          },
+          {
+            block_type: 'text',
+            content: {
+              title: 'What is Technology Really?',
+              body: 'Technology is any tool, system, or machine created by humans to solve problems and make daily life easier.<br><br>Most modern technology runs on <strong>Software</strong> — precise programs written by programmers.'
+            }
+          }
+        ]
+      };
+      try {
+        applyLessonData(fallback);
+      } catch (err) {
+        console.error('fallback apply failed:', err);
+        const container = document.getElementById('dialogue-feed-container');
+        if (container) {
+          container.innerHTML = '<div style="padding:1.5rem;color:#F87171;">Unable to load this lesson. Please return to the course and try again.</div>';
+        }
+      }
+      return false;
+    }
+
+    async function loadLessonFromApi() {
+      // Prefer rich client curriculum (always available for PF / PY1 / L2) when API is sparse.
+      const clientLesson = lookupClientLesson(lessonId);
+
+      try {
+        if (!window.apiFetch) {
+          if (clientLesson) applyLessonData(clientLesson);
+          else resolveClientLesson(lessonId);
+          return;
+        }
+        const res = await window.apiFetch(`/api/lessons/get.php?id=${encodeURIComponent(lessonId)}&_t=${Date.now()}`);
+
+        // Locked / forbidden: do not bypass with client content
+        if (res.status === 403) {
+          let msg = 'This lesson is locked or you are not enrolled.';
+          try {
+            const errJson = await res.json();
+            if (errJson && (errJson.message || errJson.error)) msg = errJson.message || errJson.error;
+          } catch (e) {}
+          showToast('🔒 ' + msg, 'warning');
+          const courseGuess = (clientLesson && clientLesson.course_id)
+            || (String(lessonId).includes('pyl2') ? 'course-python-level-2'
+              : (String(lessonId).includes('pyf') ? 'course-python-foundations' : 'course-programming-foundations'));
+          setTimeout(() => {
+            window.location.href = `/student/course.html?id=${encodeURIComponent(courseGuess)}&locked_warning=true`;
+          }, 1200);
+          return;
+        }
+
+        if (!res.ok) {
+          // Non-403 server error: do NOT fall back to unguarded client content.
+          // Show an error UI so the student cannot bypass server-side locks via a
+          // 500 / 404 / network error.
+          const container = document.getElementById('dialogue-feed-container');
+          if (container) {
+            container.innerHTML = '<div style="padding:1.5rem;color:#F87171;">Unable to load this lesson. Please refresh the page or return to the course. (Error ' + res.status + ')</div>';
+          }
+          return;
+        }
+
+        const json = await res.json();
+        if (json.success && json.data) {
+          const apiData = json.data;
+
+          // Merge: if API has no blocks, use client curriculum blocks/content
+          if (clientLesson) {
+            if (!apiData.blocks || !apiData.blocks.length) {
+              apiData.blocks = clientLesson.blocks || [];
+            }
+            if (!apiData.dialogue && clientLesson.dialogue) apiData.dialogue = clientLesson.dialogue;
+            if (!apiData.concept && clientLesson.concept) apiData.concept = clientLesson.concept;
+            if (!apiData.showcase && clientLesson.showcase) apiData.showcase = clientLesson.showcase;
+            if (!apiData.challenge && clientLesson.challenge) apiData.challenge = clientLesson.challenge;
+            if (!apiData.playground && clientLesson.playground) apiData.playground = clientLesson.playground;
+            if (!apiData.course_id && clientLesson.course_id) apiData.course_id = clientLesson.course_id;
+            if (!apiData.course_title && clientLesson.course_title) apiData.course_title = clientLesson.course_title;
+            // Prefer client unlock for Ch1 L1 when API omits flags
+            if (apiData.is_unlocked == null && clientLesson.is_unlocked) apiData.is_unlocked = clientLesson.is_unlocked;
+          }
+
+          lessonData = apiData;
+
+          if (apiData.is_completed && window.CURRICULUM_INDEX && typeof window.CURRICULUM_INDEX.syncCompletedLessonsToStorage === 'function') {
+            window.CURRICULUM_INDEX.syncCompletedLessonsToStorage([apiData.id]);
+          }
+
+          applyLessonData(apiData);
+        } else {
+          if (clientLesson) applyLessonData(clientLesson);
+          else resolveClientLesson(lessonId);
+        }
+      } catch (err) {
+        console.error('Error loading lesson from API:', err);
+        // Network / fetch failure: do NOT fall back to unguarded client content.
+        // The server is unreachable so we cannot confirm authorization — show error.
+        const container = document.getElementById('dialogue-feed-container');
+        if (container) {
+          container.innerHTML = '<div style="padding:1.5rem;color:#F87171;">Unable to connect to the server. Please check your connection and refresh the page.</div>';
+        }
+      }
+    }
+
+    function checkLessonAccess(data) {
+      if (!data) return true;
+      if (data.is_unlocked || data.is_completed) return true;
+
+      // Lesson 1 of Chapter 1 of ANY course is always unlocked by default
+      const lid = String(data.id || '').toLowerCase();
+      const chNum = data.chapter_number || 1;
+      const lesNum = data.lesson_number || 1;
+      if (chNum === 1 && lesNum === 1) return true;
+      if (lid.endsWith('-1-1') || lid.endsWith('-01-1')) return true;
+
+      if (window.CURRICULUM_INDEX && window.CURRICULUM_INDEX.getCourseByIdOrSlug) {
+        const course = window.CURRICULUM_INDEX.getCourseByIdOrSlug(data.course_id);
+        if (course && course.chapters) {
+          for (const ch of course.chapters) {
+            for (const l of (ch.lessons || [])) {
+              if (l.id === data.id || l.slug === data.slug) {
+                // Return true if lesson is unlocked or already completed
+                return !!(l.is_unlocked || l.is_completed);
+              }
+            }
+          }
+        }
+      }
+      // Default DENY: if server did not set is_unlocked=true, treat as locked
+      return false;
+    }
+
+    function applyLessonData(data) {
+      if (!data) throw new Error('applyLessonData called with empty data');
+      lessonData = data;
+
+      let courseId = lessonData.course_id;
+      if (!courseId) {
+        const lid = String(lessonData.id || '').toLowerCase();
+        if (lid.includes('pyl2-') || lid.includes('python-level-2')) courseId = 'course-python-level-2';
+        else if (lid.includes('pyf-') || lid.includes('python')) courseId = 'course-python-foundations';
+        else courseId = 'course-programming-foundations';
+      }
+
+      // Check route guard locking access
+      if (!checkLessonAccess(lessonData)) {
+        showToast('🔒 Locked! Please complete the previous lesson first!', 'warning');
+        setTimeout(() => {
+          window.location.href = `/student/course.html?id=${encodeURIComponent(courseId)}&locked_warning=true`;
+        }, 1200);
+        return;
+      }
+
+      // Header Labels
+      document.getElementById('breadcrumb-lesson-title').textContent = lessonData.title;
+      document.getElementById('lesson-title-display').textContent = lessonData.title;
+      document.getElementById('lesson-chapter-label').textContent = `CHAPTER ${lessonData.chapter_number || 1}: ${lessonData.chapter_title || 'CURRICULUM'}`;
+      document.getElementById('lesson-xp-badge').textContent = `+${lessonData.xp_reward || 25} XP`;
+      
+      document.getElementById('breadcrumb-course-link').href = `/student/course.html?id=${encodeURIComponent(courseId)}`;
+      document.getElementById('back-to-chapter-btn').href = `/student/course.html?id=${encodeURIComponent(courseId)}`;
+
+      // Completed status check from backend API / CURRICULUM_INDEX
+      const isCompleted = !!(lessonData.is_completed || (window.CURRICULUM_INDEX && typeof window.CURRICULUM_INDEX.isLessonCompleted === 'function' && window.CURRICULUM_INDEX.isLessonCompleted(lessonData.id)));
+
+      const actionButtonsContainer = document.getElementById('lesson-action-buttons');
+
+      if (isCompleted) {
+        document.getElementById('lesson-completed-status-tag').innerHTML = `
+          <span class="badge" style="background: rgba(16,185,129,0.2); color: #34D399; font-weight: 800;">✓ Completed</span>
+        `;
+        
+        const nextLesson = findNextLessonStrict(lessonData.id, courseId || lessonData.course_id);
+        const nextUrl = buildNextLessonUrl(nextLesson, courseId || lessonData.course_id);
+
+        if (actionButtonsContainer) {
+          if (nextUrl) {
+            const isNextExam = nextLesson && (nextLesson.is_exam || String(nextLesson.id).startsWith('exam-'));
+            const nextLabel = isNextExam ? 'Take Chapter Exam →' : 'Next Lesson →';
+            const nextBg = isNextExam ? 'linear-gradient(135deg, #38BDF8, #2563EB)' : 'linear-gradient(135deg, #10B981, #059669)';
+
+            actionButtonsContainer.innerHTML = `
+              <button class="btn btn-secondary btn-pill" id="complete-lesson-btn" disabled style="pointer-events: none; background: #1E293B; border: 1px solid #334155; color: #94A3B8; cursor: not-allowed; padding: 0.75rem 1.25rem;">
+                <i data-lucide="check-circle" style="width: 18px; height: 18px; color: #34D399;"></i>
+                <span>Completed ✓ (+${lessonData.xp_reward || 25} XP)</span>
+              </button>
+              <a href="${nextUrl}" class="btn btn-primary btn-pill" style="padding: 0.75rem 1.75rem; font-weight: 800; background: ${nextBg}; border: none; color: #FFF; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+                <span>${nextLabel}</span>
+              </a>
+            `;
+          } else {
+            actionButtonsContainer.innerHTML = `
+              <button class="btn btn-secondary btn-pill" id="complete-lesson-btn" disabled style="pointer-events: none; background: #1E293B; border: 1px solid #334155; color: #94A3B8; cursor: not-allowed; padding: 0.75rem 1.25rem;">
+                <i data-lucide="check-circle" style="width: 18px; height: 18px; color: #34D399;"></i>
+                <span>Completed ✓ (+${lessonData.xp_reward || 25} XP)</span>
+              </button>
+              <a href="/student/course.html?id=${encodeURIComponent(courseId)}&celebration=true" class="btn btn-primary btn-pill" style="padding: 0.75rem 1.75rem; font-weight: 800; background: linear-gradient(135deg, #38BDF8, #2563EB); border: none; color: #FFF; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="award" style="width: 18px; height: 18px;"></i>
+                <span>Chapter Directory &amp; Celebration</span>
+              </a>
+            `;
+          }
+        }
+      }
+
+      renderDialogueStream();
+      renderLessonSummaryBanner();
+      // Activate syntax highlighting overlays on all code editors
+      setTimeout(() => {
+        document.querySelectorAll('textarea.ide-code-input').forEach(ta => {
+          const id = (ta.id || '').replace(/^code-textarea-/, '');
+          if (id) { try { syncSyntaxHighlight(id); } catch (e) {} }
+        });
+      }, 0);
+      renderYouTubeSection();
+      renderCheckpointQuestion();
+      if (window.lucide) window.lucide.createIcons();
+
+      // Initialize all live HTML preview iframes
+      setTimeout(() => {
+        (lessonData.blocks || []).forEach((b, idx) => {
+          const content = b.content_json || b.content || {};
+          const lang = (content.language || 'HTML').toLowerCase();
+          if (lang === 'html') {
+            if (b.block_type === 'code_example') {
+              const iframe = document.getElementById(`iframe-example-${idx}`);
+              renderLiveHtmlIframe(iframe, content.code || '');
+            } else if (b.block_type === 'playground') {
+              const iframe = document.getElementById(`iframe-playground-${idx}`);
+              renderLiveHtmlIframe(iframe, content.code || '');
+            } else if (b.block_type === 'exercise') {
+              const iframe = document.getElementById(`iframe-exercise-${idx}`);
+              renderLiveHtmlIframe(iframe, content.initialCode || '');
+            }
+          }
+        });
+      }, 50);
+    }
+
+    function renderDialogueStream() {
+      const container = document.getElementById('dialogue-feed-container');
+      const blocks = lessonData.blocks || [];
+
+      let html = '';
+      let keyPointsList = [];
+
+      if (blocks.length === 0) {
+        html += createChatRow('shady', `Welcome to ${lessonData.title}! Today we explore core programming logic together!`);
+        html += createChatRow('cody', "Bzzzt! I'm ready Shady! Let's write code instructions and test them live in our dark IDE!");
+        keyPointsList.push(`Mastered core concepts of ${lessonData.title}.`);
+      } else {
+        blocks.forEach((b, idx) => {
+          const content = b.content_json || b.content || {};
+
+          if (b.block_type === 'dialogue') {
+            const shadyText = content.shady || content.student || '';
+            const codyText = content.cody || '';
+            if (shadyText) html += createChatRow('shady', shadyText);
+            if (codyText) html += createChatRow('cody', codyText);
+          } else if (b.block_type === 'text') {
+            html += `
+              <div class="concept-banner-card">
+                <div class="concept-tag">${escapeHtml(content.title || 'CONCEPT SPOTLIGHT')}</div>
+                <div style="font-size: 0.95rem; color: #CBD5E1; line-height: 1.6; margin-top: 0.35rem;">
+                  ${content.body || ''}
+                </div>
+              </div>
+            `;
+            if (content.title) keyPointsList.push(content.title);
+          } else if (b.block_type === 'code_example') {
+            html += renderCyberIdeBlock(idx, content);
+            keyPointsList.push(`Analyzed code patterns: ${content.title || 'Syntax Examples'}`);
+          } else if (b.block_type === 'playground') {
+            html += renderPlaygroundBlock(idx, content);
+            keyPointsList.push(`Experimented in playground: ${content.title || 'Sandbox'}`);
+          } else if (b.block_type === 'exercise') {
+            html += renderExerciseBlock(idx, content);
+            keyPointsList.push(`Completed coding challenge: ${content.title || 'Interactive Practice'}`);
+          } else if (b.block_type === 'summary') {
+            if (!lessonData._capturedSummary) {
+              lessonData._capturedSummary = content;
+            }
+          } else if (b.block_type === 'quick_check' || b.block_type === 'quiz') {
+            html += renderQuickCheckBlock(idx, content);
+          }
+        });
+      }
+
+      container.innerHTML = html;
+
+      const displayKeyPoints = (keyPointsList.length > 0) ? keyPointsList : (lessonData.key_points || []);
+      if (displayKeyPoints.length > 0) {
+        document.getElementById('key-points-list-container').innerHTML = displayKeyPoints.map(kp => `
+          <div class="key-point-item">
+            <div class="key-point-bullet">✓</div>
+            <div>${escapeHtml(kp)}</div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function generateNaturalYouTubeQuery(lesson) {
+      if (!lesson) return 'programming for beginners';
+      
+      let customQuery = lesson.youtube_query || '';
+      
+      function cleanQuery(str) {
+        if (!str) return '';
+        return str
+          .replace(/\b(python adventures|web adventures|web explorers|frontend builder|javascript developer|scratch adventures|digital creators|code puzzles|programming foundations|sps code orbit|code orbit)\b/gi, '')
+          .replace(/chapter \d+:\s*/gi, '')
+          .replace(/lesson \d+:\s*/gi, '')
+          .replace(/first words in code:\s*/gi, '')
+          .replace(/welcome to (the world of)?\s*/gi, '')
+          .replace(/your first look at\s*/gi, '')
+          .replace(/meet the\s*/gi, '')
+          .replace(/let's begin:\s*/gi, '')
+          .replace(/\s+/g, ' ')
+          .trim();
+      }
+
+      if (customQuery) {
+        const cleaned = cleanQuery(customQuery);
+        if (cleaned.length > 3) return cleaned;
+      }
+
+      const courseTitle = (lesson.course_title || lesson.track || '').toLowerCase();
+      let tech = '';
+      if (courseTitle.includes('python')) tech = 'Python';
+      else if (courseTitle.includes('javascript') || courseTitle.includes('js')) tech = 'JavaScript';
+      else if (courseTitle.includes('frontend') || courseTitle.includes('web') || courseTitle.includes('html')) tech = 'HTML CSS';
+      else tech = 'programming';
+
+      let rawTitle = lesson.title || '';
+      if (rawTitle.includes(':')) {
+        const parts = rawTitle.split(':');
+        rawTitle = parts[parts.length - 1].trim();
+      }
+
+      let concept = cleanQuery(rawTitle);
+      if (/print/i.test(concept)) concept = 'print function';
+      else if (/variable/i.test(concept)) concept = 'variables';
+      else if (/if|choice|decision|condition/i.test(concept)) concept = 'if else conditions';
+      else if (/loop|for|while/i.test(concept)) concept = 'loops';
+      else if (/flexbox/i.test(concept)) concept = 'flexbox';
+      else if (/link|anchor/i.test(concept)) concept = 'links';
+      else if (/event|click/i.test(concept)) concept = 'events';
+
+      return `${tech} ${concept} for beginners`.replace(/\s+/g, ' ').trim();
+    }
+
+    function getExternalCompilerUrl(lang) {
+      const l = (lang || '').toLowerCase();
+      if (l.includes('py') || l.includes('python')) {
+        return 'https://www.programiz.com/python-programming/online-compiler/';
+      } else if (l.includes('js') || l.includes('javascript')) {
+        return 'https://www.programiz.com/javascript/online-compiler/';
+      } else if (l.includes('html') || l.includes('css') || l.includes('web')) {
+        return 'https://www.programiz.com/html/online-compiler/';
+      }
+      return 'https://www.programiz.com/python-programming/online-compiler/';
+    }
+
+    function renderExternalCompilerBar(lang) {
+      const url = getExternalCompilerUrl(lang);
+      return `
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 1rem; background: rgba(255, 255, 255, 0.02); border-top: 1px solid rgba(255, 255, 255, 0.08); font-size: 0.8rem; color: #94A3B8;">
+          <div style="display: flex; align-items: center; gap: 0.4rem;">
+            <i data-lucide="terminal-square" style="width: 14px; height: 14px; color: #38BDF8;"></i>
+            <span>Need a full environment? Try this code in an external compiler.</span>
+          </div>
+          <a href="${url}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 0.25rem 0.65rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;" title="Opens an external coding environment">
+            <span>Open External Compiler</span>
+            <i data-lucide="external-link" style="width: 12px; height: 12px;"></i>
+          </a>
+        </div>
+      `;
+    }
+
+    function renderYouTubeSection() {
+      const container = document.getElementById('youtube-learn-more-section');
+      if (!container) return;
+
+      const query = generateNaturalYouTubeQuery(lessonData);
+      const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+
+      container.innerHTML = `
+        <div class="youtube-learn-card" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(15, 23, 42, 0.7) 100%); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 18px; padding: 1.5rem; margin-bottom: 2rem; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <div style="width: 48px; height: 48px; border-radius: 14px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #EF4444; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 15px rgba(239, 68, 68, 0.25);">
+                <svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" fill="#EF4444"/>
+                  <path d="M9.545 15.568L15.818 12 9.545 8.432v7.136z" fill="#FFFFFF"/>
+                </svg>
+              </div>
+              <div>
+                <div style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.2rem 0.6rem; border-radius: 50px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #FCA5A5; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.25rem;">
+                  <i data-lucide="sparkles" style="width: 12px; height: 12px;"></i>
+                  <span>RECOMMENDED RESOURCE</span>
+                </div>
+                <h3 style="font-size: 1.25rem; font-weight: 800; color: #FFFFFF; margin: 0; letter-spacing: -0.01em;">🎥 Want to Learn More?</h3>
+                <p style="font-size: 0.88rem; color: #94A3B8; margin: 0.2rem 0 0 0;">
+                  Need another explanation? Explore top video guides for this concept on YouTube.
+                </p>
+              </div>
+            </div>
+
+            <a href="${searchUrl}" target="_blank" rel="noopener noreferrer" class="btn-youtube-search" style="display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.85rem 1.5rem; background: linear-gradient(135deg, #DC2626 0%, #EF4444 100%); color: #FFFFFF; font-weight: 800; font-size: 0.9rem; border-radius: 50px; text-decoration: none; transition: all 0.2s ease; box-shadow: 0 4px 16px rgba(220, 38, 38, 0.35); flex-shrink: 0;">
+              <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" fill="#FFFFFF"/>
+                <path d="M9.545 15.568L15.818 12 9.545 8.432v7.136z" fill="#DC2626"/>
+              </svg>
+              <span>Explore on YouTube</span>
+              <i data-lucide="external-link" style="width: 14px; height: 14px; opacity: 0.8;"></i>
+            </a>
+          </div>
+          <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: #64748B;">
+            <i data-lucide="info" style="width: 14px; height: 14px; color: #64748B; flex-shrink: 0;"></i>
+            <span>External videos are provided for additional learning and are not created by SPS Code Orbit.</span>
+          </div>
+        </div>
+      `;
+
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    // =========================================================================
+    // DYNAMIC VISUAL SUMMARY SYSTEM (INFOGRAPHIC ARCHITECTURE)
+    // =========================================================================
+
+    function formatTakeawaySentence(raw) {
+      if (!raw) return 'Code executes with precision: every instruction and symbol has an exact purpose.';
+      const clean = String(raw).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+      const firstSentence = clean.split(/(?<=[.!?])\s+/)[0] || clean;
+      return firstSentence.length > 130 ? firstSentence.substring(0, 127).trim() + '...' : firstSentence;
+    }
+
+    function resolveLessonSummaryData(lesson) {
+      if (!lesson) return null;
+
+      const explicit = lesson.summary || lesson._capturedSummary || lesson.visual_summary;
+      const title = lesson.title || 'Lesson Summary';
+      const cleanTitle = title.replace(/^\d+(\.\d+)?:\s*/, '');
+      const slug = String(lesson.slug || lesson.id || '').toLowerCase();
+
+      let codeSnippet = '';
+      let codeLanguage = 'Python';
+      let conceptTitle = '';
+      let conceptBody = '';
+      let challengeGoal = '';
+      let dialogueQuote = '';
+      const checkpointExp = (lesson.checkpoint_question && lesson.checkpoint_question.explanation) || '';
+      const predictExp = (lesson.predict_question && lesson.predict_question.explanation) || '';
+
+      if (lesson.blocks && Array.isArray(lesson.blocks)) {
+        lesson.blocks.forEach(b => {
+          const c = b.content_json || b.content || {};
+          if (b.block_type === 'code_example' && !codeSnippet && c.code) {
+            codeSnippet = c.code;
+            codeLanguage = c.language || 'Python';
+          } else if (b.block_type === 'text' && !conceptBody && c.body) {
+            conceptTitle = c.title || '';
+            conceptBody = c.body;
+          } else if (b.block_type === 'exercise' && !challengeGoal) {
+            challengeGoal = c.instruction || '';
+          } else if (b.block_type === 'dialogue' && !dialogueQuote && c.cody) {
+            dialogueQuote = c.cody;
+          }
+        });
+      }
+
+      if (!codeSnippet && lesson.showcase && lesson.showcase.code) {
+        codeSnippet = lesson.showcase.code;
+        codeLanguage = lesson.showcase.language || 'Python';
+      }
+      if (!conceptBody && lesson.concept) {
+        conceptTitle = lesson.concept.title || '';
+        conceptBody = lesson.concept.body || '';
+      }
+      if (!challengeGoal && lesson.challenge) {
+        challengeGoal = lesson.challenge.instruction || '';
+      }
+
+      const rawBannerUrl = (lesson && (lesson.banner_image_url || lesson.banner_image || lesson.visual_summary_image || lesson.summary_image)) || '';
+      const takeawaySentence = formatTakeawaySentence(checkpointExp || predictExp || lesson.takeaway || (explicit && (explicit.takeaway || explicit.anchor)));
+
+      // If explicit structured summary with defined archetype type
+      if (explicit && explicit.type) {
+        return {
+          type: explicit.type,
+          anchorLabel: explicit.anchorLabel || cleanTitle,
+          icon: explicit.icon || 'orbit',
+          takeaway: takeawaySentence,
+          steps: explicit.steps || [],
+          input: explicit.input,
+          process: explicit.process,
+          output: explicit.output,
+          code: explicit.code || codeSnippet,
+          language: explicit.language || codeLanguage,
+          outputPreview: explicit.outputPreview || '',
+          tokens: explicit.tokens || [],
+          left: explicit.left,
+          right: explicit.right,
+          root: explicit.root,
+          branches: explicit.branches || [],
+          concepts: explicit.concepts || [],
+          imageUrl: rawBannerUrl
+        };
+      }
+
+      const combinedText = `${lesson.title} ${slug} ${conceptTitle} ${(lesson.key_points || []).join(' ')}`.toLowerCase();
+
+      // 1. CONCEPT ARCHETYPE: Binary & Machine States (0 and 1, Transistors, Bits)
+      if (combinedText.includes('binary') || combinedText.includes('0 and 1') || combinedText.includes('0s and 1s') || combinedText.includes('how computers think') || combinedText.includes('transistors') || combinedText.includes('machine language')) {
+        return {
+          type: 'binary_states',
+          anchorLabel: 'Binary Logic & Machine States',
+          icon: 'binary',
+          takeaway: 'Computers only operate in 0 (OFF) and 1 (ON); programming languages translate human instructions into binary execution.',
+          imageUrl: rawBannerUrl
+        };
+      }
+
+      // 2. DECISION ARCHETYPE: Conditions & Branching (IF / ELSE)
+      if (combinedText.includes('decision') || combinedText.includes('condition') || combinedText.includes('if / else') || combinedText.includes('if-else') || combinedText.includes('if/else') || combinedText.includes('boolean') || combinedText.includes('true or false')) {
+        return {
+          type: 'decision_tree',
+          anchorLabel: 'Conditional Branching (IF / ELSE)',
+          icon: 'git-branch',
+          conditionText: 'score >= 90',
+          trueBranch: { action: "Run 'if' block", output: 'Award Star Badge' },
+          falseBranch: { action: "Run 'else' block", output: 'Keep Practicing' },
+          codeExample: 'if score >= 90:\n    print("Star Badge!")\nelse:\n    print("Keep Practicing!")',
+          takeaway: 'A condition evaluates to True or False, directing code execution down exactly one path.',
+          imageUrl: rawBannerUrl
+        };
+      }
+
+      // 3. VARIABLE ARCHETYPE: Memory & Storage Box
+      if (combinedText.includes('variable') || combinedText.includes('variables') || combinedText.includes('store data') || combinedText.includes('storage box') || combinedText.includes('naming values') || combinedText.includes('memory slot')) {
+        return {
+          type: 'variable_memory',
+          anchorLabel: 'Memory Slot (Variable)',
+          icon: 'box',
+          varName: 'player_name',
+          varValue: '"Kermina"',
+          address: 'RAM Slot #0x4F',
+          codeExample: 'player_name = "Kermina"',
+          takeaway: 'A variable is a labeled container in memory holding data your program can read and update.',
+          imageUrl: rawBannerUrl
+        };
+      }
+
+      // 4. COMPARISON ARCHETYPE (Hardware vs Software, Compiler vs Interpreter, Frontend vs Backend)
+      if (combinedText.includes(' vs ') || combinedText.includes(' vs. ') || combinedText.includes('vs.') || combinedText.includes('difference between')) {
+        if (combinedText.includes('compiler') || combinedText.includes('interpreter')) {
+          return {
+            type: 'comparison',
+            anchorLabel: 'Compiler vs. Interpreter',
+            icon: 'split',
+            left: {
+              badge: 'COMPILER',
+              title: 'Whole Translation',
+              points: [
+                'Scans entire source file first',
+                'Builds standalone binary file',
+                'Fast execution speed (C++, Rust)'
+              ]
+            },
+            right: {
+              badge: 'INTERPRETER',
+              title: 'Line-by-Line',
+              points: [
+                'Translates and runs on the fly',
+                'Immediate launch without build step',
+                'Great for scripting (Python, JS)'
+              ]
+            },
+            takeaway: 'Compilers translate the entire file before running; Interpreters translate and execute one line at a time.',
+            imageUrl: rawBannerUrl
+          };
+        }
+
+        if (combinedText.includes('frontend') || combinedText.includes('backend')) {
+          return {
+            type: 'comparison',
+            anchorLabel: 'Frontend vs. Backend',
+            icon: 'split',
+            left: {
+              badge: 'FRONTEND',
+              title: 'Client Interface',
+              points: [
+                'Runs inside the user browser',
+                'Built with HTML, CSS & JavaScript',
+                'Renders visual UI and animations'
+              ]
+            },
+            right: {
+              badge: 'BACKEND',
+              title: 'Cloud Engine',
+              points: [
+                'Runs on remote cloud servers',
+                'Built with Python, Node.js & databases',
+                'Handles user auth, data & security'
+              ]
+            },
+            takeaway: 'Frontend is the interactive experience the user sees; Backend is the engine that securely manages data.',
+            imageUrl: rawBannerUrl
+          };
+        }
+
+        return {
+          type: 'comparison',
+          anchorLabel: 'Hardware vs. Software',
+          icon: 'split',
+          left: {
+            badge: 'HARDWARE',
+            title: 'Physical Machinery',
+            points: [
+              'Equipment you can touch (CPU, RAM)',
+              'Electronic circuits and microchips',
+              'Cannot function without software'
+            ]
+          },
+          right: {
+            badge: 'SOFTWARE',
+            title: 'Digital Instructions',
+            points: [
+              'Lines of code and algorithms',
+              'Tells hardware how to calculate',
+              'Easily updated and shared online'
+            ]
+          },
+          takeaway: 'Hardware is the physical machine; software is the programmed intelligence that commands it.',
+          imageUrl: rawBannerUrl
+        };
+      }
+
+      // 5. INPUT - PROCESS - OUTPUT ARCHETYPE
+      if (combinedText.includes('input') && (combinedText.includes('process') || combinedText.includes('output') || combinedText.includes('ipo') || combinedText.includes('what does a computer actually do'))) {
+        return {
+          type: 'input_output',
+          anchorLabel: 'Input ➔ Process ➔ Output',
+          icon: 'arrow-right-circle',
+          takeaway: 'All computers function by reading Inputs, calculating in the Process phase, and displaying Outputs.',
+          input: {
+            label: 'INPUT',
+            val: combinedText.includes('technology') ? 'Keyboard, Mic & Buttons' : 'Raw Values & User Commands',
+            desc: 'Captured from user or environment'
+          },
+          process: {
+            label: 'PROCESS',
+            val: 'CPU & Code Logic',
+            desc: 'Calculates, filters, and decides'
+          },
+          output: {
+            label: 'OUTPUT',
+            val: 'Screen, Audio & Actuators',
+            desc: 'Visible results and sound'
+          },
+          imageUrl: rawBannerUrl
+        };
+      }
+
+      // 6. LOOP ARCHETYPE (Repetition, Loops, While, For)
+      if (combinedText.includes('loop') || combinedText.includes('repeat') || combinedText.includes('repetition') || combinedText.includes('while') || combinedText.includes('iteration')) {
+        return {
+          type: 'loop_cycle',
+          anchorLabel: 'Loop Execution Cycle',
+          icon: 'repeat',
+          steps: [
+            { title: 'Initialize', desc: 'Set starting counter' },
+            { title: 'Test Condition', desc: 'Is condition True?' },
+            { title: 'Run Body', desc: 'Execute code block' },
+            { title: 'Update & Repeat', desc: 'Increment counter & loop' }
+          ],
+          takeaway: 'Loops repeat a block of instructions automatically until a termination condition becomes False.',
+          imageUrl: rawBannerUrl
+        };
+      }
+
+      // 7. ALGORITHM & PROBLEM SOLVING ARCHETYPE
+      if (combinedText.includes('algorithm') || combinedText.includes('flowchart') || combinedText.includes('pseudocode') || combinedText.includes('problem solving') || combinedText.includes('debugging')) {
+        return {
+          type: 'algorithm_flow',
+          anchorLabel: 'Algorithmic Sequence',
+          icon: 'cpu',
+          steps: [
+            { number: '01', title: 'Input Problem', desc: 'Define goals & inputs' },
+            { number: '02', title: 'Exact Steps', desc: 'Execute unambiguous rules' },
+            { number: '03', title: 'Decision Test', desc: 'Validate expected state' },
+            { number: '04', title: 'Solved Outcome', desc: 'Guaranteed termination' }
+          ],
+          takeaway: 'An algorithm is an unambiguous, repeatable procedure that transforms a problem into a solution.',
+          imageUrl: rawBannerUrl
+        };
+      }
+
+      // 8. STEP-BY-STEP FLOW (Recipes, Sequence, Order Matters)
+      if (combinedText.includes('recipe') || combinedText.includes('sequence') || combinedText.includes('order matters') || combinedText.includes('step-by-step')) {
+        return {
+          type: 'steps',
+          anchorLabel: 'Step-by-Step Sequence',
+          icon: 'list-ordered',
+          steps: [
+            { number: '01', title: 'Read Top Line', desc: 'Instruction 1 begins' },
+            { number: '02', title: 'Strict Order', desc: 'No skipping steps' },
+            { number: '03', title: 'Target Result', desc: 'Planned goal reached' }
+          ],
+          takeaway: 'Order matters: computers execute code in strict sequential order, one instruction at a time.',
+          imageUrl: rawBannerUrl
+        };
+      }
+
+      // 9. HTML / HIERARCHY ARCHETYPE
+      if (combinedText.includes('html') || combinedText.includes('document structure') || combinedText.includes('skeleton') || combinedText.includes('tags') || combinedText.includes('web page')) {
+        return {
+          type: 'hierarchy',
+          anchorLabel: 'HTML Document Tree',
+          icon: 'layers',
+          root: { label: 'Root Document', tag: '<!DOCTYPE html> <html>' },
+          branches: [
+            { label: 'HEAD CONTAINER', tag: '<head>', desc: 'Title, metadata & styles (invisible)' },
+            { label: 'BODY CONTAINER', tag: '<body>', desc: 'All visible headings, text & buttons' }
+          ],
+          takeaway: 'HTML is a tree: all visible page content must sit inside the <body> tag.',
+          imageUrl: rawBannerUrl
+        };
+      }
+
+      // 10. CODE ANATOMY ARCHETYPE
+      if (codeSnippet || combinedText.includes('print') || combinedText.includes('console.log') || combinedText.includes('syntax') || combinedText.includes('first look at real code')) {
+        const lines = (codeSnippet || 'print("Hello, SPS Code Orbit!")').split('\n').map(l => l.trim()).filter(Boolean);
+        const sampleCode = lines[0] || 'print("Hello, SPS Code Orbit!")';
+        let tokens = [];
+
+        if (sampleCode.includes('print(')) {
+          tokens = [
+            { badge: 'COMMAND', token: 'print', desc: 'Built-in Python function that outputs to screen console.' },
+            { badge: 'WRAPPER', token: '( ... )', desc: 'Parentheses hold the arguments sent into the function.' },
+            { badge: 'STRING', token: '"..."', desc: 'Quotes tell Python this is exact text characters.' }
+          ];
+        } else if (sampleCode.includes('console.log')) {
+          tokens = [
+            { badge: 'OBJECT', token: 'console', desc: 'Standard browser developer console object.' },
+            { badge: 'METHOD', token: '.log()', desc: 'Outputs formatted data directly to the terminal.' },
+            { badge: 'ARGUMENT', token: '( ... )', desc: 'Parameters passed into the logging method.' }
+          ];
+        } else {
+          tokens = [
+            { badge: 'INSTRUCTION', token: 'Command', desc: 'Precise instruction understood by the computer.' },
+            { badge: 'EXECUTION', token: 'Sequence', desc: 'Runs sequentially from top to bottom.' }
+          ];
+        }
+
+        const match = sampleCode.match(/["']([^"']+)["']/);
+        const outPreview = match ? match[1] : 'Executed successfully';
+
+        return {
+          type: 'code_anatomy',
+          anchorLabel: 'Syntax Anatomy',
+          icon: 'code-2',
+          code: sampleCode,
+          language: codeLanguage,
+          outputPreview: outPreview,
+          tokens: tokens,
+          takeaway: 'Every character in code matters: exact lowercase commands, matched parentheses, and closing quotes prevent syntax errors.',
+          imageUrl: rawBannerUrl
+        };
+      }
+
+      // 11. GENERAL CONCEPT TREE (Fallback for other lessons)
+      return {
+        type: 'concept_tree',
+        anchorLabel: cleanTitle,
+        icon: 'sparkles',
+        anchorTitle: cleanTitle,
+        leaves: [
+          { title: 'Core Principle', sub: 'Fundamental digital logic rule', icon: 'zap' },
+          { title: 'System Application', sub: 'How code commands the computer', icon: 'cpu' },
+          { title: 'Practical Execution', sub: 'Reliable, repeatable outcome', icon: 'check-circle' }
+        ],
+        takeaway: takeawaySentence,
+        imageUrl: rawBannerUrl
+      };
+    }
+
+    // DIAGRAM RENDERER 1: Binary States & Translation Bridge
+    function renderBinaryStatesDiagram(summary) {
+      return `
+        <div class="summary-binary-grid">
+          <div class="binary-track-card">
+            <span class="binary-track-label"><i data-lucide="cpu" style="width: 13px; height: 13px;"></i> Machine Reality (Hardware)</span>
+            
+            <div class="binary-node-pill">
+              <i data-lucide="microchip" style="width: 15px; height: 15px; color: #70D6FF;"></i>
+              <span>COMPUTER PROCESSOR</span>
+            </div>
+
+            <div class="binary-arrow-down">
+              <svg width="18" height="22" viewBox="0 0 18 22" fill="none"><path d="M9 0V18M9 18L4 13M9 18L14 13" stroke="#70D6FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+
+            <div class="binary-node-pill" style="border-color: rgba(192, 132, 252, 0.4); color: #C084FC;">
+              <i data-lucide="zap" style="width: 15px; height: 15px;"></i>
+              <span>TWO ELECTRICAL STATES</span>
+            </div>
+
+            <div class="binary-arrow-down">
+              <svg width="160" height="20" viewBox="0 0 160 20" fill="none"><path d="M80 0V6M80 6H30V16M80 6H130V16M30 16L26 12M30 16L34 12M130 16L126 12M130 16L134 12" stroke="#70D6FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+
+            <div class="binary-states-split">
+              <div class="binary-state-box state-zero">
+                <div class="binary-bit-digit">0</div>
+                <div class="binary-bit-status">SWITCH OFF</div>
+                <div class="binary-bit-desc">0 Volts (No Current)</div>
+              </div>
+              <div class="binary-state-box state-one">
+                <div class="binary-bit-digit">1</div>
+                <div class="binary-bit-status">SWITCH ON</div>
+                <div class="binary-bit-desc">+5 Volts (Current Flow)</div>
+              </div>
+            </div>
+
+            <div class="binary-arrow-down">
+              <svg width="160" height="20" viewBox="0 0 160 20" fill="none"><path d="M30 0V10M130 0V10M30 10H130M80 10V18M80 18L76 14M80 18L84 14" stroke="#70D6FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+
+            <div class="binary-node-pill" style="border-color: rgba(110, 231, 183, 0.4); color: #6EE7B7;">
+              <i data-lucide="layers" style="width: 15px; height: 15px;"></i>
+              <span>BINARY DATA (BITS: 0 &amp; 1)</span>
+            </div>
+          </div>
+
+          <div class="binary-track-card">
+            <span class="binary-track-label" style="color: #C084FC; border-color: rgba(192, 132, 252, 0.25); background: rgba(192, 132, 252, 0.1);"><i data-lucide="code-2" style="width: 13px; height: 13px;"></i> The Programming Bridge</span>
+
+            <div class="binary-node-pill" style="border-color: rgba(56, 189, 248, 0.4);">
+              <i data-lucide="terminal" style="width: 15px; height: 15px; color: #38BDF8;"></i>
+              <span>HUMAN CODE: <code>print("Hi")</code></span>
+            </div>
+
+            <div class="binary-arrow-down">
+              <svg width="18" height="22" viewBox="0 0 18 22" fill="none"><path d="M9 0V18M9 18L4 13M9 18L14 13" stroke="#C084FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+
+            <div class="binary-node-pill" style="border-color: rgba(192, 132, 252, 0.4); color: #C084FC;">
+              <i data-lucide="refresh-cw" style="width: 15px; height: 15px;"></i>
+              <span>TRANSLATION (COMPILER / INTERPRETER)</span>
+            </div>
+
+            <div class="binary-arrow-down">
+              <svg width="18" height="22" viewBox="0 0 18 22" fill="none"><path d="M9 0V18M9 18L4 13M9 18L14 13" stroke="#C084FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+
+            <div class="binary-stream-code">
+              01001000 01101001 00100001
+            </div>
+
+            <div class="binary-arrow-down">
+              <svg width="18" height="22" viewBox="0 0 18 22" fill="none"><path d="M9 0V18M9 18L4 13M9 18L14 13" stroke="#6EE7B7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+
+            <div class="binary-node-pill" style="border-color: rgba(110, 231, 183, 0.4); color: #6EE7B7;">
+              <i data-lucide="check-circle" style="width: 15px; height: 15px;"></i>
+              <span>CPU EXECUTES ELECTRICAL SIGNALS</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // DIAGRAM RENDERER 2: Decision Tree (IF / ELSE)
+    function renderDecisionTreeDiagram(summary) {
+      const cond = summary.conditionText || 'score >= 90';
+      const tb = summary.trueBranch || { action: "Run 'if' block", output: 'Award Star Badge' };
+      const fb = summary.falseBranch || { action: "Run 'else' block", output: 'Keep Practicing' };
+      const code = summary.codeExample || 'if score >= 90:\n    print("Star Badge!")\nelse:\n    print("Keep Practicing!")';
+
+      return `
+        <div class="summary-decision-container">
+          <div class="decision-eval-box">
+            <i data-lucide="help-circle" style="width: 18px; height: 18px; color: #C084FC;"></i>
+            <span>CONDITION TEST: <code>${escapeHtml(cond)}</code></span>
+          </div>
+
+          <div style="display: flex; justify-content: center; width: 100%;">
+            <svg width="220" height="24" viewBox="0 0 220 24" fill="none"><path d="M110 0V6M110 6H45V20M110 6H175V20M45 20L41 16M45 20L49 16M175 20L171 16M175 20L179 16" stroke="#C084FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+
+          <div class="decision-branches-grid">
+            <div class="decision-branch-card branch-true">
+              <div class="decision-badge-true"><i data-lucide="check-circle" style="width: 14px; height: 14px;"></i> TRUE (YES)</div>
+              <div class="decision-action-title">${escapeHtml(tb.action)}</div>
+              <div class="decision-action-desc">➔ ${escapeHtml(tb.output)}</div>
+            </div>
+
+            <div class="decision-branch-card branch-false">
+              <div class="decision-badge-false"><i data-lucide="x-circle" style="width: 14px; height: 14px;"></i> FALSE (NO)</div>
+              <div class="decision-action-title">${escapeHtml(fb.action)}</div>
+              <div class="decision-action-desc">➔ ${escapeHtml(fb.output)}</div>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: center; width: 100%;">
+            <svg width="220" height="24" viewBox="0 0 220 24" fill="none"><path d="M45 0V14M175 0V14M45 14H175M110 14V22M110 22L106 18M110 22L114 18" stroke="#70D6FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+
+          <div style="font-size: 0.76rem; font-weight: 800; color: #70D6FF; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; gap: 0.35rem;">
+            <i data-lucide="arrow-down" style="width: 13px; height: 13px;"></i>
+            <span>CONTINUE PROGRAM EXECUTION</span>
+          </div>
+
+          <div style="width: 100%; max-width: 440px; margin-top: 0.5rem; background: rgba(7, 10, 20, 0.8); border: 1px solid rgba(112, 214, 255, 0.2); border-radius: 10px; padding: 0.75rem 1rem; font-family: var(--font-mono); font-size: 0.85rem; color: #F8FAFC;">
+            <pre style="margin: 0; white-space: pre-wrap;">${escapeHtml(code)}</pre>
+          </div>
+        </div>
+      `;
+    }
+
+    // DIAGRAM RENDERER 3: Variable & Memory Slot
+    function renderVariableMemoryDiagram(summary) {
+      const vName = summary.varName || 'player_name';
+      const vVal = summary.varValue || '"Kermina"';
+      const code = summary.codeExample || `${vName} = ${vVal}`;
+
+      return `
+        <div class="summary-variable-grid">
+          <div class="variable-memory-box">
+            <div style="font-size: 0.72rem; font-weight: 800; color: #70D6FF; text-transform: uppercase; letter-spacing: 0.06em;">VARIABLE IDENTIFIER</div>
+            
+            <div class="binary-node-pill" style="border-color: #38BDF8; font-family: var(--font-mono); font-size: 1rem; color: #38BDF8;">
+              <code>${escapeHtml(vName)}</code>
+            </div>
+
+            <div class="binary-arrow-down">
+              <svg width="18" height="20" viewBox="0 0 18 20" fill="none"><path d="M9 0V16M9 16L5 12M9 16L13 12" stroke="#70D6FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+
+            <div class="variable-slot-display">
+              <div class="variable-slot-meta">MEMORY BOX (RAM)</div>
+              <div class="variable-slot-value">${escapeHtml(vVal)}</div>
+              <div class="variable-slot-meta">Type: String • Stored Value</div>
+            </div>
+
+            <div class="binary-arrow-down">
+              <svg width="18" height="20" viewBox="0 0 18 20" fill="none"><path d="M9 0V16M9 16L5 12M9 16L13 12" stroke="#6EE7B7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+
+            <div style="font-size: 0.75rem; font-weight: 800; color: #6EE7B7; text-transform: uppercase;">
+              VALUE READY FOR PROGRAM TO READ &amp; UPDATE
+            </div>
+          </div>
+
+          <div style="background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.85rem;">
+            <div style="font-size: 0.72rem; font-weight: 800; color: #C084FC; text-transform: uppercase; letter-spacing: 0.06em;">SYNTAX ANATOMY</div>
+            
+            <div style="background: rgba(7, 10, 20, 0.9); border: 1px solid rgba(192, 132, 252, 0.3); border-radius: 8px; padding: 0.75rem 1rem; font-family: var(--font-mono); font-size: 1.05rem; color: #FFFFFF;">
+              <code>${escapeHtml(code)}</code>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem;">
+                <span class="summary-token-badge" style="background: rgba(56, 189, 248, 0.15); color: #38BDF8;">${escapeHtml(vName)}</span>
+                <span style="color: var(--text-muted);">➔ Labeled container name</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem;">
+                <span class="summary-token-badge" style="background: rgba(192, 132, 252, 0.15); color: #C084FC;">=</span>
+                <span style="color: var(--text-muted);">➔ Assignment (stores value inside)</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem;">
+                <span class="summary-token-badge" style="background: rgba(110, 231, 183, 0.15); color: #6EE7B7;">${escapeHtml(vVal)}</span>
+                <span style="color: var(--text-muted);">➔ Data stored in computer memory</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // DIAGRAM RENDERER 4: Loop Cycle
+    function renderLoopDiagram(summary) {
+      const steps = summary.steps || [
+        { title: 'Initialize', desc: 'Set starting counter' },
+        { title: 'Test Condition', desc: 'Is condition True?' },
+        { title: 'Run Body', desc: 'Execute code block' },
+        { title: 'Update & Repeat', desc: 'Increment counter & loop' }
+      ];
+
+      return `
+        <div class="summary-loop-chain">
+          ${steps.map((st, i) => `
+            <div class="loop-step-chip">
+              <div class="loop-step-chip-title">0${i + 1}: ${escapeHtml(st.title)}</div>
+              <div class="loop-step-chip-desc">${escapeHtml(st.desc)}</div>
+            </div>
+            ${i < steps.length - 1 ? `<div style="color: #70D6FF; font-weight: 800;">➔</div>` : ''}
+          `).join('')}
+          <div style="width: 100%; text-align: center; margin-top: 0.5rem; font-size: 0.75rem; color: #C084FC; font-weight: 800; text-transform: uppercase;">
+            ↺ Repeats until condition evaluates to FALSE ➔ Exits Loop
+          </div>
+        </div>
+      `;
+    }
+
+    // DIAGRAM RENDERER 5: Algorithm Flow
+    function renderAlgorithmDiagram(summary) {
+      const steps = summary.steps || [
+        { number: '01', title: 'Input Problem', desc: 'Define goals & inputs' },
+        { number: '02', title: 'Exact Steps', desc: 'Execute unambiguous rules' },
+        { number: '03', title: 'Decision Test', desc: 'Validate expected state' },
+        { number: '04', title: 'Solved Outcome', desc: 'Guaranteed termination' }
+      ];
+
+      return `
+        <div class="summary-flow-chain">
+          ${steps.map((step, idx) => `
+            <div class="summary-flow-node">
+              <div class="summary-flow-number">${escapeHtml(step.number || String(idx + 1).padStart(2, '0'))}</div>
+              <div class="summary-flow-node-title">${escapeHtml(step.title)}</div>
+              <div class="summary-flow-node-desc">${escapeHtml(step.desc)}</div>
+            </div>
+            ${idx < steps.length - 1 ? `<div class="summary-flow-arrow"><i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i></div>` : ''}
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // DIAGRAM RENDERER 6: Step-by-Step Flow (Recipes / Sequence)
+    function renderFlowDiagram(summary) {
+      const steps = summary.steps || [];
+      return `
+        <div class="summary-flow-chain">
+          ${steps.map((step, idx) => `
+            <div class="summary-flow-node">
+              <div class="summary-flow-number">${escapeHtml(step.number || String(idx + 1).padStart(2, '0'))}</div>
+              <div class="summary-flow-node-title">${escapeHtml(step.title || `Step ${idx + 1}`)}</div>
+              <div class="summary-flow-node-desc">${escapeHtml(step.desc || '')}</div>
+            </div>
+            ${idx < steps.length - 1 ? `<div class="summary-flow-arrow"><i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i></div>` : ''}
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // DIAGRAM RENDERER 7: Input - Process - Output
+    function renderIpoDiagram(summary) {
+      const inp = summary.input || { label: 'INPUT', val: 'Keyboard, Mouse, Sensors', desc: 'Raw values entered' };
+      const proc = summary.process || { label: 'PROCESS', val: 'CPU & Code Logic', desc: 'Calculates and decides' };
+      const out = summary.output || { label: 'OUTPUT', val: 'Screen Display, Audio', desc: 'Results presented' };
+
+      return `
+        <div class="summary-ipo-grid">
+          <div class="summary-ipo-card card-input">
+            <div class="summary-ipo-tag"><i data-lucide="download" style="width: 13px; height: 13px;"></i> ${escapeHtml(inp.label)}</div>
+            <div class="summary-ipo-val">${escapeHtml(inp.val)}</div>
+            <div class="summary-ipo-desc">${escapeHtml(inp.desc)}</div>
+          </div>
+
+          <div class="summary-ipo-connector">
+            <span class="summary-connector-line">──►</span>
+            <span class="summary-connector-label">Feeds</span>
+          </div>
+
+          <div class="summary-ipo-card card-process">
+            <div class="summary-ipo-tag"><i data-lucide="cpu" style="width: 13px; height: 13px;"></i> ${escapeHtml(proc.label)}</div>
+            <div class="summary-ipo-val">${escapeHtml(proc.val)}</div>
+            <div class="summary-ipo-desc">${escapeHtml(proc.desc)}</div>
+          </div>
+
+          <div class="summary-ipo-connector">
+            <span class="summary-connector-line">──►</span>
+            <span class="summary-connector-label">Yields</span>
+          </div>
+
+          <div class="summary-ipo-card card-output">
+            <div class="summary-ipo-tag"><i data-lucide="terminal" style="width: 13px; height: 13px;"></i> ${escapeHtml(out.label)}</div>
+            <div class="summary-ipo-val">${escapeHtml(out.val)}</div>
+            <div class="summary-ipo-desc">${escapeHtml(out.desc)}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    // DIAGRAM RENDERER 8: Code Syntax Anatomy
+    function renderCodeAnatomyDiagram(summary) {
+      const code = summary.code || 'print("Hello, SPS Code Orbit!")';
+      const lang = summary.language || 'Python';
+      const tokens = summary.tokens || [];
+      const out = summary.outputPreview || '';
+
+      return `
+        <div class="summary-code-anatomy">
+          <div class="summary-code-topbar">
+            <div class="summary-code-dots">
+              <span style="background: #EF4444;"></span>
+              <span style="background: #F59E0B;"></span>
+              <span style="background: #10B981;"></span>
+            </div>
+            <span>${escapeHtml(lang)} Syntax Blueprint</span>
+            <span style="color: #70D6FF;">● Verified</span>
+          </div>
+          <div class="summary-code-view">
+            <code>${escapeHtml(code)}</code>
+          </div>
+          ${out ? `
+            <div style="padding: 0.55rem 1.25rem; background: rgba(0, 0, 0, 0.4); border-top: 1px dashed rgba(255, 255, 255, 0.08); display: flex; align-items: center; gap: 0.6rem; font-size: 0.8rem; font-family: var(--font-mono);">
+              <i data-lucide="terminal" style="width: 14px; height: 14px; color: #6EE7B7;"></i>
+              <span style="color: #64748B;">Console Output:</span>
+              <span style="color: #6EE7B7; font-weight: 700;">${escapeHtml(out)}</span>
+            </div>
+          ` : ''}
+          <div class="summary-code-tokens-grid">
+            ${tokens.map(t => `
+              <div class="summary-token-card">
+                <span class="summary-token-badge" style="background: rgba(112, 214, 255, 0.15); color: #70D6FF;">${escapeHtml(t.badge)}: <code>${escapeHtml(t.token)}</code></span>
+                <div class="summary-token-desc">${escapeHtml(t.desc)}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // DIAGRAM RENDERER 9: Comparison Matrix (A vs B)
+    function renderComparisonDiagram(summary) {
+      const left = summary.left || { badge: 'CONCEPT A', title: 'Side A', points: [] };
+      const right = summary.right || { badge: 'CONCEPT B', title: 'Side B', points: [] };
+
+      return `
+        <div class="summary-comparison-grid">
+          <div class="summary-comp-card side-a">
+            <div style="font-size: 0.72rem; font-weight: 800; color: #38BDF8; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.25rem;">${escapeHtml(left.badge)}</div>
+            <h4 style="font-size: 1.05rem; font-weight: 800; margin: 0 0 0.65rem 0;">${escapeHtml(left.title)}</h4>
+            <div style="display: flex; flex-direction: column; gap: 0.45rem;">
+              ${(left.points || []).map(pt => `
+                <div style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.83rem; color: var(--text-secondary);">
+                  <i data-lucide="check" style="width: 14px; height: 14px; color: #38BDF8; flex-shrink: 0; margin-top: 2px;"></i>
+                  <span>${escapeHtml(pt)}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="summary-vs-badge">VS</div>
+
+          <div class="summary-comp-card side-b">
+            <div style="font-size: 0.72rem; font-weight: 800; color: #C084FC; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.25rem;">${escapeHtml(right.badge)}</div>
+            <h4 style="font-size: 1.05rem; font-weight: 800; margin: 0 0 0.65rem 0;">${escapeHtml(right.title)}</h4>
+            <div style="display: flex; flex-direction: column; gap: 0.45rem;">
+              ${(right.points || []).map(pt => `
+                <div style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.83rem; color: var(--text-secondary);">
+                  <i data-lucide="check" style="width: 14px; height: 14px; color: #C084FC; flex-shrink: 0; margin-top: 2px;"></i>
+                  <span>${escapeHtml(pt)}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // DIAGRAM RENDERER 10: Hierarchy Tree (HTML)
+    function renderHierarchyDiagram(summary) {
+      const root = summary.root || { label: 'Root Node', tag: '<!DOCTYPE html> <html>' };
+      const branches = summary.branches || [];
+
+      return `
+        <div class="summary-hierarchy-tree">
+          <div class="summary-tree-root">
+            <i data-lucide="layers" style="width: 16px; height: 16px;"></i>
+            <span>${escapeHtml(root.tag)}</span>
+            <span style="font-size: 0.72rem; opacity: 0.8; font-weight: normal;">(${escapeHtml(root.label)})</span>
+          </div>
+
+          <div class="summary-tree-branches">
+            ${branches.map(b => `
+              <div class="summary-tree-branch">
+                <div style="font-size: 0.7rem; font-weight: 800; color: #C084FC; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">${escapeHtml(b.label)}</div>
+                <div style="font-family: var(--font-mono); font-weight: 800; font-size: 0.95rem; color: var(--text-main); margin-bottom: 0.35rem;"><code>${escapeHtml(b.tag)}</code></div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">${escapeHtml(b.desc)}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // DIAGRAM RENDERER 11: General Concept Tree (Fallback)
+    function renderConceptTreeDiagram(summary) {
+      const anchor = summary.anchorTitle || 'Core Concept';
+      const leaves = summary.leaves || [];
+
+      return `
+        <div class="summary-concept-tree">
+          <div class="summary-tree-anchor">
+            <i data-lucide="${escapeHtml(summary.icon || 'sparkles')}" style="width: 16px; height: 16px; color: #70D6FF;"></i>
+            <span>${escapeHtml(anchor)}</span>
+          </div>
+
+          <div class="binary-arrow-down">
+            <svg width="18" height="20" viewBox="0 0 18 20" fill="none"><path d="M9 0V16M9 16L5 12M9 16L13 12" stroke="#70D6FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+
+          <div class="summary-tree-leaves-row">
+            ${leaves.map(lf => `
+              <div class="summary-tree-leaf-pill">
+                <div class="summary-concept-icon-box">
+                  <i data-lucide="${escapeHtml(lf.icon || 'check')}" style="width: 15px; height: 15px;"></i>
+                </div>
+                <div>
+                  <div class="summary-tree-leaf-title">${escapeHtml(lf.title)}</div>
+                  <div class="summary-tree-leaf-sub">${escapeHtml(lf.sub)}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTakeawayBanner(summary) {
+      const takeaway = summary.takeaway || '';
+      if (!takeaway) return '';
+
+      return `
+        <div class="summary-takeaway-banner">
+          <div class="summary-takeaway-icon">
+            <i data-lucide="sparkles" style="width: 18px; height: 18px;"></i>
+          </div>
+          <div>
+            <div class="summary-takeaway-label">✦ Takeaway &amp; Golden Rule</div>
+            <div class="summary-takeaway-text"><strong>${escapeHtml(takeaway)}</strong></div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderOptionalImage(summary) {
+      if (!summary.imageUrl) return '';
+      return `
+        <div class="summary-optional-image-wrapper">
+          <img src="${escapeHtml(summary.imageUrl)}" alt="Lesson Diagram" style="max-width: 100%; max-height: 440px; object-fit: contain; display: block; margin: 0 auto; border-radius: 8px;" onerror="this.parentElement.style.display='none';" />
+        </div>
+      `;
+    }
+
+    function renderLessonSummaryBanner() {
+      const bannerSection = document.getElementById('lesson-summary-banner-section');
+      if (!bannerSection) return;
+
+      const summary = resolveLessonSummaryData(lessonData);
+      if (!summary) {
+        bannerSection.innerHTML = '';
+        return;
+      }
+
+      let diagramHtml = '';
+      if (summary.type === 'binary_states') {
+        diagramHtml = renderBinaryStatesDiagram(summary);
+      } else if (summary.type === 'decision_tree') {
+        diagramHtml = renderDecisionTreeDiagram(summary);
+      } else if (summary.type === 'variable_memory') {
+        diagramHtml = renderVariableMemoryDiagram(summary);
+      } else if (summary.type === 'loop_cycle') {
+        diagramHtml = renderLoopDiagram(summary);
+      } else if (summary.type === 'algorithm_flow') {
+        diagramHtml = renderAlgorithmDiagram(summary);
+      } else if (summary.type === 'steps' || summary.type === 'flow') {
+        diagramHtml = renderFlowDiagram(summary);
+      } else if (summary.type === 'input_output' || summary.type === 'io') {
+        diagramHtml = renderIpoDiagram(summary);
+      } else if (summary.type === 'code_anatomy' || summary.type === 'code') {
+        diagramHtml = renderCodeAnatomyDiagram(summary);
+      } else if (summary.type === 'comparison') {
+        diagramHtml = renderComparisonDiagram(summary);
+      } else if (summary.type === 'hierarchy') {
+        diagramHtml = renderHierarchyDiagram(summary);
+      } else {
+        diagramHtml = renderConceptTreeDiagram(summary);
+      }
+
+      bannerSection.innerHTML = `
+        <div class="dynamic-summary-wrapper">
+          <div class="dynamic-summary-card">
+            <div class="dynamic-summary-accent-bar"></div>
+
+            <div class="dynamic-summary-header">
+              <div class="dynamic-summary-badge">
+                <i data-lucide="sparkles" style="width: 13px; height: 13px;"></i>
+                <span>VISUAL SUMMARY</span>
+              </div>
+
+              ${summary.anchorLabel ? `
+                <div class="dynamic-summary-type-tag">
+                  <i data-lucide="${escapeHtml(summary.icon || 'orbit')}" style="width: 13px; height: 13px;"></i>
+                  <span>${escapeHtml(summary.anchorLabel)}</span>
+                </div>
+              ` : ''}
+            </div>
+
+            ${diagramHtml}
+            ${renderTakeawayBanner(summary)}
+            ${renderOptionalImage(summary)}
+          </div>
+        </div>
+      `;
+
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function createChatRow(speaker, text) {
+      const isShady = speaker === 'shady';
+      const avatarSrc = isShady ? '/assets/shady/shady.png' : '/assets/cody/cody.png';
+      const fallbackAvatar = isShady
+        ? 'https://ui-avatars.com/api/?name=Shady&background=2563EB&color=FFF'
+        : 'https://ui-avatars.com/api/?name=Cody&background=10B981&color=FFF';
+
+      return `
+        <div class="chat-row ${isShady ? 'chat-row-shady' : 'chat-row-cody'}">
+          <div class="chat-avatar-frame">
+            <img src="${avatarSrc}" alt="${speaker}" onerror="this.src='${fallbackAvatar}'">
+          </div>
+          <div class="chat-speech-bubble">
+            <div class="chat-speaker-tag ${isShady ? 'speaker-shady' : 'speaker-cody'}">
+              ${isShady ? 'Shady (Lead Instructor)' : 'Cody (AI Mascot)'}
+            </div>
+            <div>${escapeHtml(text)}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCyberIdeBlock(idx, content) {
+      const rawCode = content.code || '<h1>Hello World</h1>';
+      const lang = content.language || 'HTML';
+      const isHtml = lang.toLowerCase() === 'html';
+
+      return `
+        <div class="cyber-ide-container">
+          <div class="cyber-ide-header">
+            <div class="ide-os-dots">
+              <div class="dot-red"></div>
+              <div class="dot-yellow"></div>
+              <div class="dot-green"></div>
+            </div>
+            <div class="ide-tab-title">
+              <i data-lucide="code" style="width: 14px; height: 14px; color: #38BDF8;"></i>
+              <span>${escapeHtml(content.title || (isHtml ? 'index.html' : 'main.js'))} (${lang})</span>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="navigator.clipboard.writeText(\`${escapeJs(rawCode)}\`); showToast('Code copied!', 'success');" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;">
+              <i data-lucide="copy" style="width: 12px; height: 12px;"></i> Copy
+            </button>
+          </div>
+
+          <div class="ide-task-prompt">
+            <div>
+              <span style="font-weight: 800; color: #38BDF8;">⚡ CONCEPT EXAMPLE:</span>
+              <span style="margin-left: 0.5rem;">${escapeHtml(content.explanation || 'Review the syntax and test execution in the live sandbox.')}</span>
+            </div>
+          </div>
+
+          <div class="ide-split-workspace">
+            <div class="ide-code-panel">
+              <div class="ide-textarea-wrapper">
+                <div class="ide-line-numbers" id="lines-example-${idx}">1<br>2<br>3<br>4</div>
+                <textarea class="ide-code-input" id="code-textarea-example-${idx}" oninput="updateLineNumbers('example-${idx}')" onscroll="syncLineScroll('example-${idx}')" spellcheck="false">${escapeHtml(rawCode)}</textarea>
+                <button type="button" class="btn-run-code" onclick="runIdeCode('example-${idx}', '${lang}')">
+                  <i data-lucide="play" style="width: 12px; height: 12px;"></i> Run Code
+                </button>
+              </div>
+            </div>
+
+            <div class="ide-console-panel">
+              <div class="console-header">
+                <span>&gt; ${isHtml ? 'LIVE HTML & CSS PREVIEW' : 'CONSOLE OUTPUT (STDOUT)'}</span>
+              </div>
+              <div id="console-out-example-${idx}" class="console-output-text">
+                ${isHtml ? `<iframe class="live-html-preview" id="iframe-example-${idx}"></iframe>` : 'Click "Run Code" to execute script...'}
+              </div>
+            </div>
+          </div>
+          ${renderExternalCompilerBar(lang)}
+        </div>
+      `;
+    }
+
+    function renderExerciseBlock(idx, content) {
+      const initialCode = content.initialCode || '<h1>Orbit Base</h1>';
+      const lang = content.language || 'HTML';
+      const isHtml = lang.toLowerCase() === 'html';
+
+      return `
+        <div class="cyber-ide-container" id="practice-challenge-section" style="border-color: rgba(112, 214, 255, 0.45); box-shadow: 0 0 25px rgba(112, 214, 255, 0.15);">
+          <div class="cyber-ide-header" style="background: linear-gradient(90deg, #0A1128, #050811);">
+            <div class="ide-os-dots">
+              <div class="dot-red"></div>
+              <div class="dot-yellow"></div>
+              <div class="dot-green"></div>
+            </div>
+            <div class="ide-tab-title">
+              <i data-lucide="terminal" style="width: 14px; height: 14px; color: #70D6FF;"></i>
+              <span style="color: #70D6FF; font-weight: 800;">CHALLENGE: ${escapeHtml(content.title || 'Interactive Practice')}</span>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <button type="button" class="btn btn-secondary btn-sm" onclick="resetExerciseCode(${idx}, \`${escapeJs(initialCode)}\`)" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;">
+                <i data-lucide="rotate-ccw" style="width: 12px; height: 12px;"></i> Reset
+              </button>
+            </div>
+          </div>
+
+          <div class="ide-task-prompt" style="background: rgba(112, 214, 255, 0.08); border-bottom: 1px solid rgba(112, 214, 255, 0.2);">
+            <div>
+              <div style="font-weight: 800; color: #70D6FF; margin-bottom: 0.25rem;">🎯 MISSION INSTRUCTION:</div>
+              <div style="color: #FFFFFF; font-size: 0.95rem;">${escapeHtml(content.instruction || 'Follow the instructions and write your solution below.')}</div>
+              ${content.hint ? `<div id="hint-box-${idx}" style="display: none; margin-top: 0.5rem; color: #FDE047; font-size: 0.85rem;">💡 <strong>Hint:</strong> ${escapeHtml(content.hint)}</div>` : ''}
+            </div>
+            ${content.hint ? `<button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('hint-box-${idx}').style.display = document.getElementById('hint-box-${idx}').style.display === 'none' ? 'block' : 'none';" style="font-size: 0.75rem; padding: 0.3rem 0.6rem; flex-shrink: 0;">Hint</button>` : ''}
+          </div>
+
+          <div class="ide-split-workspace">
+            <div class="ide-code-panel">
+              <div class="ide-textarea-wrapper">
+                <div class="ide-line-numbers" id="lines-exercise-${idx}">1<br>2<br>3<br>4</div>
+                <textarea class="ide-code-input" id="code-textarea-exercise-${idx}" oninput="updateLineNumbers('exercise-${idx}')" onscroll="syncLineScroll('exercise-${idx}')" spellcheck="false">${escapeHtml(initialCode)}</textarea>
+                <button type="button" class="btn-run-code" onclick="testExerciseSolution(${idx}, '${lang}', \`${escapeJs(content.expectedOutput || '')}\`, \`${escapeJs(content.successMessage || 'Great work!')}\`)">
+                  <i data-lucide="play" style="width: 12px; height: 12px;"></i> Test Solution
+                </button>
+              </div>
+            </div>
+
+            <div class="ide-console-panel">
+              <div class="console-header">
+                <span>&gt; ${isHtml ? 'LIVE HTML & CSS PREVIEW' : 'EXECUTION OUTPUT'}</span>
+                <span id="challenge-status-badge-${idx}" style="font-size: 0.75rem; color: #94A3B8;">Awaiting test</span>
+              </div>
+              <div id="console-out-exercise-${idx}" class="console-output-text">
+                ${isHtml ? `<iframe class="live-html-preview" id="iframe-exercise-${idx}"></iframe>` : 'Click "Test Solution" to verify code...'}
+              </div>
+            </div>
+          </div>
+          ${renderExternalCompilerBar(lang)}
+        </div>
+      `;
+    }
+
+    function renderVisualBlock(idx, content) {
+      const visualInner = content.html 
+        ? `<div style="margin: 0.75rem 0;">${content.html}</div>`
+        : `<pre class="visual-diagram-pre">${escapeHtml(content.diagram || '')}</pre>`;
+      const captionText = content.caption || content.explanation || '';
+
+      return `
+        <div class="visual-diagram-card">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+            <div style="font-size: 0.8rem; font-weight: 800; color: #70D6FF; letter-spacing: 0.05em; text-transform: uppercase; display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="eye" style="width: 16px; height: 16px; color: #70D6FF;"></i>
+              <span>VISUAL MENTAL MODEL: ${escapeHtml(content.title || 'Concept Diagram')}</span>
+            </div>
+          </div>
+          ${visualInner}
+          ${captionText ? `
+            <div style="font-size: 0.9rem; color: #94A3B8; line-height: 1.5; margin-top: 0.5rem;">
+              💡 <strong>Observation:</strong> ${escapeHtml(captionText)}
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    function renderPlaygroundBlock(idx, content) {
+      const rawCode = content.code || '// Write and test your code here';
+      const lang = content.language || 'HTML';
+      const isHtml = lang.toLowerCase() === 'html';
+
+      return `
+        <div class="cyber-ide-container" style="border-color: rgba(56, 189, 248, 0.4); box-shadow: 0 0 20px rgba(56, 189, 248, 0.1);">
+          <div class="cyber-ide-header" style="background: linear-gradient(90deg, #09192F, #050811);">
+            <div class="ide-os-dots">
+              <div class="dot-red"></div>
+              <div class="dot-yellow"></div>
+              <div class="dot-green"></div>
+            </div>
+            <div class="ide-tab-title">
+              <i data-lucide="sparkles" style="width: 14px; height: 14px; color: #38BDF8;"></i>
+              <span style="color: #38BDF8; font-weight: 800;">SANDBOX: ${escapeHtml(content.title || 'Live Experimentation')} (${lang})</span>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="navigator.clipboard.writeText(\`${escapeJs(rawCode)}\`); showToast('Sandbox code copied!', 'success');" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;">
+              <i data-lucide="copy" style="width: 12px; height: 12px;"></i> Copy
+            </button>
+          </div>
+
+          <div class="ide-task-prompt" style="background: rgba(56, 189, 248, 0.08); border-bottom: 1px solid rgba(56, 189, 248, 0.2);">
+            <div>
+              <span style="font-weight: 800; color: #38BDF8;">🧪 TRY THIS:</span>
+              <span style="margin-left: 0.5rem; color: #E2E8F0;">${escapeHtml(content.instructions || 'Edit the values freely and press Run Code to see what happens!')}</span>
+            </div>
+          </div>
+
+          <div class="ide-split-workspace">
+            <div class="ide-code-panel">
+              <div class="ide-textarea-wrapper">
+                <div class="ide-line-numbers" id="lines-playground-${idx}">1<br>2<br>3<br>4</div>
+                <textarea class="ide-code-input" id="code-textarea-playground-${idx}" oninput="updateLineNumbers('playground-${idx}')" onscroll="syncLineScroll('playground-${idx}')" spellcheck="false">${escapeHtml(rawCode)}</textarea>
+                <button type="button" class="btn-run-code" onclick="runIdeCode('playground-${idx}', '${lang}')">
+                  <i data-lucide="play" style="width: 12px; height: 12px;"></i> Run Sandbox
+                </button>
+              </div>
+            </div>
+
+            <div class="ide-console-panel">
+              <div class="console-header">
+                <span>&gt; ${isHtml ? 'LIVE HTML PREVIEW' : 'CONSOLE OUTPUT'}</span>
+              </div>
+              <div id="console-out-playground-${idx}" class="console-output-text">
+                ${isHtml ? `<iframe class="live-html-preview" id="iframe-playground-${idx}"></iframe>` : 'Click "Run Sandbox" to test code...'}
+              </div>
+            </div>
+          </div>
+          ${renderExternalCompilerBar(lang)}
+        </div>
+      `;
+    }
+
+    function renderSummaryBlock(idx, content) {
+      const points = content.key_points || content.points || [];
+      const anchor = content.anchor || '';
+
+      return `
+        <div class="summary-takeaways-card">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="bookmark-check" style="width: 18px; height: 18px; color: #34D399;"></i>
+              <span style="font-size: 0.85rem; font-weight: 800; color: #34D399; letter-spacing: 0.05em; text-transform: uppercase;">
+                ${escapeHtml(content.title || 'CONCEPT CHEAT SHEET')}
+              </span>
+            </div>
+            ${anchor ? `
+              <span style="font-size: 0.75rem; background: rgba(52, 211, 153, 0.15); border: 1px solid rgba(52, 211, 153, 0.3); color: #34D399; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 600;">
+                ${escapeHtml(anchor)}
+              </span>
+            ` : ''}
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+            ${points.map(pt => `
+              <div style="display: flex; align-items: flex-start; gap: 0.65rem; font-size: 0.92rem; color: #E2E8F0; line-height: 1.5;">
+                <span style="color: #34D399; font-weight: 800; flex-shrink: 0;">✓</span>
+                <span>${escapeHtml(pt)}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderQuickCheckBlock(idx, content) {
+      const q = content.question || 'Quick Question';
+      const codeSnippet = content.code || content.snippet || content.example || '';
+      const rawOpts = content.options || {};
+      let optsEntries = [];
+      const letters = ['A', 'B', 'C', 'D', 'E'];
+      if (Array.isArray(rawOpts)) {
+        optsEntries = rawOpts.map((opt, i) => [letters[i] || String(i+1), opt]);
+      } else if (typeof rawOpts === 'object') {
+        optsEntries = Object.entries(rawOpts);
+      }
+      let correct = content.correct;
+      if (!correct && typeof content.correctIndex === 'number') {
+        correct = letters[content.correctIndex] || 'A';
+      }
+      if (!correct) correct = 'A';
+      const explanation = content.explanation || 'Great job!';
+      const codeHtml = codeSnippet
+        ? `<pre class="quiz-code-block"><code>${escapeHtml(codeSnippet)}</code></pre>`
+        : '';
+
+      return `
+        <div class="micro-quiz-card" id="quick-check-card-${idx}">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+            <div style="font-size: 0.75rem; font-weight: 800; color: #C084FC; letter-spacing: 0.05em; text-transform: uppercase; display: flex; align-items: center; gap: 0.4rem;">
+              <i data-lucide="zap" style="width: 14px; height: 14px; color: #C084FC;"></i>
+              <span>QUICK CHECK: MICRO QUIZ</span>
+            </div>
+            <span id="quick-check-badge-${idx}" style="font-size: 0.75rem; color: #94A3B8;">1 Question</span>
+          </div>
+          <div style="font-size: 1.05rem; font-weight: 700; color: #FFFFFF; line-height: 1.5; margin-bottom: 0.5rem;">
+            ${escapeHtml(q)}
+          </div>
+          ${codeHtml}
+          <div id="quick-check-options-${idx}">
+            ${optsEntries.map(([key, val]) => `
+              <button class="checkpoint-option-btn" id="qc-btn-${idx}-${key}" onclick="checkMicroQuizAnswer(${idx}, '${key}', '${correct}', \`${escapeJs(explanation)}\`)">
+                <span><strong style="color: #C084FC; margin-right: 0.5rem;">${key}.</strong> ${escapeHtml(val)}</span>
+                <i data-lucide="circle" style="width: 16px; height: 16px; opacity: 0.5; flex-shrink: 0;"></i>
+              </button>
+            `).join('')}
+          </div>
+          <div id="quick-check-feedback-${idx}" style="display: none; margin-top: 1rem; padding: 1rem; border-radius: 8px; font-size: 0.9rem; line-height: 1.5;"></div>
+        </div>
+      `;
+    }
+
+    function checkMicroQuizAnswer(idx, chosen, correct, explanation) {
+      const container = document.getElementById(`quick-check-options-${idx}`);
+      const feedback = document.getElementById(`quick-check-feedback-${idx}`);
+      const badge = document.getElementById(`quick-check-badge-${idx}`);
+      if (!container || !feedback) return;
+
+      const isCorrect = chosen.toUpperCase() === correct.toUpperCase();
+
+      container.querySelectorAll('.checkpoint-option-btn').forEach(btn => {
+        btn.disabled = true;
+        btn.style.cursor = 'default';
+      });
+
+      const chosenBtn = document.getElementById(`qc-btn-${idx}-${chosen}`);
+      const correctBtn = document.getElementById(`qc-btn-${idx}-${correct}`);
+
+      if (isCorrect) {
+        if (chosenBtn) chosenBtn.classList.add('is-correct');
+        if (badge) {
+          badge.textContent = 'Correct! (+10 XP)';
+          badge.style.color = '#34D399';
+        }
+        feedback.style.display = 'block';
+        feedback.style.background = 'rgba(16, 185, 129, 0.15)';
+        feedback.style.border = '1px solid rgba(52, 211, 153, 0.4)';
+        feedback.style.color = '#34D399';
+        feedback.innerHTML = `<strong>✓ Cody says:</strong> Brilliant deduction! ${escapeHtml(explanation)}`;
+        showToast('Micro Quiz Passed! +10 XP', 'success');
+      } else {
+        if (chosenBtn) chosenBtn.classList.add('is-wrong');
+        if (correctBtn) correctBtn.classList.add('is-correct');
+        if (badge) {
+          badge.textContent = 'Reviewed';
+          badge.style.color = '#F87171';
+        }
+        feedback.style.display = 'block';
+        feedback.style.background = 'rgba(239, 68, 68, 0.15)';
+        feedback.style.border = '1px solid rgba(248, 113, 113, 0.4)';
+        feedback.style.color = '#FCA5A5';
+        feedback.innerHTML = `<strong>⚠️ Not quite:</strong> The correct answer is <strong>${correct}</strong>. ${escapeHtml(explanation)}`;
+      }
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function renderCheckpointQuestion() {
+      const container = document.getElementById('end-checkpoint-options-container');
+      const titleEl = document.getElementById('end-checkpoint-question-text');
+      if (!container || !titleEl) return;
+
+      const pq = (lessonData && (lessonData.predict_question || lessonData.checkpoint_question)) || {
+        question: 'What is the primary function of tags in HTML or logic in JavaScript?',
+        options: {
+          A: 'To format, structure, and declare document contents',
+          B: 'To crash web browsers randomly',
+          C: 'To replace hardware processors',
+          D: 'To disable network traffic'
+        },
+        correct: 'A',
+        explanation: 'Tags and syntax structure code instructions so engines can process and present content cleanly.'
+      };
+
+      titleEl.innerHTML = window.formatInlineQuestionText ? window.formatInlineQuestionText(pq.question) : escapeHtml(pq.question);
+
+      let optsEntries = [];
+      const letters = ['A', 'B', 'C', 'D', 'E'];
+      if (Array.isArray(pq.options)) {
+        optsEntries = pq.options.map((opt, i) => [letters[i] || String(i+1), opt]);
+      } else if (typeof pq.options === 'object') {
+        optsEntries = Object.entries(pq.options);
+      }
+      let correct = pq.correct;
+      if (!correct && typeof pq.correctIndex === 'number') {
+        correct = letters[pq.correctIndex] || 'A';
+      }
+      if (!correct) correct = 'A';
+
+      container.innerHTML = optsEntries.map(([key, val]) => `
+        <button class="checkpoint-option-btn" onclick="checkFinalCheckpointAnswer('${key}', '${correct}', \`${escapeJs(pq.explanation || '')}\`)">
+          <span><strong style="color: #70D6FF; margin-right: 0.5rem;">${key}.</strong> ${window.formatInlineQuestionText ? window.formatInlineQuestionText(val) : escapeHtml(val)}</span>
+          <i data-lucide="circle" style="width: 16px; height: 16px; opacity: 0.5; flex-shrink: 0;"></i>
+        </button>
+      `).join('');
+    }
+
+        function updateLineNumbers(id) {
+      const textarea = document.getElementById(`code-textarea-${id}`);
+      try { syncSyntaxHighlight(id); } catch (e) {}
+      const lineBox = document.getElementById(`lines-${id}`);
+      if (!textarea || !lineBox) return;
+
+      const lines = textarea.value.split('\n').length;
+      let nums = '';
+      for (let i = 1; i <= Math.max(lines, 4); i++) nums += `${i}<br>`;
+      lineBox.innerHTML = nums;
+      lineBox.scrollTop = textarea.scrollTop;
+    }
+
+function syncLineScroll(id) {
+      const textarea = document.getElementById(`code-textarea-${id}`);
+      const lineBox = document.getElementById(`lines-${id}`);
+      if (textarea && lineBox) {
+        lineBox.scrollTop = textarea.scrollTop;
+      }
+    }
+
+    /* Live HTML/CSS Iframe Execution Engine */
+    function renderLiveHtmlIframe(iframe, userCode) {
+      if (!iframe) return;
+
+      let fullDoc = '';
+      const hasHtmlWrapper = /<html[\s>]/i.test(userCode);
+
+      if (hasHtmlWrapper) {
+        fullDoc = userCode;
+      } else {
+        fullDoc = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 12px;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #0f172a;
+      background-color: #ffffff;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  ${userCode}
+</body>
+</html>`;
+      }
+
+      try {
+        iframe.srcdoc = fullDoc;
+      } catch (e) {
+        try {
+          const doc = iframe.contentDocument || iframe.contentWindow.document;
+          doc.open();
+          doc.write(fullDoc);
+          doc.close();
+        } catch (err) {
+          console.error("Frame document write error:", err);
+        }
+      }
+    }
+
+
+    const PY_KEYWORDS = /\b(and|as|assert|async|await|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield)\b/g;
+    const PY_BUILTINS = /\b(print|input|len|str|int|float|bool|list|dict|set|tuple|range|type|sum|min|max|abs|round|sorted|enumerate|zip|open|isinstance)\b/g;
+    const PY_BOOLS = /\b(True|False|None)\b/g;
+
+    function highlightPython(code) {
+      const esc = (s) => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      // tokenize roughly: protect strings and comments first
+      const tokens = [];
+      let i = 0;
+      const s = code;
+      while (i < s.length) {
+        // comment
+        if (s[i] === '#') {
+          let j = i;
+          while (j < s.length && s[j] !== '\n') j++;
+          tokens.push({t:'com', v:s.slice(i,j)});
+          i = j;
+          continue;
+        }
+        // string
+        if (s[i] === '"' || s[i] === "'" || (s[i] === 'f' && (s[i+1] === '"' || s[i+1] === "'"))) {
+          let start = i;
+          if (s[i] === 'f') i++;
+          const q = s[i];
+          i++;
+          while (i < s.length && s[i] !== q) {
+            if (s[i] === '\\') i += 2;
+            else i++;
+          }
+          if (i < s.length) i++;
+          tokens.push({t:'str', v:s.slice(start,i)});
+          continue;
+        }
+        // number
+        if (/[0-9]/.test(s[i]) && (i===0 || /[^\w]/.test(s[i-1]))) {
+          let j = i;
+          while (j < s.length && /[0-9.]/.test(s[j])) j++;
+          tokens.push({t:'num', v:s.slice(i,j)});
+          i = j;
+          continue;
+        }
+        // word
+        if (/[A-Za-z_]/.test(s[i])) {
+          let j = i;
+          while (j < s.length && /[A-Za-z0-9_]/.test(s[j])) j++;
+          tokens.push({t:'word', v:s.slice(i,j)});
+          i = j;
+          continue;
+        }
+        // op
+        if (/[\+\-\*\/\%=<>!&|^~]/.test(s[i])) {
+          tokens.push({t:'op', v:s[i]});
+          i++;
+          continue;
+        }
+        tokens.push({t:'raw', v:s[i]});
+        i++;
+      }
+      return tokens.map(tok => {
+        const v = esc(tok.v);
+        if (tok.t === 'com') return '<span class="tok-com">'+v+'</span>';
+        if (tok.t === 'str') return '<span class="tok-str">'+v+'</span>';
+        if (tok.t === 'num') return '<span class="tok-num">'+v+'</span>';
+        if (tok.t === 'op') return '<span class="tok-op">'+v+'</span>';
+        if (tok.t === 'word') {
+          if (/^(True|False|None)$/.test(tok.v)) return '<span class="tok-bool">'+v+'</span>';
+          if (/^(and|as|assert|async|await|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield)$/.test(tok.v))
+            return '<span class="tok-kw">'+v+'</span>';
+          if (/^(print|input|len|str|int|float|bool|list|dict|set|tuple|range|type|sum|min|max|abs|round|sorted|enumerate|zip|open|isinstance)$/.test(tok.v))
+            return '<span class="tok-builtin">'+v+'</span>';
+          return v;
+        }
+        return v;
+      }).join('');
+    }
+
+    function syncSyntaxHighlight(id) {
+      const ta = document.getElementById('code-textarea-' + id);
+      if (!ta) return;
+      let pre = document.getElementById('code-highlight-' + id);
+      if (!pre) {
+        // Ensure textarea sits in a code-stack sibling to line numbers (not a flex mess)
+        let stack = ta.parentElement;
+        if (!stack || !stack.classList.contains('ide-code-stack')) {
+          stack = document.createElement('div');
+          stack.className = 'ide-code-stack';
+          const wrap = ta.parentElement;
+          if (!wrap) return;
+          wrap.insertBefore(stack, ta);
+          stack.appendChild(ta);
+        }
+        pre = document.createElement('pre');
+        pre.className = 'ide-code-highlight';
+        pre.id = 'code-highlight-' + id;
+        stack.insertBefore(pre, ta);
+        ta.classList.add('syntax-on');
+        ta.addEventListener('scroll', () => {
+          pre.scrollTop = ta.scrollTop;
+          pre.scrollLeft = ta.scrollLeft;
+        });
+      }
+      pre.innerHTML = highlightPython(ta.value) + '\n';
+      pre.scrollTop = ta.scrollTop;
+      pre.scrollLeft = ta.scrollLeft;
+    }
+
+    // runIdeCode — async, uses real Pyodide Python engine
+    function runIdeCode(id, lang) {
+      const textarea = document.getElementById(`code-textarea-${id}`);
+      const consoleBox = document.getElementById(`console-out-${id}`);
+      if (!textarea || !consoleBox) return;
+
+      const code = textarea.value;
+
+      if ((lang || '').toLowerCase() === 'html' || (lang || '').toLowerCase() === 'css') {
+        consoleBox.innerHTML = `<iframe class="live-html-preview" id="iframe-${id}"></iframe>`;
+        const iframe = document.getElementById(`iframe-${id}`);
+        renderLiveHtmlIframe(iframe, code);
+        return;
+      }
+
+      consoleBox.textContent = '⏳ Running Python…';
+
+      if (!window.codeRunner) window.codeRunner = new SafeCodeRunner();
+
+      window.codeRunner.runCodeAsync(code, lang || 'Python').then(function(res) {
+        if (res.loading) {
+          consoleBox.textContent = res.output;
+          return;
+        }
+        consoleBox.textContent = res.output || (res.success
+          ? '(Code executed with no output)'
+          : (res.error || 'Execution error'));
+      }).catch(function(err) {
+        consoleBox.textContent = 'Runner error: ' + String(err);
+      });
+    }
+
+    // testExerciseSolution — async, evaluates student code only
+    function testExerciseSolution(idx, lang, expectedOutput, successMsg, solutionCode) {
+      const textarea = document.getElementById(`code-textarea-exercise-${idx}`);
+      const consoleBox = document.getElementById(`console-out-exercise-${idx}`);
+      const statusBadge = document.getElementById(`challenge-status-badge-${idx}`);
+      if (!textarea || !consoleBox) return;
+
+      const userCode = textarea.value;
+      // solutionCode is NEVER executed here — it stays hidden from student.
+
+      // HTML/CSS preview path
+      if ((lang || '').toLowerCase() === 'html' || (lang || '').toLowerCase() === 'css') {
+        let iframe = document.getElementById(`iframe-exercise-${idx}`);
+        if (!iframe) {
+          consoleBox.innerHTML = `<iframe class="live-html-preview" id="iframe-exercise-${idx}"></iframe>`;
+          iframe = document.getElementById(`iframe-exercise-${idx}`);
+        }
+        renderLiveHtmlIframe(iframe, userCode);
+        if (statusBadge) statusBadge.innerHTML = '<span style="color: #70D6FF;">Preview updated</span>';
+        return;
+      }
+
+      consoleBox.textContent = '⏳ Testing your solution…';
+      if (statusBadge) { statusBadge.textContent = 'Testing…'; statusBadge.style.color = '#94A3B8'; }
+
+      if (!window.codeRunner) window.codeRunner = new SafeCodeRunner();
+      try { window.codeRunner.setStdin(['ShadyCoder']); } catch(_) {}
+
+      window.codeRunner.evaluatePracticeAsync(userCode, expectedOutput, lang || 'Python').then(function(evalRes) {
+        const actual = (evalRes.output || '').trim();
+        const expected = (expectedOutput || '').trim();
+
+        if (!evalRes.passed && (evalRes.output || '').includes('Error')) {
+          // Runtime or syntax error
+          consoleBox.textContent = 'ERROR\n\n' + (evalRes.output || 'Execution failed');
+          if (statusBadge) { statusBadge.innerHTML = '<span style="color:#F87171;font-weight:800;">✖ Error</span>'; }
+          return;
+        }
+
+        if (evalRes.passed) {
+          consoleBox.textContent = '✓ PASSED\n\nActual output:\n' + (actual || '(empty)') + (expected ? '\n\nExpected output:\n' + expected : '');
+          if (statusBadge) { statusBadge.innerHTML = '<span style="color:#34D399;font-weight:800;">✓ PASSED</span>'; }
+          if (typeof showToast === 'function') showToast(successMsg || 'Awesome! Challenge completed!', 'success');
+          if (window.gamification) window.gamification.awardXP(15, 'Exercise Completed');
+        } else {
+          consoleBox.textContent = '✖ NEEDS REFINEMENT\n\nExpected output:\n' + (expected || '(any)') + '\n\nActual output:\n' + (actual || '(empty)') + '\n\n' + (evalRes.message || '');
+          if (statusBadge) { statusBadge.innerHTML = '<span style="color:#F87171;font-weight:800;">✖ NEEDS REFINEMENT</span>'; }
+        }
+      }).catch(function(err) {
+        consoleBox.textContent = 'Test runner error: ' + String(err);
+        if (statusBadge) { statusBadge.innerHTML = '<span style="color:#F87171;">Error</span>'; }
+      });
+    }
+
+    function resetExerciseCode(idx, initialCode) {
+      const textarea = document.getElementById(`code-textarea-exercise-${idx}`);
+      if (textarea) {
+        textarea.value = initialCode;
+        updateLineNumbers(`exercise-${idx}`);
+        const iframe = document.getElementById(`iframe-exercise-${idx}`);
+        if (iframe) renderLiveHtmlIframe(iframe, initialCode);
+      }
+    }
+
+    function checkFinalCheckpointAnswer(selected, correct, explanation) {
+      const container = document.getElementById('end-checkpoint-options-container');
+      if (!container) return;
+
+      const btns = container.querySelectorAll('.checkpoint-option-btn');
+      btns.forEach(btn => {
+        btn.disabled = true;
+        const text = btn.textContent.trim();
+        if (text.startsWith(correct + '.')) {
+          btn.classList.add('is-correct');
+        } else if (text.startsWith(selected + '.')) {
+          btn.classList.add('is-wrong');
+        }
+      });
+
+      const feedback = document.getElementById('end-checkpoint-feedback');
+      if (feedback) {
+        feedback.style.display = 'block';
+        if (selected === correct) {
+          feedback.innerHTML = `<span style="color: #34D399; font-weight: 800;">✓ Excellent Checkpoint Answer!</span> <span style="color: #CBD5E1;">${escapeHtml(explanation)}</span>`;
+          showToast('Checkpoint passed! +10 XP', 'success');
+        } else {
+          feedback.innerHTML = `<span style="color: #F87171; font-weight: 800;">✖ Incorrect.</span> <span style="color: #CBD5E1;">${escapeHtml(explanation)}</span>`;
+        }
+      }
+    }
+
+
+    /**
+     * Course-safe next lesson resolution.
+     * NEVER crosses course boundaries. Uses explicit curriculum objects when available.
+     */
+    function resolveCourseIdForLessonNav(explicitCourseId, explicitLessonId) {
+      const lid = String(explicitLessonId || lessonId || '').toLowerCase();
+      const fromData = (lessonData && lessonData.course_id) || '';
+      const fromUrl = (urlParams.get('course') || urlParams.get('course_id') || '');
+      const raw = String(explicitCourseId || fromData || fromUrl || '').trim();
+      if (raw === 'course-python-level-2' || raw.includes('level-2') || lid.includes('pyl2')) return 'course-python-level-2';
+      if (raw === 'course-python-foundations' || lid.includes('pyf-') || (lid.includes('python') && !lid.includes('pyl2'))) return 'course-python-foundations';
+      if (raw === 'course-programming-foundations' || lid.includes('pf-') || lid.includes('programming')) return 'course-programming-foundations';
+      if (raw) return raw;
+      return 'course-programming-foundations';
+    }
+
+    function getRawCourseObjectById(courseId) {
+      if (courseId === 'course-python-level-2' && window.PYTHON_LEVEL2_COURSE) return window.PYTHON_LEVEL2_COURSE;
+      if (courseId === 'course-python-foundations' && window.PYTHON_FOUNDATIONS_COURSE) return window.PYTHON_FOUNDATIONS_COURSE;
+      if (courseId === 'course-programming-foundations' && window.PROGRAMMING_FOUNDATIONS_COURSE) return window.PROGRAMMING_FOUNDATIONS_COURSE;
+      if (window.CURRICULUM_INDEX && typeof window.CURRICULUM_INDEX.getRawCourseList === 'function') {
+        const list = window.CURRICULUM_INDEX.getRawCourseList() || [];
+        return list.find(c => c.id === courseId) || null;
+      }
+      return null;
+    }
+
+    function findNextLessonStrict(currentLessonId, courseId) {
+      const cid = resolveCourseIdForLessonNav(courseId, currentLessonId);
+      const course = getRawCourseObjectById(cid);
+      if (!course || !Array.isArray(course.chapters)) return null;
+
+      // Flatten chapter lessons in order; append virtual exam node after each chapter's lessons
+      for (let chIdx = 0; chIdx < course.chapters.length; chIdx++) {
+        const ch = course.chapters[chIdx];
+        const lessons = (ch.lessons || []).filter(l => l && l.id && !String(l.id).startsWith('exam-'));
+        for (let i = 0; i < lessons.length; i++) {
+          if (lessons[i].id === currentLessonId || lessons[i].slug === currentLessonId) {
+            // Next lesson in same chapter
+            if (i + 1 < lessons.length) {
+              return {
+                id: lessons[i + 1].id,
+                slug: lessons[i + 1].slug,
+                title: lessons[i + 1].title,
+                chapter_id: ch.id,
+                course_id: cid,
+                is_exam: false
+              };
+            }
+            // After last lesson → chapter exam
+            return {
+              id: 'exam-' + ch.id,
+              title: (ch.title || 'Chapter') + ' Exam',
+              chapter_id: ch.id,
+              course_id: cid,
+              is_exam: true
+            };
+          }
+        }
+        // If current is this chapter's exam → first lesson of next chapter
+        if (currentLessonId === ('exam-' + ch.id) || currentLessonId === ch.id) {
+          if (chIdx + 1 < course.chapters.length) {
+            const nextCh = course.chapters[chIdx + 1];
+            const nextLessons = (nextCh.lessons || []).filter(l => l && l.id && !String(l.id).startsWith('exam-'));
+            if (nextLessons.length) {
+              return {
+                id: nextLessons[0].id,
+                slug: nextLessons[0].slug,
+                title: nextLessons[0].title,
+                chapter_id: nextCh.id,
+                course_id: cid,
+                is_exam: false
+              };
+            }
+          }
+          return null;
+        }
+      }
+      return null;
+    }
+
+    function buildNextLessonUrl(nextLesson, courseId) {
+      if (!nextLesson || !nextLesson.id) return null;
+      const cid = nextLesson.course_id || courseId;
+      const isExam = !!(nextLesson.is_exam || String(nextLesson.id).startsWith('exam-'));
+      if (isExam) {
+        return `/student/exam.html?chapter_id=${encodeURIComponent(nextLesson.chapter_id || '')}&exam_id=${encodeURIComponent(nextLesson.id)}&course=${encodeURIComponent(cid)}`;
+      }
+      return `/student/lesson.html?id=${encodeURIComponent(nextLesson.id)}&course=${encodeURIComponent(cid)}`;
+    }
+
+
+    async function submitLessonCompletion() {
+      const btn = document.getElementById('complete-lesson-btn');
+      if (!btn || btn.disabled) return;
+
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader" class="animate-spin" style="width: 18px; height: 18px;"></i> Submitting...`;
+      if (window.lucide) window.lucide.createIcons();
+
+      const xp = lessonData ? (lessonData.xp_reward || 25) : 25;
+
+      let courseId = lessonData && lessonData.course_id ? lessonData.course_id : '';
+      if (!courseId) {
+        if (lessonId.includes('pyl2-') || lessonId.includes('python-level-2')) courseId = 'course-python-level-2';
+        else if (lessonId.includes('pyf-') || (lessonId.includes('python') && !lessonId.includes('pyl2'))) courseId = 'course-python-foundations';
+        else courseId = 'course-programming-foundations';
+      }
+
+      // 1. Mark completed in localStorage & XP bank
+      if (window.CURRICULUM_INDEX && typeof window.CURRICULUM_INDEX.markLessonCompleted === 'function') {
+        window.CURRICULUM_INDEX.markLessonCompleted(lessonId, xp);
+      }
+
+      // 2. Call backend API with course_id and xp_reward for strict database persistence
+      try {
+        if (window.apiFetch) {
+          const res = await window.apiFetch('/api/lessons/complete.php', {
+            method: 'POST',
+            body: JSON.stringify({ lesson_id: lessonId, course_id: courseId, xp_reward: xp })
+          });
+          if (res && res.ok) {
+            const resJson = await res.json();
+            if (resJson.success && resJson.data && resJson.data.user_progress) {
+              if (window.SessionManager && window.SessionManager.userProgress) {
+                window.SessionManager.userProgress[courseId] = resJson.data.user_progress;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('API sync completed locally:', err);
+      }
+
+      // 3. Set permanent disabled state
+      btn.style.background = '#1E293B';
+      btn.style.border = '1px solid #334155';
+      btn.style.color = '#94A3B8';
+      btn.style.pointerEvents = 'none';
+      btn.innerHTML = `<i data-lucide="check-circle" style="width: 18px; height: 18px; color: #34D399;"></i> <span>Lesson Completed ✓ (+${xp} XP Claimed)</span>`;
+      if (window.lucide) window.lucide.createIcons();
+
+      // 4. Determine next lesson — STRICT same-course only (never jump to another course)
+      const nextLesson = findNextLessonStrict(lessonId, courseId);
+      const nextUrl = buildNextLessonUrl(nextLesson, courseId);
+
+      if (nextUrl) {
+        const isNextExam = nextLesson && (nextLesson.is_exam || String(nextLesson.id).startsWith('exam-'));
+        showToast(isNextExam ? `+${xp} XP Claimed! Unlocking Chapter Final Exam...` : `+${xp} XP Claimed! Unlocking Next Mission...`, 'success');
+        setTimeout(() => {
+          window.location.href = nextUrl;
+        }, 1200);
+      } else {
+        showToast(`🎉 Chapter / Course Completed (+${xp} XP)!`, 'success');
+        setTimeout(() => {
+          window.location.href = `/student/course.html?id=${encodeURIComponent(courseId)}&celebration=true`;
+        }, 1200);
+      }
+    }
+
+    function showToast(msg, type = 'info') {
+      let toastContainer = document.getElementById('toast-container');
+      if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.id = 'toast-container';
+        document.body.appendChild(toastContainer);
+      }
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.innerHTML = `<i data-lucide="${type === 'success' ? 'check-circle' : 'info'}" style="width: 18px; height: 18px;"></i><span>${escapeHtml(msg)}</span>`;
+      toastContainer.appendChild(toast);
+      if (window.lucide) window.lucide.createIcons();
+      setTimeout(() => toast.remove(), 3500);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function escapeJs(str) {
+      if (!str) return '';
+      return str.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$');
+    }
+  </script>
+</body>
+</html>

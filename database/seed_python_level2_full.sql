@@ -1,0 +1,4 @@
+-- DEPRECATED for direct partial import.
+-- Use database/production_rebuild.sql for a full clean rebuild.
+-- This file previously used a non-production options_json shape ({options,keys,map})
+-- that could fail MariaDB JSON constraint #4025 on InfinityFree.

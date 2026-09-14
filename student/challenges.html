@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coding Challenges &amp; Projects - SPS Code Orbit</title>
+  <link rel="stylesheet" href="../css/global.css?v=2.0">
+  <link rel="stylesheet" href="../css/components.css?v=2.0">
+  <link rel="stylesheet" href="../css/responsive.css?v=1.2">
+  <link rel="stylesheet" href="../css/dashboard.css?v=2.0">
+  <link rel="stylesheet" href="../css/lesson.css?v=2.0">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .project-card {
+      background: rgba(16, 23, 42, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-xl);
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .status-banner {
+      padding: 0.6rem 1rem;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .status-submitted {
+      background: rgba(245, 158, 11, 0.15);
+      color: #F59E0B;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .status-graded {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10B981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .teacher-feedback-box {
+      background: rgba(59, 130, 246, 0.08);
+      border-left: 3px solid #3B82F6;
+      padding: 0.75rem 1rem;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      font-size: 0.85rem;
+      color: var(--text-main);
+    }
+  </style>
+</head>
+<body style="background: #070A14;">
+
+  <!-- ========================================================================
+       0. IMMERSIVE DEEP-SPACE UNIVERSE & SWIRLING NEBULAE BACKDROP
+       ======================================================================== -->
+  <div class="space-universe-backdrop" aria-hidden="true">
+    <div class="starfield-layer"></div>
+    <div class="starfield-layer-dense"></div>
+    <div class="nebula-swirl-container">
+      <div class="nebula-cloud nebula-blue"></div>
+      <div class="nebula-cloud nebula-purple"></div>
+      <div class="nebula-cloud nebula-pink"></div>
+      <div class="nebula-cloud nebula-cyan-lower"></div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       1. THE "ORBIT" EFFECT: WINDING NEON ORBITAL PATHS CONNECTING SECTIONS
+       ======================================================================== -->
+  <svg class="orbital-paths-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 3200" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="cyanPurpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#38bdf8" />
+        <stop offset="50%" stop-color="#818cf8" />
+        <stop offset="100%" stop-color="#c084fc" />
+      </linearGradient>
+      <linearGradient id="purplePinkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#c084fc" />
+        <stop offset="50%" stop-color="#f472b6" />
+        <stop offset="100%" stop-color="#38bdf8" />
+      </linearGradient>
+    </defs>
+    <path 
+      d="M 1200 250 C 1050 480, 750 620, 350 780 S -50 1020, 280 1220 S 980 1280, 1150 1480" 
+      class="orbital-path-line orbital-path-cyan"
+    />
+  </svg>
+
+  <div class="app-shell" style="position: relative; z-index: 10;">
+    <aside id="app-sidebar"></aside>
+
+    <div class="main-wrapper">
+      <header id="top-header"></header>
+
+      <main class="page-content" style="max-width: 1200px; margin: 0 auto; width: 100%; padding-bottom: 5rem;">
+        
+        <!-- Section Header -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+          <div>
+            <span class="badge badge-primary" style="margin-bottom: 0.5rem;">ORBIT ARENA &amp; PROJECTS</span>
+            <h1 style="font-size: 2rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.25rem;">Coding Challenges &amp; Projects</h1>
+            <p style="color: var(--text-secondary); font-size: 0.95rem;">Build real computational programs, submit work to your teachers, and earn XP.</p>
+          </div>
+        </div>
+
+        <!-- Section 1: Assigned Course Projects (Server-Authoritative) -->
+        <div style="margin-bottom: 3rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+            <h2 style="font-size: 1.35rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="folder-git-2" style="width: 20px; height: 20px; color: #3B82F6;"></i>
+              <span>Assigned Course Projects</span>
+            </h2>
+            <span class="badge badge-secondary-track" id="projects-count-badge">Loading...</span>
+          </div>
+
+          <div id="projects-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div class="card" style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+              Loading your assigned course projects...
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Quick Arena Warmups -->
+        <div>
+          <h2 style="font-size: 1.35rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.25rem;">
+            <i data-lucide="zap" style="width: 20px; height: 20px; color: #F59E0B;"></i>
+            <span>Interactive Arena Warmups</span>
+          </h2>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            
+            <!-- Challenge 1: The Score Multiplier -->
+            <div class="card" style="padding: 1.75rem; border-radius: var(--radius-lg);">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                <span class="badge badge-success">Beginner</span>
+                <span style="font-weight: 800; color: #F59E0B; font-size: 0.9rem;">+35 XP</span>
+              </div>
+              <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem;">Score Multiplier</h3>
+              <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+                Calculate the bonus score by creating two variables <code>base_score = 40</code> and <code>multiplier = 3</code> and printing their product.
+              </p>
+
+              <div class="interactive-editor-wrap">
+                <textarea class="editor-textarea" id="chal-code-1" style="height: 100px;">base_score = 40
+multiplier = 3
+total = base_score * multiplier
+print(total)</textarea>
+                <div class="output-console">
+                  <div class="output-label">CONSOLE OUTPUT</div>
+                  <div class="output-val" id="chal-out-1">120</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                  <button type="button" class="btn btn-primary btn-pill btn-sm" onclick="runChallenge1()">Run &amp; Submit</button>
+                  <div id="chal-feed-1" style="font-size: 0.85rem; font-weight: 600; color: #10B981;">✓ Challenge Solved</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Challenge 2: Space Orbit Distance -->
+            <div class="card" style="padding: 1.75rem; border-radius: var(--radius-lg);">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                <span class="badge badge-primary">Intermediate</span>
+                <span style="font-weight: 800; color: #F59E0B; font-size: 0.9rem;">+50 XP</span>
+              </div>
+              <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem;">Cody's Fuel Calculator</h3>
+              <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+                Cody has <code>fuel = 100</code>. Each orbit burns <code>burn_rate = 15</code>. Calculate and print fuel remaining after 4 orbits.
+              </p>
+
+              <div class="interactive-editor-wrap">
+                <textarea class="editor-textarea" id="chal-code-2" style="height: 100px;">fuel = 100
+burn_rate = 15
+orbits = 4
+remaining = fuel - (burn_rate * orbits)
+print(remaining)</textarea>
+                <div class="output-console">
+                  <div class="output-label">CONSOLE OUTPUT</div>
+                  <div class="output-val" id="chal-out-2">40</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                  <button type="button" class="btn btn-primary btn-pill btn-sm" onclick="runChallenge2()">Run &amp; Submit</button>
+                  <div id="chal-feed-2" style="font-size: 0.85rem; font-weight: 600; color: #10B981;">✓ Challenge Solved</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="/js/session.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/components.js"></script>
+  <script src="/js/code-runner.js"></script>
+  <script src="/js/gamification.js"></script>
+  <script>
+    let studentUser = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      studentUser = await window.session.requireAuth(['student']);
+      if (!studentUser) return;
+
+      window.renderSidebar('challenges');
+      window.renderHeader('Orbit Challenges & Projects', 'Build computational projects and test your skills.');
+
+      await loadStudentProjects();
+      if (window.lucide) window.lucide.createIcons();
+    });
+
+    async function loadStudentProjects() {
+      const container = document.getElementById('projects-container');
+      const badge = document.getElementById('projects-count-badge');
+
+      try {
+        const res = await fetch('/api/projects/list.php');
+        const json = await res.json();
+
+        if (json.success && json.data) {
+          const projects = json.data;
+          badge.textContent = `${projects.length} Available`;
+
+          if (projects.length === 0) {
+            container.innerHTML = `
+              <div class="card" style="padding: 2.5rem; text-align: center; color: var(--text-secondary);">
+                <i data-lucide="check-circle" style="width: 40px; height: 40px; color: #10B981; margin-bottom: 0.75rem;"></i>
+                <div style="font-weight: 700; font-size: 1.1rem; color: var(--text-main);">No active projects assigned yet</div>
+                <div style="font-size: 0.9rem; margin-top: 0.25rem;">Check back once your teacher assigns coursework for your class!</div>
+              </div>
+            `;
+            if (window.lucide) window.lucide.createIcons();
+            return;
+          }
+
+          container.innerHTML = projects.map(p => {
+            const hasSubmitted = !!p.submission_status;
+            const isGraded = p.submission_status === 'graded';
+            const isSubmitted = p.submission_status === 'submitted';
+            
+            let statusBanner = '';
+            if (isGraded) {
+              statusBanner = `
+                <div class="status-banner status-graded">
+                  <i data-lucide="award" style="width: 16px; height: 16px;"></i>
+                  <span>Graded: ${p.grade}/100</span>
+                  ${p.feedback ? `<span style="margin-left: 0.5rem; font-weight: 400; opacity: 0.85;">— Feedback provided below</span>` : ''}
+                </div>
+              `;
+            } else if (isSubmitted) {
+              statusBanner = `
+                <div class="status-banner status-submitted">
+                  <i data-lucide="clock" style="width: 16px; height: 16px;"></i>
+                  <span>Submitted on ${p.submitted_at ? p.submitted_at.substring(0, 16) : ''} · Pending Teacher Review</span>
+                </div>
+              `;
+            }
+
+            const initialCode = (p.content_json && p.content_json.code) ? p.content_json.code : 
+              `# Python Project: ${p.title}\n# Write your solution code below\n\nbase_power = 250\nthrusters = 4\nreserve = 75\n\ntotal_power = (base_power * thrusters) + reserve\nprint(f"Total Landing Energy: {total_power} MW")`;
+
+            const initialNotes = (p.content_json && p.content_json.notes) ? p.content_json.notes : '';
+
+            return `
+              <div class="project-card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
+                  <div>
+                    <span class="badge badge-secondary-track" style="margin-bottom: 0.5rem;">${escapeHtml(p.course_title)}</span>
+                    <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.35rem;">${escapeHtml(p.title)}</h3>
+                    <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.5;">${escapeHtml(p.description || '')}</p>
+                  </div>
+                  <div style="text-align: right; flex-shrink: 0;">
+                    <span style="font-size: 1.15rem; font-weight: 800; color: #F59E0B;">+${p.xp_reward || 50} XP</span>
+                  </div>
+                </div>
+
+                ${statusBanner}
+
+                ${p.feedback ? `
+                  <div class="teacher-feedback-box">
+                    <strong>Teacher Feedback:</strong> ${escapeHtml(p.feedback)}
+                  </div>
+                ` : ''}
+
+                <div style="background: var(--bg-surface-secondary); border-radius: var(--radius-md); padding: 1rem; border: 1px solid var(--border-light);">
+                  <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.35rem;">Instructions &amp; Requirements:</div>
+                  <div style="font-size: 0.85rem; color: var(--text-secondary); white-space: pre-wrap; font-family: sans-serif; line-height: 1.5;">${escapeHtml(p.instructions)}</div>
+                </div>
+
+                <div class="form-group">
+                  <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">Your Solution Code:</label>
+                  <textarea class="editor-textarea" id="project-code-${p.id}" style="height: 140px; font-family: monospace; font-size: 0.875rem;">${escapeHtml(initialCode)}</textarea>
+                </div>
+
+                <div class="form-group">
+                  <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">Notes or explanation for teacher (optional):</label>
+                  <input type="text" class="input-field" id="project-notes-${p.id}" placeholder="e.g. Calculated power consumption per landing thruster with reserve buffer" value="${escapeHtml(initialNotes)}">
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; align-items: center; gap: 1rem;">
+                  <button class="btn btn-primary btn-pill" id="btn-submit-proj-${p.id}" onclick="submitProject('${p.id}')">
+                    <i data-lucide="send" style="width: 16px; height: 16px;"></i>
+                    <span>${hasSubmitted ? 'Resubmit Solution' : 'Submit Project to Teacher'}</span>
+                  </button>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          if (window.lucide) window.lucide.createIcons();
+        }
+      } catch (e) {
+        container.innerHTML = '<div class="card" style="padding: 2rem; text-align: center; color: #EF4444;">Failed to load projects.</div>';
+      }
+    }
+
+    async function submitProject(projectId) {
+      const code = document.getElementById(`project-code-${projectId}`).value.trim();
+      const notes = document.getElementById(`project-notes-${projectId}`).value.trim();
+
+      if (!code) {
+        alert('Please write or paste your solution code before submitting.');
+        return;
+      }
+
+      const btn = document.getElementById(`btn-submit-proj-${projectId}`);
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      try {
+        const res = await window.apiFetch('/api/projects/submit.php', {
+          method: 'POST',
+          body: JSON.stringify({ project_id: projectId, code, notes })
+        });
+        const json = await res.json();
+
+        if (json.success) {
+          alert('✓ Project submitted successfully! Your teacher will review and grade your work.');
+          await loadStudentProjects();
+        } else {
+          alert(json.error || 'Failed to submit project.');
+        }
+      } catch (e) {
+        alert('Network error while submitting project.');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function runChallenge1() {
+      if (!window.codeRunner && typeof SafeCodeRunner !== 'undefined') window.codeRunner = new SafeCodeRunner();
+      const code = document.getElementById('chal-code-1').value;
+      const res = window.codeRunner ? window.codeRunner.evaluatePractice(code, '120') : { output: 'Engine loading...', passed: false };
+      document.getElementById('chal-out-1').textContent = res.output;
+      const feed = document.getElementById('chal-feed-1');
+      if (res.passed) {
+        feed.style.color = '#10B981';
+        feed.textContent = '✓ Challenge Solved (+35 XP)';
+        if (window.gamification) window.gamification.awardXP(35, 'Challenge Solved');
+      } else {
+        feed.style.color = '#DC2626';
+        feed.textContent = '✗ Expected output: 120';
+      }
+    }
+
+    function runChallenge2() {
+      if (!window.codeRunner && typeof SafeCodeRunner !== 'undefined') window.codeRunner = new SafeCodeRunner();
+      const code = document.getElementById('chal-code-2').value;
+      const res = window.codeRunner ? window.codeRunner.evaluatePractice(code, '40') : { output: 'Engine loading...', passed: false };
+      document.getElementById('chal-out-2').textContent = res.output;
+      const feed = document.getElementById('chal-feed-2');
+      if (res.passed) {
+        feed.style.color = '#10B981';
+        feed.textContent = '✓ Challenge Solved (+50 XP)';
+        if (window.gamification) window.gamification.awardXP(50, 'Challenge Solved');
+      } else {
+        feed.style.color = '#DC2626';
+        feed.textContent = '✗ Expected output: 40';
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progress &amp; Analytics - SPS Code Orbit</title>
+  <link rel="stylesheet" href="../css/global.css?v=2.0">
+  <link rel="stylesheet" href="../css/components.css?v=2.0">
+  <link rel="stylesheet" href="../css/responsive.css?v=1.2">
+  <link rel="stylesheet" href="../css/dashboard.css?v=2.0">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="/data/python_level2_curriculum.js?v=5.0"></script>
+  <script src="/data/python_level2_exams.js?v=5.0"></script>
+</head>
+<body>
+
+  <!-- ========================================================================
+       0. IMMERSIVE DEEP-SPACE UNIVERSE & SWIRLING NEBULAE BACKDROP
+       ======================================================================== -->
+  <div class="space-universe-backdrop" aria-hidden="true">
+    <div class="starfield-layer"></div>
+    <div class="starfield-layer-dense"></div>
+    <div class="nebula-swirl-container">
+      <div class="nebula-cloud nebula-blue"></div>
+      <div class="nebula-cloud nebula-purple"></div>
+      <div class="nebula-cloud nebula-pink"></div>
+      <div class="nebula-cloud nebula-cyan-lower"></div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       1. THE "ORBIT" EFFECT: WINDING NEON ORBITAL PATHS CONNECTING SECTIONS
+       ======================================================================== -->
+  <svg class="orbital-paths-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 3200" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="cyanPurpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#38bdf8" />
+        <stop offset="50%" stop-color="#818cf8" />
+        <stop offset="100%" stop-color="#c084fc" />
+      </linearGradient>
+      <linearGradient id="purplePinkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#c084fc" />
+        <stop offset="50%" stop-color="#f472b6" />
+        <stop offset="100%" stop-color="#38bdf8" />
+      </linearGradient>
+    </defs>
+    <path 
+      d="M 1200 250 C 1050 480, 750 620, 350 780 S -50 1020, 280 1220 S 980 1280, 1150 1480" 
+      class="orbital-path-line orbital-path-cyan"
+    />
+  </svg>
+
+  <div class="app-shell" style="position: relative; z-index: 10;">
+    <aside id="app-sidebar"></aside>
+
+    <div class="main-wrapper">
+      <header id="top-header"></header>
+
+      <main class="page-content" style="max-width: 1200px; margin: 0 auto; width: 100%;">
+        
+        <div style="margin-bottom: 2rem;">
+          <span class="badge badge-primary" style="margin-bottom: 0.5rem;">PERFORMANCE METRICS</span>
+          <h1 style="font-size: 2rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.25rem;">Your Learning Orbit</h1>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">Track your computational skills, mastery levels, and achievements.</p>
+        </div>
+
+        <!-- Metric Highlights Row -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2rem;">
+          
+          <div class="card" style="padding: 1.5rem; border-radius: var(--radius-lg);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">OVERALL PROGRESS</span>
+              <i data-lucide="pie-chart" style="width: 20px; height: 20px; color: var(--color-primary);"></i>
+            </div>
+            <div style="font-size: 2.25rem; font-weight: 800; color: var(--text-main);" id="prog-overall-pct">0%</div>
+            <div style="font-size: 0.8rem; color: #10B981; font-weight: 600; margin-top: 0.25rem;">Live from database</div>
+          </div>
+
+          <div class="card" style="padding: 1.5rem; border-radius: var(--radius-lg);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">TOTAL XP</span>
+              <i data-lucide="star" style="width: 20px; height: 20px; color: #F59E0B; fill: #F59E0B;"></i>
+            </div>
+            <div style="font-size: 2.25rem; font-weight: 800; color: var(--text-main);" id="prog-xp-val">0</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;" id="prog-level-label">Level 1 Explorer</div>
+          </div>
+
+          <div class="card" style="padding: 1.5rem; border-radius: var(--radius-lg);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">STREAK</span>
+              <i data-lucide="flame" style="width: 20px; height: 20px; color: #EF4444; fill: #EF4444;"></i>
+            </div>
+            <div style="font-size: 2.25rem; font-weight: 800; color: var(--text-main);" id="prog-streak-val">0 Days</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;" id="prog-streak-best">Personal best: 0 days</div>
+          </div>
+
+          <div class="card" style="padding: 1.5rem; border-radius: var(--radius-lg);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">COMPLETED</span>
+              <i data-lucide="check-circle-2" style="width: 20px; height: 20px; color: #10B981;"></i>
+            </div>
+            <div style="font-size: 2.25rem; font-weight: 800; color: var(--text-main);" id="prog-completed-lessons">0 Lessons</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;" id="prog-completed-chapters">0 Chapters completed</div>
+          </div>
+
+        </div>
+
+        <!-- Course Detailed Progress Section -->
+        <div class="card" style="padding: 2rem; border-radius: var(--radius-xl); margin-bottom: 2rem;">
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin-bottom: 1.25rem;">Curriculum Mastery</h3>
+          <div id="progress-courses-breakdown" style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Badges & Achievements -->
+        <div class="card" style="padding: 2rem; border-radius: var(--radius-xl); margin-bottom: 2rem;">
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin-bottom: 1.25rem;">Unlocked Achievements</h3>
+          <div id="progress-achievements-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem;">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="/js/session.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/components.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      await window.session.requireAuth(['student']);
+      window.renderSidebar('progress');
+      window.renderHeader('Progress & Analytics', 'Track your computational skills, mastery levels, and achievements.');
+      await loadProgressData();
+    });
+
+    async function loadProgressData() {
+      try {
+        const res = await fetch('/api/student/progress.php');
+        if (!res.ok) return;
+        const json = await res.json();
+        if (!json.success || !json.data) return;
+
+        let { stats, courses, achievements } = json.data;
+        const legacyKeywords = ['scratch', 'web magic', 'python fundamentals', 'interactive web apps', 'visual coding'];
+        const legacyIds = ['course-1', 'course-2', 'course-3', 'course-4', 'intro-programming'];
+        courses = (courses || []).filter(c => {
+          if (!c) return false;
+          const id = String(c.id || '').toLowerCase();
+          const title = String(c.title || '').toLowerCase();
+          if (legacyIds.includes(id)) return false;
+          if (legacyKeywords.some(kw => title.includes(kw))) return false;
+          return true;
+        });
+
+        // 1. Stats
+        if (stats) {
+          document.getElementById('prog-xp-val').textContent = Number(stats.total_xp || 0).toLocaleString();
+          document.getElementById('prog-level-label').textContent = `Level ${stats.level || 1} Explorer`;
+          document.getElementById('prog-streak-val').textContent = `${stats.current_streak || 0} Days`;
+          document.getElementById('prog-streak-best').textContent = `Personal best: ${stats.longest_streak || 0} days`;
+          document.getElementById('prog-completed-lessons').textContent = `${stats.completed_lessons || 0} Lessons`;
+          document.getElementById('prog-completed-chapters').textContent = `${stats.completed_chapters || 0} Chapters completed`;
+        }
+
+        // 2. Courses Breakdown
+        const breakdownContainer = document.getElementById('progress-courses-breakdown');
+        let totalCourseLessons = 0;
+        let completedCourseLessons = 0;
+
+        if (breakdownContainer && courses && courses.length > 0) {
+          breakdownContainer.innerHTML = courses.map(c => {
+            totalCourseLessons += c.total_lessons || 0;
+            completedCourseLessons += c.completed_lessons || 0;
+
+            const chaptersHtml = (c.chapters || []).map(ch => `
+              <div style="background: var(--bg-surface-secondary); border-radius: var(--radius-md); padding: 0.75rem 1rem; margin-top: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <span style="font-weight: 600; font-size: 0.9rem; color: var(--text-main);">Ch ${ch.number}: ${ch.title}</span>
+                  <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 0.5rem;">(${ch.completed_lessons}/${ch.total_lessons} lessons)</span>
+                </div>
+                <span class="badge ${ch.status === 'completed' ? 'badge-primary' : (ch.status === 'in_progress' ? 'badge-secondary-track' : '')}" style="font-size: 0.75rem;">
+                  ${ch.status === 'completed' ? 'Completed' : (ch.status === 'in_progress' ? 'In Progress' : 'Not Started')}
+                </span>
+              </div>
+            `).join('');
+
+            return `
+              <div style="border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.25rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                  <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <div style="width: 12px; height: 12px; border-radius: 50%; background: ${c.accentColor};"></div>
+                    <h4 style="font-weight: 700; font-size: 1.05rem; color: var(--text-main); margin: 0;">${c.title}</h4>
+                  </div>
+                  <span style="font-weight: 700; color: var(--color-primary);">${c.progress_percent}%</span>
+                </div>
+                <div class="progress-bar-container" style="height: 6px; margin-bottom: 0.75rem;">
+                  <div class="progress-bar-fill" style="width: ${c.progress_percent}%; background: ${c.accentColor};"></div>
+                </div>
+                <div>${chaptersHtml}</div>
+              </div>
+            `;
+          }).join('');
+
+          const overallPct = totalCourseLessons > 0 ? Math.round((completedCourseLessons / totalCourseLessons) * 100) : 0;
+          document.getElementById('prog-overall-pct').textContent = `${overallPct}%`;
+        }
+
+        // 3. Achievements
+        const achGrid = document.getElementById('progress-achievements-grid');
+        if (achGrid && achievements && achievements.length > 0) {
+          achGrid.innerHTML = achievements.map(a => `
+            <div style="background: var(--bg-surface-secondary); border: 1px solid ${a.unlocked ? '#10B981' : 'var(--border-light)'}; border-radius: var(--radius-lg); padding: 1.25rem; text-align: center; opacity: ${a.unlocked ? '1' : '0.55'}; position: relative;">
+              ${a.unlocked ? '<span style="position: absolute; top: 8px; right: 8px; background: #10B981; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; display: flex; align-items: center; justify-content: center;">✓</span>' : ''}
+              <div style="width: 50px; height: 50px; border-radius: 50%; background: ${a.unlocked ? '#D1FAE5' : '#F3F4F6'}; color: ${a.unlocked ? '#059669' : '#9CA3AF'}; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+                <i data-lucide="${a.unlocked ? 'award' : 'lock'}" style="width: 24px; height: 24px;"></i>
+              </div>
+              <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.25rem;">${a.title}</h4>
+              <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">${a.description}</p>
+              <span style="font-size: 0.75rem; font-weight: 700; color: #D97706;">+${a.xp_reward} XP</span>
+            </div>
+          `).join('');
+        }
+
+      } catch (e) {
+        console.error('Failed to load progress details', e);
+      }
+      if (window.lucide) window.lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

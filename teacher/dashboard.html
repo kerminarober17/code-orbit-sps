@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Portal - SPS Code Orbit</title>
+  <link rel="stylesheet" href="../css/global.css?v=2.0">
+  <link rel="stylesheet" href="../css/components.css?v=2.0">
+  <link rel="stylesheet" href="../css/responsive.css?v=1.2">
+  <link rel="stylesheet" href="../css/dashboard.css?v=2.0">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000; padding: 1rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1; pointer-events: auto;
+    }
+    .modal-dialog {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      width: 100%; max-width: 650px; max-height: 90vh;
+      display: flex; flex-direction: column;
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+      transform: scale(0.95); transition: transform 0.25s ease;
+    }
+    .modal-overlay.active .modal-dialog { transform: scale(1); }
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-light);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .modal-header h3 { font-size: 1.2rem; font-weight: 800; color: var(--text-main); margin: 0; }
+    .modal-body {
+      padding: 1.5rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem;
+    }
+    .modal-footer {
+      padding: 1.25rem 1.5rem;
+      border-top: 1px solid var(--border-light);
+      display: flex; justify-content: flex-end; gap: 0.75rem;
+      background: var(--bg-surface-secondary);
+    }
+    .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+    .form-group label { font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); }
+    .code-preview-box {
+      background: #090D16;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.85rem;
+      color: #A5F3FC;
+      white-space: pre-wrap;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    .tab-btn {
+      padding: 0.6rem 1.25rem;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-btn.active {
+      color: var(--color-primary, #3B82F6);
+      border-bottom-color: var(--color-primary, #3B82F6);
+    }
+  </style>
+</head>
+<body style="background: #070A14;">
+
+  <!-- ========================================================================
+       0. IMMERSIVE DEEP-SPACE UNIVERSE & SWIRLING NEBULAE BACKDROP
+       ======================================================================== -->
+  <div class="space-universe-backdrop" aria-hidden="true">
+    <div class="starfield-layer"></div>
+    <div class="starfield-layer-dense"></div>
+    <div class="nebula-swirl-container">
+      <div class="nebula-cloud nebula-blue"></div>
+      <div class="nebula-cloud nebula-purple"></div>
+      <div class="nebula-cloud nebula-pink"></div>
+      <div class="nebula-cloud nebula-cyan-lower"></div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       1. THE "ORBIT" EFFECT: WINDING NEON ORBITAL PATHS CONNECTING SECTIONS
+       ======================================================================== -->
+  <svg class="orbital-paths-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 3200" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="cyanPurpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#38bdf8" />
+        <stop offset="50%" stop-color="#818cf8" />
+        <stop offset="100%" stop-color="#c084fc" />
+      </linearGradient>
+      <linearGradient id="purplePinkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#c084fc" />
+        <stop offset="50%" stop-color="#f472b6" />
+        <stop offset="100%" stop-color="#38bdf8" />
+      </linearGradient>
+    </defs>
+    <path 
+      d="M 1200 250 C 1050 480, 750 620, 350 780 S -50 1020, 280 1220 S 980 1280, 1150 1480" 
+      class="orbital-path-line orbital-path-cyan"
+    />
+  </svg>
+
+  <!-- Navbar -->
+  <header style="background: rgba(7, 10, 20, 0.65); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 10;">
+    <div style="display: flex; align-items: center; gap: 1.5rem;">
+      <a href="/index.html" class="landing-logo" style="text-decoration: none;">
+        <div class="landing-logo-icon">
+          <i data-lucide="orbit" style="width: 26px; height: 26px;"></i>
+        </div>
+        <span>SPS Code Orbit</span>
+      </a>
+      <span class="badge badge-primary">Teacher Portal</span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 1.25rem;">
+      <div style="text-align: right;">
+        <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem;" id="header-teacher-name">Teacher</div>
+        <div style="font-size: 0.8rem; color: var(--text-secondary);" id="header-teacher-scope">Assigned Classes</div>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="window.session.logout()" style="padding: 0.4rem 0.8rem;">
+        <i data-lucide="log-out" style="width: 15px; height: 15px;"></i>
+        <span>Logout</span>
+      </button>
+    </div>
+  </header>
+
+  <main style="max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem 5rem;">
+    
+    <!-- Top Stats -->
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2rem;">
+      <div class="card" style="padding: 1.5rem; border-radius: var(--radius-lg);">
+        <div style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 700; margin-bottom: 0.5rem;">ASSIGNED STUDENTS</div>
+        <div style="font-size: 2rem; font-weight: 800; color: var(--text-main);" id="teacher-stat-active-students">0</div>
+        <div style="font-size: 0.8rem; color: #10B981; margin-top: 0.25rem;">In your classes</div>
+      </div>
+
+      <div class="card" style="padding: 1.5rem; border-radius: var(--radius-lg);">
+        <div style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 700; margin-bottom: 0.5rem;">CLASS AVG PROGRESS</div>
+        <div style="font-size: 2rem; font-weight: 800; color: var(--text-main);" id="teacher-stat-avg-progress">0%</div>
+        <div style="font-size: 0.8rem; color: #10B981; margin-top: 0.25rem;">Curriculum Completion</div>
+      </div>
+
+      <div class="card" style="padding: 1.5rem; border-radius: var(--radius-lg);">
+        <div style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 700; margin-bottom: 0.5rem;">PENDING REVIEWS</div>
+        <div style="font-size: 2rem; font-weight: 800; color: #F59E0B;" id="teacher-stat-pending-reviews">0</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Submissions to Grade</div>
+      </div>
+
+      <div class="card" style="padding: 1.5rem; border-radius: var(--radius-lg);">
+        <div style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 700; margin-bottom: 0.5rem;">TOTAL CLASS XP</div>
+        <div style="font-size: 2rem; font-weight: 800; color: #3B82F6;" id="teacher-stat-total-xp">0</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Earned by Students</div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs (Roster vs Submissions) -->
+    <div style="display: flex; gap: 1rem; border-bottom: 1px solid var(--border-light); margin-bottom: 1.5rem;">
+      <button class="tab-btn active" id="tab-btn-roster" onclick="switchTab('roster')">
+        <i data-lucide="users" style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i>
+        <span>Student Roster</span>
+      </button>
+      <button class="tab-btn" id="tab-btn-submissions" onclick="switchTab('submissions')">
+        <i data-lucide="file-check" style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i>
+        <span>Project Submissions</span>
+      </button>
+      <button class="tab-btn" id="tab-btn-projects" onclick="switchTab('projects')">
+        <i data-lucide="folder-code" style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i>
+        <span>Course Projects</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: Student Roster -->
+    <div id="tab-content-roster" class="card" style="padding: 2rem; border-radius: var(--radius-xl);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div>
+          <h2 style="font-size: 1.35rem; font-weight: 800; color: var(--text-main);">Assigned Class Roster</h2>
+          <p style="font-size: 0.875rem; color: var(--text-secondary);">Real-time learning analytics for students in your assigned classes.</p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openCreateProjectModal()">
+          <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+          <span>Create Class Project</span>
+        </button>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+          <thead>
+            <tr style="border-bottom: 1.5px solid var(--border-light); color: var(--text-secondary);">
+              <th style="padding: 0.75rem 1rem;">Student</th>
+              <th style="padding: 0.75rem 1rem;">Academic Tier</th>
+              <th style="padding: 0.75rem 1rem;">Class</th>
+              <th style="padding: 0.75rem 1rem;">Curriculum Progress</th>
+              <th style="padding: 0.75rem 1rem;">Total XP</th>
+              <th style="padding: 0.75rem 1rem;">Streak</th>
+              <th style="padding: 0.75rem 1rem; text-align: right;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="teacher-students-tbody">
+            <tr><td colspan="7" style="padding: 2rem; text-align: center; color: var(--text-secondary);">Loading student roster...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 2: Project Submissions to Grade -->
+    <div id="tab-content-submissions" class="card" style="padding: 2rem; border-radius: var(--radius-xl); display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div>
+          <h2 style="font-size: 1.35rem; font-weight: 800; color: var(--text-main);">Student Project Submissions</h2>
+          <p style="font-size: 0.875rem; color: var(--text-secondary);">Review student code, provide structured feedback, and assign grades.</p>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <select id="submissions-filter-status" class="input-field" style="padding: 0.35rem 0.75rem; font-size: 0.85rem;" onchange="fetchTeacherSubmissions()">
+            <option value="all">All Submissions</option>
+            <option value="submitted" selected>Pending Review</option>
+            <option value="graded">Graded</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+          <thead>
+            <tr style="border-bottom: 1.5px solid var(--border-light); color: var(--text-secondary);">
+              <th style="padding: 0.75rem 1rem;">Student</th>
+              <th style="padding: 0.75rem 1rem;">Class</th>
+              <th style="padding: 0.75rem 1rem;">Project &amp; Course</th>
+              <th style="padding: 0.75rem 1rem;">Submitted</th>
+              <th style="padding: 0.75rem 1rem;">Status / Grade</th>
+              <th style="padding: 0.75rem 1rem; text-align: right;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="teacher-submissions-tbody">
+            <tr><td colspan="6" style="padding: 2rem; text-align: center; color: var(--text-secondary);">Loading submissions...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 3: Projects List -->
+    <div id="tab-content-projects" class="card" style="padding: 2rem; border-radius: var(--radius-xl); display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div>
+          <h2 style="font-size: 1.35rem; font-weight: 800; color: var(--text-main);">Course Projects</h2>
+          <p style="font-size: 0.875rem; color: var(--text-secondary);">Active computational projects assigned to your courses.</p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openCreateProjectModal()">
+          <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+          <span>Create New Project</span>
+        </button>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+          <thead>
+            <tr style="border-bottom: 1.5px solid var(--border-light); color: var(--text-secondary);">
+              <th style="padding: 0.75rem 1rem;">Project Title</th>
+              <th style="padding: 0.75rem 1rem;">Course</th>
+              <th style="padding: 0.75rem 1rem;">XP Reward</th>
+              <th style="padding: 0.75rem 1rem;">Submissions</th>
+              <th style="padding: 0.75rem 1rem;">Pending</th>
+            </tr>
+          </thead>
+          <tbody id="teacher-projects-tbody">
+            <tr><td colspan="5" style="padding: 2rem; text-align: center; color: var(--text-secondary);">Loading projects...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- 1. Grading / Review Modal -->
+  <div class="modal-overlay" id="modal-grade">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modal-grade-title">Review Student Submission</h3>
+        <button class="btn btn-sm btn-outline" onclick="closeModal('modal-grade')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="grade-submission-id">
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; background: var(--bg-surface-secondary); padding: 0.75rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">STUDENT</div>
+            <div style="font-weight: 700; color: var(--text-main);" id="grade-student-name">Loading...</div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary);" id="grade-student-class">Class</div>
+          </div>
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">PROJECT</div>
+            <div style="font-weight: 700; color: var(--text-main);" id="grade-project-title">Project Title</div>
+            <div style="font-size: 0.75rem; color: #F59E0B; font-weight: 600;" id="grade-project-xp">+50 XP Reward</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Submitted Solution Code:</label>
+          <div class="code-preview-box" id="grade-code-preview"># No code submitted</div>
+        </div>
+
+        <div class="form-group" id="grade-notes-wrap" style="display: none;">
+          <label>Student Notes:</label>
+          <div style="padding: 0.5rem 0.75rem; background: var(--bg-surface-secondary); border-radius: var(--radius-sm); font-size: 0.85rem; color: var(--text-main);" id="grade-notes-preview"></div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label>Grade Score (0 - 100) *</label>
+            <input type="number" id="grade-score-input" class="input-field" min="0" max="100" placeholder="e.g. 95" value="100">
+            <span style="font-size: 0.75rem; color: #10B981;">Score ≥ 70 awards XP to student.</span>
+          </div>
+          <div class="form-group">
+            <label>Review Status</label>
+            <select id="grade-status-select" class="input-field">
+              <option value="graded">Graded &amp; Passed</option>
+              <option value="resubmit">Request Revision</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Teacher Feedback &amp; Suggestions</label>
+          <textarea id="grade-feedback-input" class="input-field" rows="3" placeholder="Great job! Your logic is clean and well-structured..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modal-grade')">Cancel</button>
+        <button class="btn btn-primary" id="btn-submit-grade" onclick="submitStudentGrade()">Save &amp; Award Grade</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Create Project Modal -->
+  <div class="modal-overlay" id="modal-create-project">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Create New Course Project</h3>
+        <button class="btn btn-sm btn-outline" onclick="closeModal('modal-create-project')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Course *</label>
+          <select id="project-course-select" class="input-field">
+            <option value="">Select Course...</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Project Title *</label>
+          <input type="text" id="project-title-input" class="input-field" placeholder="e.g. Planetary Lander Simulator">
+        </div>
+
+        <div class="form-group">
+          <label>Short Description</label>
+          <textarea id="project-desc-input" class="input-field" rows="2" placeholder="Brief summary of what this project entails..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Step-by-Step Instructions &amp; Requirements *</label>
+          <textarea id="project-inst-input" class="input-field" rows="4" placeholder="1. Define variable fuel = 100&#10;2. Calculate thrust needed&#10;3. Print final landing status"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>XP Reward</label>
+          <input type="number" id="project-xp-input" class="input-field" min="10" max="500" value="75">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modal-create-project')">Cancel</button>
+        <button class="btn btn-primary" id="btn-save-project" onclick="submitCreateProject()">Create Project</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Student Learning Analytics Modal -->
+  <div class="modal-overlay" id="modal-student-analytics">
+    <div class="modal-dialog" style="max-width: 800px;">
+      <div class="modal-header">
+        <h3 id="modal-student-name">Student Learning Analytics</h3>
+        <button class="btn btn-sm btn-outline" onclick="closeModal('modal-student-analytics')">✕</button>
+      </div>
+      
+      <!-- Student Top Header Info -->
+      <div style="padding: 1.25rem 1.5rem 0.75rem; background: var(--bg-surface-secondary); border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <img id="analytics-avatar" src="https://ui-avatars.com/api/?name=Student" alt="Avatar" style="width: 52px; height: 52px; border-radius: 50%; border: 2px solid #3B82F6;">
+          <div>
+            <div style="font-weight: 800; font-size: 1.15rem; color: var(--text-main);" id="analytics-fullname">Student</div>
+            <div style="font-size: 0.825rem; color: var(--text-secondary);" id="analytics-username-class">@username</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem;">
+          <div style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.3); padding: 0.35rem 0.75rem; border-radius: var(--radius-md); text-align: center;">
+            <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">TOTAL XP</div>
+            <div style="font-weight: 800; color: #F59E0B; font-size: 1rem;" id="analytics-xp">0 XP</div>
+          </div>
+          <div style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); padding: 0.35rem 0.75rem; border-radius: var(--radius-md); text-align: center;">
+            <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">STREAK</div>
+            <div style="font-weight: 800; color: #EF4444; font-size: 1rem;" id="analytics-streak">🔥 0 Days</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Nav Tabs -->
+      <div style="display: flex; gap: 0.5rem; padding: 0 1.5rem; border-bottom: 1px solid var(--border-light); background: var(--bg-surface-secondary);">
+        <button class="tab-btn active" id="modal-tab-courses" onclick="switchModalTab('courses')">Course Progress</button>
+        <button class="tab-btn" id="modal-tab-exams" onclick="switchModalTab('exams')">Exam History</button>
+        <button class="tab-btn" id="modal-tab-projects" onclick="switchModalTab('projects')">Project Submissions</button>
+        <button class="tab-btn" id="modal-tab-badges" onclick="switchModalTab('badges')">Achievements</button>
+      </div>
+
+      <div class="modal-body" id="modal-analytics-body">
+        <!-- SECTION 1: Courses & Lessons -->
+        <div id="analytics-section-courses">
+          <div style="display: flex; flex-direction: column; gap: 1rem;" id="analytics-courses-list">
+            Loading course progress...
+          </div>
+        </div>
+
+        <!-- SECTION 2: Exams -->
+        <div id="analytics-section-exams" style="display: none;">
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;" id="analytics-exams-list">
+            Loading exam history...
+          </div>
+        </div>
+
+        <!-- SECTION 3: Projects -->
+        <div id="analytics-section-projects" style="display: none;">
+          <div style="display: flex; flex-direction: column; gap: 1rem;" id="analytics-projects-list">
+            Loading project submissions...
+          </div>
+        </div>
+
+        <!-- SECTION 4: Badges -->
+        <div id="analytics-section-badges" style="display: none;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;" id="analytics-badges-list">
+            Loading achievements...
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modal-student-analytics')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/session.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/components.js"></script>
+  <script>
+    let currentTeacher = null;
+    let submissionsCache = [];
+    let coursesCache = [];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.lucide) window.lucide.createIcons();
+      currentTeacher = await window.session.requireAuth(['teacher']);
+      if (!currentTeacher) return;
+
+      document.getElementById('header-teacher-name').textContent = currentTeacher.full_name;
+
+      await fetchTeacherStudents();
+      await fetchTeacherSubmissions();
+      await fetchTeacherProjects();
+      await loadTeacherCourses();
+    });
+
+    function switchTab(tab) {
+      document.getElementById('tab-btn-roster').classList.toggle('active', tab === 'roster');
+      document.getElementById('tab-btn-submissions').classList.toggle('active', tab === 'submissions');
+      document.getElementById('tab-btn-projects').classList.toggle('active', tab === 'projects');
+
+      document.getElementById('tab-content-roster').style.display = tab === 'roster' ? 'block' : 'none';
+      document.getElementById('tab-content-submissions').style.display = tab === 'submissions' ? 'block' : 'none';
+      document.getElementById('tab-content-projects').style.display = tab === 'projects' ? 'block' : 'none';
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    async function fetchTeacherStudents() {
+      try {
+        const res = await fetch('/api/teacher/students.php');
+        const data = await res.json();
+        const tbody = document.getElementById('teacher-students-tbody');
+
+        if (data.success && data.data) {
+          const students = data.data.students || [];
+          const assignedLevels = data.data.assigned_levels || [];
+          document.getElementById('teacher-stat-active-students').textContent = students.length;
+
+          let totalXp = 0;
+          let totalProg = 0;
+
+          students.forEach(s => {
+            totalXp += Number(s.total_xp || 0);
+            totalProg += Number(s.progress_percent || 0);
+          });
+
+          const avgProg = students.length > 0 ? Math.round(totalProg / students.length) : 0;
+          document.getElementById('teacher-stat-avg-progress').textContent = `${avgProg}%`;
+          document.getElementById('teacher-stat-total-xp').textContent = totalXp.toLocaleString();
+
+          if (assignedLevels.length > 0) {
+            document.getElementById('header-teacher-scope').textContent = assignedLevels.map(l => l.name).join(', ');
+          }
+
+          if (students.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="padding: 2rem; text-align: center; color: var(--text-secondary);">No students enrolled in your assigned academic tiers or classes yet.</td></tr>';
+            return;
+          }
+
+          tbody.innerHTML = students.map(s => {
+            const avatar = s.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.full_name)}&background=4F46E5&color=FFFFFF`;
+            return `
+              <tr style="border-bottom: 1px solid var(--border-light);">
+                <td style="padding: 1rem; display: flex; align-items: center; gap: 0.75rem;">
+                  <img src="${avatar}" alt="${escapeHtml(s.full_name)}" style="width: 38px; height: 38px; border-radius: 50%;">
+                  <div>
+                    <div style="font-weight: 700; color: var(--text-main);">${escapeHtml(s.full_name)}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">@${escapeHtml(s.username)}</div>
+                  </div>
+                </td>
+                <td style="padding: 1rem;"><span class="badge badge-secondary-track" style="font-size: 0.75rem;">${escapeHtml(s.academic_group_name || 'Tier')}</span></td>
+                <td style="padding: 1rem;"><span class="badge badge-primary" style="font-size: 0.75rem;">${escapeHtml(s.class_name)}</span></td>
+                <td style="padding: 1rem;">
+                  <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <div class="progress-bar-container" style="width: 80px; height: 6px;">
+                      <div class="progress-bar-fill" style="width: ${s.progress_percent || 0}%;"></div>
+                    </div>
+                    <span style="font-weight: 700; font-size: 0.85rem;">${s.progress_percent || 0}%</span>
+                  </div>
+                </td>
+                <td style="padding: 1rem; font-weight: 700; color: #F59E0B;">${(s.total_xp || 0).toLocaleString()} XP</td>
+                <td style="padding: 1rem; color: #10B981; font-weight: 600;">🔥 ${s.current_streak || 0}d</td>
+                <td style="padding: 1rem; text-align: right;">
+                  <button class="btn btn-outline btn-sm" style="padding: 0.25rem 0.6rem; font-size: 0.8rem;" onclick="openStudentAnalytics('${s.id}')">
+                    <i data-lucide="bar-chart-2" style="width: 13px; height: 13px;"></i>
+                    <span>Analytics</span>
+                  </button>
+                </td>
+              </tr>
+            `;
+          }).join('');
+          if (window.lucide) window.lucide.createIcons();
+        } else {
+          tbody.innerHTML = '<tr><td colspan="7" style="padding: 2rem; text-align: center; color: #EF4444;">Failed to load roster.</td></tr>';
+        }
+      } catch (e) {
+        document.getElementById('teacher-students-tbody').innerHTML = '<tr><td colspan="7" style="padding: 2rem; text-align: center; color: #EF4444;">Network error.</td></tr>';
+      }
+    }
+
+    async function openStudentAnalytics(studentId) {
+      openModal('modal-student-analytics');
+      switchModalTab('courses');
+
+      document.getElementById('analytics-courses-list').innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-secondary);">Loading analytics...</div>';
+      document.getElementById('analytics-exams-list').innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-secondary);">Loading exam history...</div>';
+      document.getElementById('analytics-projects-list').innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-secondary);">Loading project submissions...</div>';
+      document.getElementById('analytics-badges-list').innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-secondary);">Loading achievements...</div>';
+
+      try {
+        const res = await fetch(`/api/student/detailed_profile.php?student_id=${studentId}`);
+        const data = await res.json();
+        if (data.success && data.data) {
+          renderStudentAnalyticsData(data.data);
+        } else {
+          alert(data.error || 'Failed to load student analytics');
+        }
+      } catch (e) {
+        console.error(e);
+        alert('Network error loading student details.');
+      }
+    }
+
+    function renderStudentAnalyticsData(data) {
+      const p = data.profile;
+      const g = data.gamification || {};
+
+      document.getElementById('analytics-fullname').textContent = p.full_name;
+      document.getElementById('analytics-username-class').textContent = `@${p.username} • Class ${p.class_name || 'N/A'} • ${p.academic_group_name || 'Tier'}`;
+      document.getElementById('analytics-avatar').src = p.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.full_name)}`;
+      document.getElementById('analytics-xp').textContent = `${g.total_xp || 0} XP`;
+      document.getElementById('analytics-streak').textContent = `🔥 ${g.current_streak || 0} Days`;
+
+      // 1. Courses
+      const coursesList = document.getElementById('analytics-courses-list');
+      if (!data.courses_progress || data.courses_progress.length === 0) {
+        coursesList.innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-secondary);">No courses enrolled yet.</div>';
+      } else {
+        coursesList.innerHTML = data.courses_progress.map(c => `
+          <div style="background: var(--bg-surface-secondary); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <div style="font-weight: 800; color: var(--text-main);">${escapeHtml(c.title)}</div>
+              <div style="font-weight: 800; color: #3B82F6;">${c.progress_percent}%</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.08); height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 0.5rem;">
+              <div style="background: #3B82F6; height: 100%; width: ${c.progress_percent}%;"></div>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-secondary); display: flex; justify-content: space-between;">
+              <span>${c.completed_lessons} of ${c.total_lessons} Lessons Completed</span>
+              <span class="badge ${c.progress_percent >= 100 ? 'badge-published' : 'badge-draft'}" style="font-size: 0.7rem;">${c.status || 'in_progress'}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // 2. Exams
+      const examsList = document.getElementById('analytics-exams-list');
+      if (!data.exam_history || data.exam_history.length === 0) {
+        examsList.innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-secondary);">No exam attempts recorded.</div>';
+      } else {
+        examsList.innerHTML = data.exam_history.map(e => `
+          <div style="background: var(--bg-surface-secondary); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-weight: 800; color: var(--text-main); font-size: 0.95rem;">${escapeHtml(e.exam_title)}</div>
+              <div style="font-size: 0.8rem; color: var(--text-secondary);">${escapeHtml(e.course_title)} • ${escapeHtml(e.chapter_title)}</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">Date: ${e.completed_at || e.started_at}</div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 1.25rem; font-weight: 800; color: ${e.passed ? '#10B981' : '#EF4444'};">${e.score}%</div>
+              <span class="badge ${e.passed ? 'badge-published' : 'badge-draft'}" style="font-size: 0.75rem;">${e.passed ? 'Passed' : 'Needs Retake'}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // 3. Projects
+      const projectsList = document.getElementById('analytics-projects-list');
+      if (!data.project_submissions || data.project_submissions.length === 0) {
+        projectsList.innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-secondary);">No practical project submissions recorded.</div>';
+      } else {
+        projectsList.innerHTML = data.project_submissions.map(ps => {
+          const submittedCode = ps.content_data && ps.content_data.code ? ps.content_data.code : '# No code content';
+          return `
+            <div style="background: var(--bg-surface-secondary); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <div>
+                  <div style="font-weight: 800; color: var(--text-main); font-size: 0.95rem;">${escapeHtml(ps.project_title)}</div>
+                  <div style="font-size: 0.8rem; color: var(--text-secondary);">${escapeHtml(ps.course_title)} • Submitted: ${ps.submitted_at}</div>
+                </div>
+                <div style="text-align: right;">
+                  <span class="badge ${ps.status === 'graded' ? 'badge-published' : 'badge-draft'}" style="font-size: 0.75rem;">${ps.status}</span>
+                  ${ps.grade !== null ? `<div style="font-weight: 800; color: #10B981; font-size: 1rem; margin-top: 2px;">Score: ${ps.grade}/100</div>` : ''}
+                </div>
+              </div>
+
+              ${ps.feedback ? `
+                <div style="background: rgba(59,130,246,0.1); border-left: 3px solid #3B82F6; padding: 0.5rem 0.75rem; border-radius: 4px; font-size: 0.85rem; color: #93C5FD; margin-bottom: 0.75rem;">
+                  <strong>Teacher Feedback:</strong> ${escapeHtml(ps.feedback)}
+                </div>
+              ` : ''}
+
+              <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.25rem;">SUBMITTED CODE:</div>
+              <pre style="background: #090D16; border: 1px solid var(--border-light); border-radius: 6px; padding: 0.75rem; font-family: monospace; font-size: 0.8rem; color: #A5F3FC; max-height: 150px; overflow-y: auto;">${escapeHtml(submittedCode)}</pre>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 4. Badges
+      const badgesList = document.getElementById('analytics-badges-list');
+      if (!data.achievements || data.achievements.length === 0) {
+        badgesList.innerHTML = '<div style="grid-column: 1/-1; padding: 2rem; text-align: center; color: var(--text-secondary);">No achievements unlocked yet.</div>';
+      } else {
+        badgesList.innerHTML = data.achievements.map(b => `
+          <div style="background: var(--bg-surface-secondary); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.75rem;">
+            <div style="font-size: 1.75rem;">🏆</div>
+            <div>
+              <div style="font-weight: 800; color: var(--text-main); font-size: 0.9rem;">${escapeHtml(b.title)}</div>
+              <div style="font-size: 0.75rem; color: var(--text-secondary);">${escapeHtml(b.description)}</div>
+              <div style="font-size: 0.7rem; color: #F59E0B; margin-top: 2px;">+${b.xp_reward} XP • ${b.earned_at}</div>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function switchModalTab(tabKey) {
+      ['courses', 'exams', 'projects', 'badges'].forEach(k => {
+        document.getElementById(`modal-tab-${k}`).classList.remove('active');
+        document.getElementById(`analytics-section-${k}`).style.display = (k === tabKey) ? 'block' : 'none';
+      });
+      document.getElementById(`modal-tab-${tabKey}`).classList.add('active');
+    }
+
+    async function fetchTeacherSubmissions() {
+      const statusFilter = document.getElementById('submissions-filter-status').value;
+      try {
+        const res = await fetch(`/api/teacher/submissions.php?status=${encodeURIComponent(statusFilter)}`);
+        const json = await res.json();
+        const tbody = document.getElementById('teacher-submissions-tbody');
+
+        if (json.success && json.data) {
+          submissionsCache = json.data.submissions || [];
+          
+          const pendingCount = submissionsCache.filter(s => s.status === 'submitted').length;
+          document.getElementById('teacher-stat-pending-reviews').textContent = pendingCount;
+
+          if (submissionsCache.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="padding: 2rem; text-align: center; color: var(--text-secondary);">No project submissions match the selected filter.</td></tr>';
+            return;
+          }
+
+          tbody.innerHTML = submissionsCache.map(sub => {
+            const isPending = sub.status === 'submitted';
+            const statusBadge = isPending 
+              ? '<span class="badge badge-warning" style="background: rgba(245, 158, 11, 0.15); color: #F59E0B;">Pending Review</span>'
+              : `<span class="badge badge-success">Graded: ${sub.grade}/100</span>`;
+            
+            const subJsonStr = JSON.stringify(sub).replace(/"/g, '&quot;');
+
+            return `
+              <tr style="border-bottom: 1px solid var(--border-light);">
+                <td style="padding: 1rem;">
+                  <div style="font-weight: 700; color: var(--text-main);">${escapeHtml(sub.student_name)}</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">@${escapeHtml(sub.student_username)}</div>
+                </td>
+                <td style="padding: 1rem;"><span class="badge badge-secondary-track">${escapeHtml(sub.class_name)}</span></td>
+                <td style="padding: 1rem;">
+                  <div style="font-weight: 700; color: var(--text-main);">${escapeHtml(sub.project_title)}</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">${escapeHtml(sub.course_title)}</div>
+                </td>
+                <td style="padding: 1rem; font-size: 0.8rem; color: var(--text-secondary);">${sub.submitted_at ? sub.submitted_at.substring(0, 16) : 'N/A'}</td>
+                <td style="padding: 1rem;">${statusBadge}</td>
+                <td style="padding: 1rem; text-align: right;">
+                  <button class="btn btn-sm ${isPending ? 'btn-primary' : 'btn-outline'}" onclick="openGradeModal('${sub.submission_id}')">
+                    <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>
+                    <span>${isPending ? 'Review & Grade' : 'Edit Grade'}</span>
+                  </button>
+                </td>
+              </tr>
+            `;
+          }).join('');
+          if (window.lucide) window.lucide.createIcons();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function fetchTeacherProjects() {
+      try {
+        const res = await fetch('/api/projects/list.php');
+        const json = await res.json();
+        const tbody = document.getElementById('teacher-projects-tbody');
+
+        if (json.success && json.data) {
+          const projects = json.data || [];
+          if (projects.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="padding: 2rem; text-align: center; color: var(--text-secondary);">No projects created yet. Click "Create New Project" above.</td></tr>';
+            return;
+          }
+
+          tbody.innerHTML = projects.map(p => `
+            <tr style="border-bottom: 1px solid var(--border-light);">
+              <td style="padding: 1rem; font-weight: 700; color: var(--text-main);">${escapeHtml(p.title)}</td>
+              <td style="padding: 1rem;"><span class="badge badge-secondary-track">${escapeHtml(p.course_title)}</span></td>
+              <td style="padding: 1rem; color: #F59E0B; font-weight: 700;">+${p.xp_reward || 0} XP</td>
+              <td style="padding: 1rem; font-weight: 600;">${p.total_submissions || 0} Submissions</td>
+              <td style="padding: 1rem;">
+                <span class="badge ${(p.pending_submissions > 0) ? 'badge-warning' : 'badge-success'}">
+                  ${p.pending_submissions || 0} to review
+                </span>
+              </td>
+            </tr>
+          `).join('');
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function loadTeacherCourses() {
+      try {
+        const res = await fetch('/api/courses/list.php');
+        const json = await res.json();
+        if (json.success && json.data) {
+          coursesCache = json.data;
+          const select = document.getElementById('project-course-select');
+          select.innerHTML = '<option value="">Select Course...</option>' + 
+            coursesCache.map(c => `<option value="${c.id}">${escapeHtml(c.title)} (${escapeHtml(c.academic_group_name || 'General')})</option>`).join('');
+        }
+      } catch (e) {
+        console.error('Failed to load courses for teacher project creation', e);
+      }
+    }
+
+    function openGradeModal(submissionId) {
+      const sub = submissionsCache.find(s => s.submission_id === submissionId);
+      if (!sub) return;
+
+      document.getElementById('grade-submission-id').value = sub.submission_id;
+      document.getElementById('grade-student-name').textContent = sub.student_name;
+      document.getElementById('grade-student-class').textContent = `${sub.class_name} · @${sub.student_username}`;
+      document.getElementById('grade-project-title').textContent = sub.project_title;
+      document.getElementById('grade-project-xp').textContent = `+${sub.xp_reward || 50} XP Reward`;
+
+      const codeContent = (sub.content_json && sub.content_json.code) ? sub.content_json.code : '# No code submitted in payload';
+      document.getElementById('grade-code-preview').textContent = codeContent;
+
+      const notes = (sub.content_json && sub.content_json.notes) ? sub.content_json.notes : '';
+      const notesWrap = document.getElementById('grade-notes-wrap');
+      if (notes) {
+        notesWrap.style.display = 'block';
+        document.getElementById('grade-notes-preview').textContent = notes;
+      } else {
+        notesWrap.style.display = 'none';
+      }
+
+      document.getElementById('grade-score-input').value = (sub.grade !== null && sub.grade !== undefined) ? sub.grade : 90;
+      document.getElementById('grade-status-select').value = sub.status === 'resubmit' ? 'resubmit' : 'graded';
+      document.getElementById('grade-feedback-input').value = sub.feedback || '';
+
+      openModal('modal-grade');
+    }
+
+    async function submitStudentGrade() {
+      const submission_id = document.getElementById('grade-submission-id').value;
+      const grade = parseInt(document.getElementById('grade-score-input').value, 10);
+      const status = document.getElementById('grade-status-select').value;
+      const feedback = document.getElementById('grade-feedback-input').value.trim();
+
+      if (isNaN(grade) || grade < 0 || grade > 100) {
+        alert('Please enter a valid grade between 0 and 100.');
+        return;
+      }
+
+      const btn = document.getElementById('btn-submit-grade');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      try {
+        const res = await window.apiFetch('/api/teacher/grade_submission.php', {
+          method: 'POST',
+          body: JSON.stringify({ submission_id, grade, status, feedback })
+        });
+        const json = await res.json();
+
+        if (json.success) {
+          closeModal('modal-grade');
+          await fetchTeacherSubmissions();
+          await fetchTeacherStudents();
+          await fetchTeacherProjects();
+        } else {
+          alert(json.error || 'Failed to save grade.');
+        }
+      } catch (e) {
+        alert('Network error while grading submission.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save & Award Grade';
+      }
+    }
+
+    function openCreateProjectModal() {
+      document.getElementById('project-title-input').value = '';
+      document.getElementById('project-desc-input').value = '';
+      document.getElementById('project-inst-input').value = '';
+      document.getElementById('project-xp-input').value = 75;
+      openModal('modal-create-project');
+    }
+
+    async function submitCreateProject() {
+      const course_id = document.getElementById('project-course-select').value;
+      const title = document.getElementById('project-title-input').value.trim();
+      const description = document.getElementById('project-desc-input').value.trim();
+      const instructions = document.getElementById('project-inst-input').value.trim();
+      const xp_reward = parseInt(document.getElementById('project-xp-input').value, 10) || 75;
+
+      if (!course_id || !title || !instructions) {
+        alert('Please select a Course and provide Project Title and Instructions.');
+        return;
+      }
+
+      const btn = document.getElementById('btn-save-project');
+      btn.disabled = true;
+      btn.textContent = 'Creating...';
+
+      try {
+        const res = await window.apiFetch('/api/projects/create.php', {
+          method: 'POST',
+          body: JSON.stringify({ course_id, title, description, instructions, xp_reward })
+        });
+        const json = await res.json();
+
+        if (json.success) {
+          closeModal('modal-create-project');
+          switchTab('projects');
+          await fetchTeacherProjects();
+        } else {
+          alert(json.error || 'Failed to create project');
+        }
+      } catch (e) {
+        alert('Network error creating project');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Create Project';
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+  </script>
+</body>
+</html>

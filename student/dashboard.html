@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - SPS Code Orbit</title>
+  <link rel="stylesheet" href="../css/global.css?v=2.0">
+  <link rel="stylesheet" href="../css/components.css?v=2.0">
+  <link rel="stylesheet" href="../css/responsive.css?v=1.2">
+  <link rel="stylesheet" href="../css/dashboard.css?v=2.0">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <!-- ========================================================================
+       0. IMMERSIVE DEEP-SPACE UNIVERSE & SWIRLING NEBULAE BACKDROP
+       ======================================================================== -->
+  <div class="space-universe-backdrop" aria-hidden="true">
+    <div class="starfield-layer"></div>
+    <div class="starfield-layer-dense"></div>
+    <div class="nebula-swirl-container">
+      <div class="nebula-cloud nebula-blue"></div>
+      <div class="nebula-cloud nebula-purple"></div>
+      <div class="nebula-cloud nebula-pink"></div>
+      <div class="nebula-cloud nebula-cyan-lower"></div>
+    </div>
+  </div>
+
+  <div class="app-shell" style="position: relative; z-index: 10;">
+    <!-- Persistent Sidebar -->
+    <aside id="app-sidebar"></aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header id="top-header"></header>
+
+      <!-- Dashboard Body Content -->
+      <main class="page-content" id="dashboard-main-content">
+        <div class="dashboard-grid">
+          
+          <!-- 1. CONTINUE LEARNING BANNER -->
+          <section aria-labelledby="continue-learning-title">
+            <div class="section-label">CONTINUE LEARNING</div>
+            <div class="continue-learning-banner" id="continue-learning-card">
+              <div class="continue-banner-glow"></div>
+              
+              <div class="continue-banner-content">
+                <span class="banner-track-tag" id="continue-track-tag">Academic Path</span>
+                <h2 class="continue-banner-title" id="continue-course-title">Loading Assigned Course...</h2>
+                <div class="continue-banner-meta" id="continue-lesson-subtitle"></div>
+
+                <div class="continue-progress-wrap">
+                  <div class="continue-progress-bar-row">
+                    <div class="progress-bar-container">
+                      <div class="progress-bar-fill" style="width: 0%;" id="continue-progress-fill"></div>
+                    </div>
+                    <span class="continue-progress-percent" id="continue-progress-text">0%</span>
+                  </div>
+                </div>
+
+                <a href="/student/courses.html" class="btn btn-primary" id="btn-continue-learning-action">
+                  <span>Start Course</span>
+                  <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+                </a>
+              </div>
+
+              <div class="continue-banner-visual">
+                <img src="/assets/images/Robot_waving_and_holding_tablet.png" alt="Cody Robot Companion" class="continue-robot-img" id="continue-cody-img" onerror="this.onerror=null; this.src='/assets/cody/cody.png';">
+                <div class="continue-floating-badge c-badge-1">&lt;/&gt;</div>
+                <div class="continue-floating-badge c-badge-2">{ }</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. MY COURSES -->
+          <section aria-labelledby="my-courses-header">
+            <div class="section-header-row">
+              <div class="section-label" style="margin-bottom: 0;">MY COURSES</div>
+              <a href="/student/courses.html" class="view-all-link" id="link-view-all-courses">
+                <span>View all courses</span>
+                <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+              </a>
+            </div>
+
+            <div class="courses-grid-4" id="dashboard-courses-list">
+              <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 2rem 0;">
+                Loading your enrolled courses...
+              </div>
+            </div>
+          </section>
+
+          <!-- 3. PROGRESS & RECENT ACTIVITY -->
+          <div class="dashboard-dual-row">
+            <!-- Progress Stats Box -->
+            <div class="stats-card-block" id="stats-overview-block">
+              <div class="section-label" style="margin-bottom: 0.5rem;">YOUR PROGRESS</div>
+
+              <div class="stats-content-grid">
+                <!-- Circular Chart -->
+                <div class="donut-stat-col">
+                  <div class="donut-chart-wrap">
+                    <svg viewBox="0 0 90 90">
+                      <circle class="donut-bg-circle" cx="45" cy="45" r="36"></circle>
+                      <circle class="donut-fill-circle" cx="45" cy="45" r="36" style="stroke-dashoffset: 226;"></circle>
+                    </svg>
+                    <div class="donut-center-label" id="donut-percent-text">0%</div>
+                  </div>
+                  <div class="donut-subtext">Overall Progress<br>Across all courses</div>
+                </div>
+
+                <!-- Metric 1: Lessons Completed -->
+                <div class="metric-stat-item">
+                  <div class="metric-header">Lessons Completed</div>
+                  <div class="metric-value-row">
+                    <i data-lucide="book-check" style="width: 22px; height: 22px; color: var(--color-primary);"></i>
+                    <span id="metric-lessons-completed">0</span>
+                  </div>
+                  <div class="metric-sub">Lessons</div>
+                </div>
+
+                <!-- Metric 2: XP -->
+                <div class="metric-stat-item">
+                  <div class="metric-header">XP</div>
+                  <div class="metric-value-row">
+                    <i data-lucide="star" style="width: 22px; height: 22px; color: #F59E0B; fill: #F59E0B;"></i>
+                    <span id="metric-total-xp">0</span>
+                  </div>
+                  <div class="metric-sub">Total XP</div>
+                </div>
+
+                <!-- Metric 3: Current Streak -->
+                <div class="metric-stat-item">
+                  <div class="metric-header">Current Streak</div>
+                  <div class="metric-value-row">
+                    <i data-lucide="flame" style="width: 22px; height: 22px; color: #EF4444; fill: #EF4444;"></i>
+                    <span id="metric-current-streak">0</span>
+                  </div>
+                  <div class="metric-sub">Days</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Activity Box -->
+            <div class="stats-card-block" id="recent-activity-block">
+              <div class="section-header-row" style="margin-bottom: 0.5rem;">
+                <div class="section-label" style="margin-bottom: 0;">RECENT ACTIVITY</div>
+                <a href="/student/progress.html" class="view-all-link">
+                  <span>View all activity</span>
+                  <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+                </a>
+              </div>
+
+              <div class="activity-feed-list" id="dashboard-activity-feed">
+                <div style="text-align: center; color: var(--text-muted); padding: 1.5rem 0; width: 100%;">
+                  No recent activity yet
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/js/session.js?v=5.0"></script>
+  <script src="/data/programming_foundations_curriculum.js?v=5.0"></script>
+  <script src="/data/python_foundations_curriculum.js?v=5.0"></script>
+  <script src="/data/python_level2_curriculum.js?v=5.0"></script>
+  <script src="/data/python_level2_exams.js?v=5.0"></script>
+  <script src="/data/curriculum_index.js?v=5.0"></script>
+  <script src="/data/courses.js?v=5.0"></script>
+  
+  <script src="/js/theme.js?v=5.0"></script>
+  <script src="/js/components.js?v=5.0"></script>
+  <script src="/js/gamification.js?v=5.0"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      await window.session.requireAuth(['student']);
+      window.renderSidebar('dashboard');
+      window.renderHeader();
+      await loadDashboardData();
+    });
+
+    function sanitizeCourses(list) {
+      if (!Array.isArray(list)) return [];
+      const legacyIds = ['course-1', 'course-2', 'course-3', 'course-4', 'intro-programming', 'course-code-quest', 'course-game-makers'];
+      const legacyKeywords = ['code quest', 'game makers', 'web magic', 'visual coding'];
+      return list.filter(c => {
+        if (!c) return false;
+        const id = String(c.id || '').toLowerCase();
+        const title = String(c.title || '').toLowerCase();
+        if (legacyIds.includes(id)) return false;
+        if (legacyKeywords.some(kw => id.includes(kw) || title.includes(kw))) return false;
+        return true;
+      });
+    }
+
+    function renderDashboardErrorState(message) {
+      const courseTitle = document.getElementById('continue-course-title');
+      if (courseTitle) courseTitle.textContent = 'Could Not Load Dashboard';
+
+      const lessonSubtitle = document.getElementById('continue-lesson-subtitle');
+      if (lessonSubtitle) lessonSubtitle.textContent = message || 'Please refresh and try again.';
+
+      const continueProgressFill = document.getElementById('continue-progress-fill');
+      if (continueProgressFill) continueProgressFill.style.width = '0%';
+
+      const continueProgressText = document.getElementById('continue-progress-text');
+      if (continueProgressText) continueProgressText.textContent = '0%';
+
+      const coursesList = document.getElementById('dashboard-courses-list');
+      if (coursesList) {
+        coursesList.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 2rem 0;">
+            Could not load your dashboard data. Please refresh and try again.
+          </div>
+        `;
+      }
+
+      const feedList = document.getElementById('dashboard-activity-feed');
+      if (feedList) {
+        feedList.innerHTML = `
+          <div style="text-align: center; color: var(--text-muted); padding: 1.5rem 0; width: 100%;">
+            No activity data available
+          </div>
+        `;
+      }
+
+      const metricXp = document.getElementById('metric-total-xp');
+      if (metricXp) metricXp.textContent = '0';
+
+      const metricLessons = document.getElementById('metric-lessons-completed');
+      if (metricLessons) metricLessons.textContent = '0';
+
+      const metricStreak = document.getElementById('metric-current-streak');
+      if (metricStreak) metricStreak.textContent = '0';
+
+      const donutLabel = document.getElementById('donut-percent-text');
+      if (donutLabel) donutLabel.textContent = '0%';
+
+      const donutCircle = document.querySelector('.donut-fill-circle');
+      if (donutCircle) donutCircle.style.strokeDashoffset = '226';
+    }
+
+    async function loadDashboardData() {
+      try {
+        const res = await fetch('/api/student/dashboard.php?_t=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) {
+          renderDashboardErrorState('Could not load your dashboard data. Please refresh and try again.');
+          if (window.lucide) window.lucide.createIcons();
+          return;
+        }
+        const json = await res.json();
+        if (!json.success || !json.data) {
+          renderDashboardErrorState(json.error || 'Could not load your dashboard data. Please refresh and try again.');
+          if (window.lucide) window.lucide.createIcons();
+          return;
+        }
+
+        let { stats, courses, completed_lesson_ids, recent_activities } = json.data;
+        courses = sanitizeCourses(courses || []);
+
+        // Sync completed lessons and total XP to localStorage
+        if (window.CURRICULUM_INDEX && typeof window.CURRICULUM_INDEX.syncCompletedLessonsToStorage === 'function') {
+          window.CURRICULUM_INDEX.syncCompletedLessonsToStorage(completed_lesson_ids || []);
+        }
+        if (stats && stats.total_xp !== undefined) {
+          if (window.CURRICULUM_INDEX && typeof window.CURRICULUM_INDEX.syncUserXpToStorage === 'function') {
+            window.CURRICULUM_INDEX.syncUserXpToStorage(stats.total_xp);
+          }
+        }
+
+        // 1. Stats
+        if (stats) {
+          document.getElementById('metric-total-xp').textContent = Number(stats.total_xp || 0).toLocaleString();
+          document.getElementById('metric-lessons-completed').textContent = stats.completed_lessons || 0;
+          document.getElementById('metric-current-streak').textContent = stats.current_streak || 0;
+          
+          // Calculate overall progress across courses
+          let totalCourseLessons = 0;
+          let completedCourseLessons = 0;
+          if (courses && courses.length > 0) {
+            courses.forEach(c => {
+              totalCourseLessons += c.lessonsCount || 0;
+              completedCourseLessons += c.completedLessonsCount || 0;
+            });
+          }
+          const overallPct = totalCourseLessons > 0 ? Math.round((completedCourseLessons / totalCourseLessons) * 100) : 0;
+          const donutLabel = document.getElementById('donut-percent-text');
+          if (donutLabel) donutLabel.textContent = `${overallPct}%`;
+          
+          const donutCircle = document.querySelector('.donut-fill-circle');
+          if (donutCircle) {
+            // Circumference is 2 * PI * 36 ~ 226. stroke-dashoffset = 226 - (226 * pct / 100)
+            const offset = 226 - (226 * overallPct / 100);
+            donutCircle.style.strokeDashoffset = offset;
+          }
+        }
+
+        // 2. Continue Learning Banner
+        if (courses && courses.length > 0) {
+          // Find first course with uncompleted lessons or first course
+          const activeCourse = courses.find(c => c.progress < 100) || courses[0];
+          document.getElementById('continue-track-tag').textContent = activeCourse.academicGroupLabel || 'Computer Science';
+          document.getElementById('continue-course-title').textContent = activeCourse.title;
+          document.getElementById('continue-lesson-subtitle').textContent = activeCourse.currentChapter ? `${activeCourse.currentChapter} · ${activeCourse.currentLessonTitle}` : activeCourse.currentLessonTitle;
+          document.getElementById('continue-progress-fill').style.width = `${activeCourse.progress}%`;
+          document.getElementById('continue-progress-text').textContent = `${activeCourse.progress}%`;
+          
+          const continueBtn = document.getElementById('btn-continue-learning-action');
+          if (continueBtn) {
+            if (activeCourse.progress >= 100 || activeCourse.isCompleted) {
+              continueBtn.href = `/student/course.html?id=${activeCourse.id}`;
+              const btnSpan = continueBtn.querySelector('span');
+              if (btnSpan) btnSpan.textContent = 'Review Course';
+            } else if (activeCourse.currentLessonId) {
+              continueBtn.href = `/student/lesson.html?id=${activeCourse.currentLessonId}`;
+              const btnSpan = continueBtn.querySelector('span');
+              if (btnSpan) btnSpan.textContent = 'Continue Learning';
+            } else {
+              continueBtn.href = `/student/course.html?id=${activeCourse.id}`;
+              const btnSpan = continueBtn.querySelector('span');
+              if (btnSpan) btnSpan.textContent = activeCourse.progress > 0 ? 'Continue Learning' : 'Start Course';
+            }
+          }
+        } else {
+          document.getElementById('continue-course-title').textContent = 'No Courses Assigned';
+          document.getElementById('continue-lesson-subtitle').textContent = 'Visit My Courses to explore curriculum';
+          const continueBtn = document.getElementById('btn-continue-learning-action');
+          if (continueBtn) continueBtn.href = '/student/courses.html';
+        }
+
+        // 3. Render Course Cards
+        const coursesList = document.getElementById('dashboard-courses-list');
+        if (coursesList) {
+          if (courses && courses.length > 0) {
+            coursesList.innerHTML = courses.map(c => {
+              const isFinished = c.progress >= 100 || c.isCompleted;
+              const targetUrl = isFinished || !c.currentLessonId 
+                ? `/student/course.html?id=${c.id}` 
+                : `/student/lesson.html?id=${c.currentLessonId}`;
+              const courseUrl = `/student/course.html?id=${c.id}`;
+              const actionLabel = isFinished ? 'Review Course' : (c.progress > 0 ? 'Continue' : 'Start');
+
+              return `
+                <div class="course-card" id="card-course-${c.id}">
+                  <a href="${courseUrl}" class="course-card-thumb-wrap" style="display: block;">
+                    <img src="${c.image}" alt="${c.title}">
+                  </a>
+                  <div class="course-card-body">
+                    <div class="course-card-header">
+                      <h3 class="course-card-title">
+                        <a href="${courseUrl}" style="color: inherit; text-decoration: none;">${c.title}</a>
+                      </h3>
+                    </div>
+                    <span class="badge badge-secondary-track course-card-tag">${c.academicGroupLabel}</span>
+                    
+                    <div class="course-progress-block">
+                      <div class="course-progress-row">
+                        <div class="progress-bar-container">
+                          <div class="progress-bar-fill" style="width: ${c.progress}%;"></div>
+                        </div>
+                        <span class="course-percent-label">${c.progress}%</span>
+                      </div>
+
+                      <div class="course-card-footer">
+                        <span class="course-lesson-indicator">${c.currentChapter}</span>
+                        <a href="${targetUrl}" class="course-action-link">
+                          <span>${actionLabel}</span>
+                          <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('');
+          } else {
+            coursesList.innerHTML = `
+              <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 2rem 0;">
+                No enrolled courses found. <a href="/student/courses.html" style="color: var(--color-primary);">Browse Courses</a>
+              </div>
+            `;
+          }
+        }
+
+        // 4. Render Activity Feed
+        const feedList = document.getElementById('dashboard-activity-feed');
+        if (feedList) {
+          if (recent_activities && recent_activities.length > 0) {
+            feedList.innerHTML = recent_activities.map(act => `
+              <div class="activity-item">
+                <div class="activity-icon-badge act-green">
+                  <i data-lucide="check-circle-2" style="width: 18px; height: 18px;"></i>
+                </div>
+                <div class="activity-details">
+                  <div class="activity-title">${act.lesson_title}</div>
+                  <div class="activity-meta">${act.course_title} · ${act.chapter_title}</div>
+                </div>
+                <div class="activity-time">${act.completed_at ? new Date(act.completed_at).toLocaleDateString() : 'Recently'}</div>
+              </div>
+            `).join('');
+          } else {
+            feedList.innerHTML = `
+              <div style="text-align: center; color: var(--text-muted); padding: 1.5rem 0; width: 100%;">
+                No recent activity yet
+              </div>
+            `;
+          }
+        }
+
+      } catch (e) {
+        console.error('Failed to load dashboard data', e);
+        renderDashboardErrorState('Could not load your dashboard data. Please refresh and try again.');
+      }
+      if (window.lucide) window.lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

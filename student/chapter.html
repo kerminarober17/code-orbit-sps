@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 2: Variables & Data - SPS Code Orbit</title>
+  <link rel="stylesheet" href="../css/global.css?v=2.0">
+  <link rel="stylesheet" href="../css/components.css?v=2.0">
+  <link rel="stylesheet" href="../css/responsive.css?v=1.2">
+  <link rel="stylesheet" href="../css/dashboard.css?v=2.0">
+  <link rel="stylesheet" href="../css/lesson.css?v=2.0">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="/data/python_level2_curriculum.js?v=5.0"></script>
+  <script src="/data/python_level2_exams.js?v=5.0"></script>
+</head>
+<body>
+
+  <!-- ========================================================================
+       0. IMMERSIVE DEEP-SPACE UNIVERSE & SWIRLING NEBULAE BACKDROP
+       ======================================================================== -->
+  <div class="space-universe-backdrop" aria-hidden="true">
+    <div class="starfield-layer"></div>
+    <div class="starfield-layer-dense"></div>
+    <div class="nebula-swirl-container">
+      <div class="nebula-cloud nebula-blue"></div>
+      <div class="nebula-cloud nebula-purple"></div>
+      <div class="nebula-cloud nebula-pink"></div>
+      <div class="nebula-cloud nebula-cyan-lower"></div>
+    </div>
+  </div>
+
+  <div class="app-shell" style="position: relative; z-index: 10;">
+    <aside id="app-sidebar"></aside>
+
+    <div class="main-wrapper">
+      <!-- Top Header Bar with Breadcrumb -->
+      <header class="top-header" style="height: 60px;">
+        <div class="breadcrumb-nav">
+          <a href="/student/courses.html">Introduction to Programming</a>
+          <span>/</span>
+          <span style="color: var(--text-main); font-weight: 600;">Chapter 2</span>
+        </div>
+
+        <div class="header-actions">
+          <div class="notification-bell" onclick="showToast('No new notifications', 'info')">
+            <i data-lucide="bell" style="width: 18px; height: 18px;"></i>
+            <span class="notification-badge">3</span>
+          </div>
+          <a href="/student/profile.html">
+            <img src="https://ui-avatars.com/api/?name=User&background=E0E7FF&color=4338CA" alt="Profile" class="header-user-avatar" style="width: 36px; height: 36px;">
+          </a>
+        </div>
+      </header>
+
+      <!-- Main Page Content -->
+      <main class="page-content" style="max-width: 1080px; margin: 0 auto; width: 100%;">
+        
+        <!-- Chapter Header Card -->
+        <div class="chapter-header-card" id="chapter-main-header">
+          <div class="chapter-header-left">
+            <div class="chapter-icon-badge" id="chapter-icon-view">
+              <span>X=</span>
+            </div>
+            <div class="chapter-header-titles">
+              <h1 id="chapter-title-text">Variables &amp; Data</h1>
+              <p id="chapter-desc-text">Learn how programs store, change, and use information.</p>
+            </div>
+          </div>
+
+          <div class="chapter-progress-box">
+            <div class="chapter-progress-label">Chapter Progress</div>
+            <div class="chapter-progress-val" id="chapter-progress-val">60%</div>
+            <div class="progress-bar-container" style="height: 6px;">
+              <div class="progress-bar-fill" style="width: 60%;"></div>
+            </div>
+            <div class="chapter-progress-sub">3 of 5 lessons completed</div>
+          </div>
+        </div>
+
+        <!-- Chapter Lessons Heading -->
+        <div class="section-label" style="margin-bottom: 1rem;">Chapter Lessons</div>
+
+        <!-- Lessons Sequence List -->
+        <div class="chapter-lessons-list" id="chapter-lessons-container">
+          
+          <!-- Lesson 01 -->
+          <div class="lesson-row-card" id="lesson-row-1">
+            <div class="lesson-status-icon status-completed">
+              <i data-lucide="check" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div class="lesson-row-num">01</div>
+            <div class="lesson-row-info">
+              <h4>What Is a Variable?</h4>
+              <p>Understand how variables store information.</p>
+            </div>
+            <div class="lesson-row-meta">
+              <span class="lesson-duration"><i data-lucide="clock" style="width: 14px; height: 14px;"></i> 8 min</span>
+              <span class="badge badge-success">Completed</span>
+              <i data-lucide="chevron-down" style="color: var(--text-muted); cursor: pointer;"></i>
+            </div>
+          </div>
+
+          <!-- Lesson 02 -->
+          <div class="lesson-row-card" id="lesson-row-2">
+            <div class="lesson-status-icon status-completed">
+              <i data-lucide="check" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div class="lesson-row-num">02</div>
+            <div class="lesson-row-info">
+              <h4>Creating Variables</h4>
+              <p>Create and assign values to variables.</p>
+            </div>
+            <div class="lesson-row-meta">
+              <span class="lesson-duration"><i data-lucide="clock" style="width: 14px; height: 14px;"></i> 10 min</span>
+              <span class="badge badge-success">Completed</span>
+              <i data-lucide="chevron-down" style="color: var(--text-muted); cursor: pointer;"></i>
+            </div>
+          </div>
+
+          <!-- Lesson 03: CURRENT / ACTIVE -->
+          <div class="lesson-row-card active-lesson" id="lesson-row-3">
+            <div class="lesson-status-icon status-active">
+              <i data-lucide="arrow-right" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div class="lesson-row-num">03</div>
+            <div class="lesson-row-info">
+              <h4>Changing Values</h4>
+              <p>Learn how variables can change while a program runs.</p>
+            </div>
+            <div class="lesson-row-meta">
+              <span class="lesson-duration"><i data-lucide="clock" style="width: 14px; height: 14px;"></i> 12 min</span>
+              <span class="badge badge-current">Current</span>
+              <a href="/student/lesson.html?id=lesson-ch2-l3" class="btn btn-primary btn-sm" style="padding: 0.45rem 1.25rem;">
+                <span>Continue</span>
+                <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Lesson 04 -->
+          <div class="lesson-row-card" id="lesson-row-4">
+            <div class="lesson-status-icon status-locked">
+              <i data-lucide="lock" style="width: 18px; height: 18px;"></i>
+            </div>
+            <div class="lesson-row-num">04</div>
+            <div class="lesson-row-info">
+              <h4>Using Variables</h4>
+              <p>Use variables in expressions and program logic.</p>
+            </div>
+            <div class="lesson-row-meta">
+              <span class="lesson-duration"><i data-lucide="clock" style="width: 14px; height: 14px;"></i> 10 min</span>
+              <span class="badge badge-upcoming">Upcoming</span>
+              <i data-lucide="chevron-down" style="color: var(--text-muted); cursor: pointer;"></i>
+            </div>
+          </div>
+
+          <!-- Lesson 05 -->
+          <div class="lesson-row-card" id="lesson-row-5">
+            <div class="lesson-status-icon status-locked">
+              <i data-lucide="lock" style="width: 18px; height: 18px;"></i>
+            </div>
+            <div class="lesson-row-num">05</div>
+            <div class="lesson-row-info">
+              <h4>Mini Challenge</h4>
+              <p>Apply what you've learned in a short challenge.</p>
+            </div>
+            <div class="lesson-row-meta">
+              <span class="lesson-duration"><i data-lucide="clock" style="width: 14px; height: 14px;"></i> 15 min</span>
+              <span class="badge badge-upcoming">Upcoming</span>
+              <i data-lucide="chevron-down" style="color: var(--text-muted); cursor: pointer;"></i>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Special Chapter 2 Exam Card -->
+        <div class="special-action-card" id="card-chapter-exam">
+          <div class="special-card-left">
+            <div class="special-icon-box">
+              <i data-lucide="file-text" style="width: 24px; height: 24px;"></i>
+            </div>
+            <div class="special-info">
+              <h4>Chapter 2 Exam</h4>
+              <p>Test what you've learned so far. The exam includes material from previous chapters.</p>
+            </div>
+          </div>
+
+          <a href="/student/exam.html?id=exam-ch2" class="btn btn-secondary" style="border-radius: var(--radius-md); padding: 0.6rem 1.4rem; font-weight: 600;">
+            <span>Take Exam</span>
+            <i data-lucide="arrow-right" style="width: 16px; height: 16px; color: var(--color-primary);"></i>
+          </a>
+        </div>
+
+        <!-- Special Chapter Project Card -->
+        <div class="special-action-card" style="border-left-color: #0EA5E9;" id="card-chapter-project">
+          <div class="special-card-left">
+            <div class="special-icon-box" style="background: #F0F9FF; color: #0EA5E9;">
+              <i data-lucide="code" style="width: 24px; height: 24px;"></i>
+            </div>
+            <div class="special-info">
+              <h4>Chapter Project (Optional)</h4>
+              <p>Apply your knowledge by building a real program.</p>
+            </div>
+          </div>
+
+          <a href="/student/challenges.html?project=ch2" class="btn btn-secondary" style="border-radius: var(--radius-md); padding: 0.6rem 1.4rem; font-weight: 600;">
+            <span>View Project</span>
+            <i data-lucide="arrow-right" style="width: 16px; height: 16px; color: var(--color-primary);"></i>
+          </a>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="/js/session.js?v=5.0"></script>
+  <script src="/data/courses.js?v=5.0"></script>
+  <script src="/data/chapters.js?v=5.0"></script>
+  
+  <script src="/js/theme.js?v=5.0"></script>
+  <script src="/js/components.js?v=5.0"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      await window.session.requireAuth(['student']);
+      window.location.href = '/student/course.html' + window.location.search;
+    });
+  </script>
+</body>
+</html>
