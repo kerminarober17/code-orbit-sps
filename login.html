@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - SPS Code Orbit</title>
+  <link rel="stylesheet" href="css/global.css?v=2.0">
+  <link rel="stylesheet" href="css/components.css?v=2.0">
+  <link rel="stylesheet" href="css/responsive.css?v=1.2">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body style="background: #070A14; min-height: 100vh; display: flex; flex-direction: column;">
+
+  <!-- ========================================================================
+       0. IMMERSIVE DEEP-SPACE UNIVERSE & SWIRLING NEBULAE BACKDROP
+       ======================================================================== -->
+  <div class="space-universe-backdrop" aria-hidden="true">
+    <div class="starfield-layer"></div>
+    <div class="starfield-layer-dense"></div>
+    <div class="nebula-swirl-container">
+      <div class="nebula-cloud nebula-blue"></div>
+      <div class="nebula-cloud nebula-purple"></div>
+      <div class="nebula-cloud nebula-pink"></div>
+      <div class="nebula-cloud nebula-cyan-lower"></div>
+    </div>
+  </div>
+
+  <!-- Simple Navigation Header -->
+  <header style="background: rgba(7, 10, 20, 0.65); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 10;">
+    <a href="/index.html" class="landing-logo" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem; color: #FFFFFF; font-weight: 800;">
+      <div class="landing-logo-icon" style="color: #70D6FF; filter: drop-shadow(0 0 8px rgba(112, 214, 255, 0.5));">
+        <i data-lucide="orbit" style="width: 26px; height: 26px;"></i>
+      </div>
+      <span>SPS Code Orbit</span>
+    </a>
+    <a href="/signup.html" class="btn btn-pill" style="border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.05); color: #FFFFFF; border-radius: 50px; font-size: 0.85rem; font-weight: 700; padding: 0.5rem 1.25rem;">Create Student Account</a>
+  </header>
+
+  <!-- Login Container -->
+  <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 2.5rem 1.5rem; position: relative; z-index: 10;">
+    <div class="glass-card" style="max-width: 440px; width: 100%; padding: 2.5rem; border-radius: 22px; background: rgba(16, 23, 42, 0.65); border: 1px solid rgba(255, 255, 255, 0.1);">
+      
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(112, 214, 255, 0.12); color: #70D6FF; border: 1px solid rgba(112, 214, 255, 0.4); box-shadow: 0 0 20px rgba(112, 214, 255, 0.25); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+          <i data-lucide="lock" style="width: 26px; height: 26px;"></i>
+        </div>
+        <h1 class="text-gradient-cyan" style="font-size: 1.65rem; font-weight: 800; margin-bottom: 0.35rem;">Welcome back</h1>
+        <p style="font-size: 0.9rem; color: #94A3B8;">Enter your credentials to access your SPS Code Orbit dashboard.</p>
+      </div>
+
+      <form id="login-form" onsubmit="handleLoginSubmit(event)" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div>
+          <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #E2E8F0; margin-bottom: 0.4rem;">Username</label>
+          <input type="text" id="login-username" class="input-field" placeholder="Enter your username" style="width: 100%; padding: 0.75rem 1rem; border-radius: 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); color: #FFFFFF;" required autofocus>
+        </div>
+
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <label style="font-size: 0.85rem; font-weight: 600; color: #E2E8F0;">Password</label>
+            <a href="#" style="font-size: 0.8rem; color: #70D6FF; text-decoration: none;">Forgot?</a>
+          </div>
+          <input type="password" id="login-password" class="input-field" placeholder="••••••••" style="width: 100%; padding: 0.75rem 1rem; border-radius: 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); color: #FFFFFF;" required>
+        </div>
+
+        <div id="login-error-alert" style="display: none; padding: 0.75rem 1rem; background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.4); color: #FDA4AF; border-radius: 12px; font-size: 0.85rem; box-shadow: 0 0 15px rgba(244, 63, 94, 0.2);"></div>
+
+        <button type="submit" class="btn btn-primary btn-pill" style="width: 100%; margin-top: 0.5rem; padding: 0.8rem 1.8rem; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.4);" id="btn-submit-login">
+          <span>Log In</span>
+          <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+        </button>
+      </form>
+
+      <div style="margin-top: 1.75rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.875rem; text-align: center; color: #E2E8F0;">
+        Don't have an account? <a href="/signup.html" style="color: var(--color-primary); font-weight: 600; text-decoration: none;">Register here</a>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="/js/session.js"></script>
+  <script src="/js/theme.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.lucide) window.lucide.createIcons();
+      await window.session.requireGuest();
+    });
+
+    async function handleLoginSubmit(e) {
+      e.preventDefault();
+      const username = document.getElementById('login-username').value;
+      const pass = document.getElementById('login-password').value;
+      
+      const btn = document.getElementById('btn-submit-login');
+      btn.disabled = true;
+      btn.querySelector('span').textContent = 'Logging in...';
+      
+      const res = await window.session.login(username, pass);
+
+      if (res.success && res.data && res.data.user) {
+        if (res.data.user.role === 'admin') window.location.href = '/admin/dashboard.html';
+        else if (res.data.user.role === 'teacher') window.location.href = '/teacher/dashboard.html';
+        else window.location.href = '/student/dashboard.html';
+      } else {
+        const alertBox = document.getElementById('login-error-alert');
+        alertBox.textContent = res.error || 'Invalid username or password';
+        alertBox.style.display = 'block';
+        btn.disabled = false;
+        btn.querySelector('span').textContent = 'Log In';
+      }
+    }
+  </script>
+</body>
+</html>

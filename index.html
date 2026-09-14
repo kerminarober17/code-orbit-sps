@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPS Code Orbit - Learn. Code. Explore.</title>
+  <meta name="description" content="Gamified interactive coding platform for young learners in programming, artificial intelligence, robotics, and creative technology.">
+  <meta property="og:title" content="SPS Code Orbit - Learn. Code. Explore.">
+  <meta property="og:description" content="Gamified interactive coding platform for young learners in programming, artificial intelligence, robotics, and creative technology.">
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="style.css?v=2.0">
+  <link rel="stylesheet" href="/css/responsive.css?v=1.3">
+  
+  <!-- Lucide Modern Icons Script -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <!-- ========================================================================
+       0. IMMERSIVE DEEP-SPACE UNIVERSE & SWIRLING NEBULAE BACKDROP
+       ======================================================================== -->
+  <div class="space-universe-backdrop" aria-hidden="true">
+    <!-- Starfield with Twinkling Depth -->
+    <div class="starfield-layer"></div>
+    <div class="starfield-layer-dense"></div>
+
+    <!-- Swirling Pastel Cosmic Dust Clouds (Nebulae) with 3D Depth -->
+    <div class="nebula-swirl-container">
+      <div class="nebula-cloud nebula-blue"></div>
+      <div class="nebula-cloud nebula-purple"></div>
+      <div class="nebula-cloud nebula-pink"></div>
+      <div class="nebula-cloud nebula-cyan-lower"></div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       2. FIXED GLASS NAVIGATION HEADER
+       ======================================================================== -->
+  <header class="glass-header" id="main-nav-header">
+    <div class="container nav-container">
+      <a href="/index.html" class="brand-logo" id="brand-logo-link">
+        <div class="brand-orbit-icon">
+          <i data-lucide="orbit" style="width: 28px; height: 28px;"></i>
+        </div>
+        <span>SPS Code Orbit</span>
+      </a>
+
+      <nav class="nav-links" id="primary-nav-links" aria-label="Main">
+        <a href="/courses.html" class="nav-link" id="nav-link-courses">Courses</a>
+        <a href="/challenges.html" class="nav-link" id="nav-link-challenges">Challenges</a>
+        <a href="/about.html" class="nav-link" id="nav-link-about">About</a>
+        <div class="mobile-drawer-actions" id="mobile-drawer-actions">
+          <a href="/login.html" class="btn-pill btn-glass drawer-link">Log In</a>
+          <a href="/signup.html" class="btn-pill btn-primary-cyan drawer-link">Get Started</a>
+        </div>
+      </nav>
+
+      <div class="nav-auth" id="header-auth-group">
+        <a href="/login.html" class="login-link" id="nav-btn-login">Log In</a>
+        <a href="/signup.html" class="btn-pill btn-white-pill" id="nav-btn-get-started">Get Started</a>
+      </div>
+
+      <button type="button" class="mobile-nav-btn" id="mobile-nav-btn" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav-links">
+        <i data-lucide="menu" style="width: 22px; height: 22px;"></i>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-nav-backdrop" id="mobile-nav-backdrop" hidden></div>
+<!-- ========================================================================
+       3. HERO SECTION (Rich Deep Space Video Blend & Asymmetrical Text)
+       ======================================================================== -->
+  <section class="hero-section" id="hero-section">
+    <!-- Autoplay Looping Muted Background Video -->
+    <video class="hero-video-bg" autoplay loop muted playsinline id="hero-bg-video">
+      <source src="https://res.cloudinary.com/wojtqtsw/video/upload/v1788782266/Astronaut_floating_with_pastel_p__202609071441.mp4" type="video/mp4">
+    </video>
+
+    <!-- Scrim Gradients blending video seamlessly into cosmic nebulae -->
+    <div class="hero-scrim-overlay"></div>
+    <div class="hero-bottom-fade"></div>
+
+    <!-- Hero Cosmic World Elements: Subtle floating coding fragments -->
+    <div class="hero-cosmic-elements" aria-hidden="true">
+      <!-- Subtle low-contrast floating code glyphs drifting peacefully in deep space -->
+      <div class="hero-floating-code-token token-brackets float-anim-1">{ }</div>
+      <div class="hero-floating-code-token token-tags float-anim-2">&lt; / &gt;</div>
+      <div class="hero-floating-code-token token-binary float-anim-3">01</div>
+    </div>
+
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-tag" id="hero-learning-tag">
+          <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i>
+          <span>THE FUTURE OF LEARNING</span>
+        </div>
+
+        <h1 class="hero-headline" id="hero-headline">
+          Learn.<br>
+          Code.<br>
+          <span class="text-gradient-white-blue">Explore.</span>
+        </h1>
+
+        <p class="hero-description" id="hero-description">
+          Interactive learning in programming, artificial intelligence, robotics, and creative technology for students from primary school through secondary school.
+        </p>
+
+        <div class="hero-cta-row" id="hero-cta-group">
+          <a href="/signup.html" class="btn-pill btn-primary-cyan" id="hero-btn-start">
+            <span>Start Learning</span>
+            <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+          </a>
+          <a href="/courses.html" class="btn-pill btn-glass" id="hero-btn-explore">
+            <span>Explore Courses</span>
+            <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       4. "YOUR CODE JOURNEY" (Four Stages of One Continuous Orbit)
+       Undulating Elevation + Continuous SVG Orbit Path + Waypoint Destination Pedestals
+       ======================================================================== -->
+  <section class="journey-section" id="features-section">
+    <!-- Ambient Cyan/Blue Orbital Atmosphere -->
+    <div class="journey-nebula-ambient"></div>
+
+    <div class="container">
+      <div class="section-header-center">
+        <div class="section-chapter-tag">
+          <span class="chapter-sparkle">✦</span>
+          <span>YOUR JOURNEY</span>
+        </div>
+        <h2 class="section-title">
+          Why Choose <span class="highlight-cyan-gradient">Code Orbit?</span>
+        </h2>
+        <p class="section-subtitle">
+          Travel through the four stages of your coding odyssey: Learn, Practice, Challenge, and Build.
+        </p>
+      </div>
+
+      <!-- Continuous Journey Flow Indicator Bar -->
+      <div class="journey-flow-indicator" aria-label="Journey stages progression">
+        <div class="journey-flow-node active">
+          <span class="journey-flow-dot"></span>
+          <span>01 Learn</span>
+        </div>
+        <span class="journey-flow-arrow">✦</span>
+        <div class="journey-flow-node">
+          <span class="journey-flow-dot"></span>
+          <span>02 Practice</span>
+        </div>
+        <span class="journey-flow-arrow">✦</span>
+        <div class="journey-flow-node">
+          <span class="journey-flow-dot"></span>
+          <span>03 Challenge</span>
+        </div>
+        <span class="journey-flow-arrow">✦</span>
+        <div class="journey-flow-node">
+          <span class="journey-flow-dot"></span>
+          <span>04 Build</span>
+        </div>
+      </div>
+
+      <!-- Journey Stages Grid with Continuous Undulating Orbit Track -->
+      <div class="journey-stages-container">
+        <!-- SVG Trajectory Path linking the 4 planetary stages -->
+        <svg class="journey-orbit-svg" viewBox="0 0 1200 160" fill="none" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="orbitLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.8" />
+              <stop offset="35%" stop-color="#c084fc" stop-opacity="0.85" />
+              <stop offset="70%" stop-color="#fbbf24" stop-opacity="0.85" />
+              <stop offset="100%" stop-color="#f472b6" stop-opacity="0.8" />
+            </linearGradient>
+          </defs>
+          <path 
+            class="journey-orbit-line" 
+            d="M 50 80 Q 200 30, 350 110 T 650 50 T 950 100 T 1150 70" 
+            stroke="url(#orbitLineGrad)" 
+            stroke-width="2.5" 
+            fill="none" 
+          />
+        </svg>
+
+        <div class="journey-stages-grid" id="features-grid">
+          <!-- Stage 01: LEARN (Cyan Orbital Atmosphere) -->
+          <div class="stage-destination-pedestal stage-halo-cyan stage-node-1" id="feature-card-learn">
+            <div class="stage-waypoint-top">
+              <span class="stage-waypoint-pill badge-cyan">
+                <span class="stage-beacon-glow"></span>
+                <span>01 · ARRIVAL</span>
+              </span>
+              <span class="stage-concept-tag">Enter the Orbit</span>
+            </div>
+
+            <div class="stage-mascot-viewport">
+              <div class="stage-orbit-ring"></div>
+              <img 
+                src="assets/images/Astronaut_robot_holding_star.png" 
+                alt="Astronaut Robot holding glowing star" 
+                class="stage-mascot-img float-anim-1"
+                onerror="this.onerror=null; this.src='Astronaut_robot_holding_star.png';"
+              >
+            </div>
+
+            <h3 class="stage-title">Learn</h3>
+            <p class="stage-desc">
+              Engage with interactive lessons, bite-sized cosmic concepts, and guided missions.
+            </p>
+            <a href="/courses.html" class="stage-action-link" aria-label="Explore lessons">
+              <span>Start Course Track</span>
+              <i data-lucide="arrow-right" style="width: 15px; height: 15px;"></i>
+            </a>
+          </div>
+
+          <!-- Stage 02: PRACTICE (Violet Orbital Atmosphere - Offset Lower) -->
+          <div class="stage-destination-pedestal stage-halo-purple stage-node-2" id="feature-card-practice">
+            <div class="stage-waypoint-top">
+              <span class="stage-waypoint-pill badge-purple">
+                <span class="stage-beacon-glow"></span>
+                <span>02 · EXPERIMENT</span>
+              </span>
+              <span class="stage-concept-tag">Experiment with Code</span>
+            </div>
+
+            <div class="stage-mascot-viewport">
+              <div class="stage-orbit-ring"></div>
+              <img 
+                src="assets/images/Violet_planet_character_smiling.png" 
+                alt="Violet smiling planet character with rings" 
+                class="stage-mascot-img float-anim-2"
+                onerror="this.onerror=null; this.src='Violet_planet_character_smiling.png';"
+              >
+            </div>
+
+            <h3 class="stage-title">Practice</h3>
+            <p class="stage-desc">
+              Apply concepts in live zero-gravity sandboxes with instant visual feedback.
+            </p>
+            <a href="/challenges.html" class="stage-action-link" aria-label="Practice hands-on exercises">
+              <span>Open Sandboxes</span>
+              <i data-lucide="arrow-right" style="width: 15px; height: 15px;"></i>
+            </a>
+          </div>
+
+          <!-- Stage 03: CHALLENGE (Solar Amber Atmosphere - Offset Higher) -->
+          <div class="stage-destination-pedestal stage-halo-yellow stage-node-3" id="feature-card-challenge">
+            <div class="stage-waypoint-top">
+              <span class="stage-waypoint-pill badge-yellow">
+                <span class="stage-beacon-glow"></span>
+                <span>03 · MISSION</span>
+              </span>
+              <span class="stage-concept-tag">Solve the Mission</span>
+            </div>
+
+            <div class="stage-mascot-viewport">
+              <div class="stage-orbit-ring"></div>
+              <img 
+                src="assets/images/Yellow_star_character_smiling.png" 
+                alt="Smiling yellow star character" 
+                class="stage-mascot-img float-anim-3"
+                onerror="this.onerror=null; this.src='Yellow_star_character_smiling.png';"
+              >
+            </div>
+
+            <h3 class="stage-title">Challenge</h3>
+            <p class="stage-desc">
+              Tackle planetary code puzzles, unlock daily streaks, and conquer quests.
+            </p>
+            <a href="/challenges.html" class="stage-action-link" aria-label="Test your skills in challenges">
+              <span>Accept Missions</span>
+              <i data-lucide="arrow-right" style="width: 15px; height: 15px;"></i>
+            </a>
+          </div>
+
+          <!-- Stage 04: BUILD (Pink Nebula Atmosphere - Climax Elevation) -->
+          <div class="stage-destination-pedestal stage-halo-pink stage-node-4" id="feature-card-build">
+            <div class="stage-waypoint-top">
+              <span class="stage-waypoint-pill badge-pink">
+                <span class="stage-beacon-glow"></span>
+                <span>04 · LAUNCH</span>
+              </span>
+              <span class="stage-concept-tag">Create Your World</span>
+            </div>
+
+            <div class="stage-mascot-viewport">
+              <div class="stage-orbit-ring"></div>
+              <img 
+                src="assets/images/Green_alien_waving_in_UFO.png" 
+                alt="Friendly green alien waving in UFO saucer" 
+                class="stage-mascot-img float-anim-4"
+                onerror="this.onerror=null; this.src='Green_alien_waving_in_UFO.png';"
+              >
+            </div>
+
+            <h3 class="stage-title">Build</h3>
+            <p class="stage-desc">
+              Transform your skills into real web apps, multiplayer games, and cosmic tools.
+            </p>
+            <a href="/student/dashboard.html" class="stage-action-link" aria-label="Build and showcase projects">
+              <span>Showcase Creations</span>
+              <i data-lucide="arrow-right" style="width: 15px; height: 15px;"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       5. "EXPLORE THE GALAXY" (Planetary Course Worlds)
+       Destinations with Planetary Aura + Reduced Secondary UI Clutter
+       ======================================================================== -->
+  <section class="courses-section" id="courses-section">
+    <!-- Deep Galaxy Ambient Aura -->
+    <div class="courses-galaxy-ambient"></div>
+
+    <div class="container">
+      <div class="courses-header-row">
+        <div>
+          <div class="section-chapter-tag">
+            <span class="chapter-sparkle">✦</span>
+            <span>EXPLORE</span>
+          </div>
+          <h2 class="section-title">
+            Explore The <span class="highlight-purple-gradient">Galaxy</span>
+          </h2>
+          <p class="section-subtitle">
+            Choose which world to explore — each track is a dedicated planet with its own interactive missions.
+          </p>
+        </div>
+
+        <a href="/courses.html" class="btn-pill btn-glass" id="btn-view-all-courses">
+          <span>View All Worlds</span>
+          <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+        </a>
+      </div>
+
+      <div class="courses-grid" id="popular-courses-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); max-width: 900px; margin: 0 auto; gap: 2rem;">
+        <!-- Planetary World 1: Programming Foundations -->
+        <div class="course-world-card world-halo-cyan" id="course-card-programming-foundations">
+          <div class="world-top-row">
+            <span class="world-designation">WORLD 01 · LEVEL 1</span>
+            <span class="world-tag-quiet">Preparatory Track</span>
+          </div>
+
+          <div class="world-focal-stage">
+            <div class="world-planetary-halo halo-cyan-bg"></div>
+            <div class="world-orbit-ring"></div>
+            <img 
+              src="assets/courses/prog.png" 
+              alt="Programming Foundations Mascot" 
+              class="world-illustration-img float-anim-1"
+              onerror="this.onerror=null; this.src='assets/images/Astronaut_robot_holding_star.png';"
+            >
+          </div>
+
+          <h3 class="course-world-title">Programming Foundations — Start Here</h3>
+          <p class="course-world-description">
+            The complete foundational course: discover what programming truly is, how computers work, and master algorithmic thinking.
+          </p>
+
+          <div class="world-bottom-wrap">
+            <div class="world-meta-quiet">
+              <span class="world-orbit-stat">
+                <i data-lucide="book-open" style="width: 13px; height: 13px; color: #70D6FF;"></i>
+                <span>6 Chapters · 24 Lessons</span>
+              </span>
+              <span>Level 1: Foundations</span>
+            </div>
+            <div class="world-minimal-progress">
+              <div class="world-progress-bar world-progress-cyan" style="width: 100%;"></div>
+            </div>
+            <a href="/student/course.html?id=course-programming-foundations" class="world-explore-btn">
+              <span>Enter World</span>
+              <i data-lucide="arrow-right" style="width: 15px; height: 15px;"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Planetary World 2: Python Foundations -->
+        <div class="course-world-card world-halo-purple" id="course-card-python-foundations">
+          <div class="world-top-row">
+            <span class="world-designation">WORLD 02 · LEVEL 1</span>
+            <span class="world-tag-quiet">Python Track</span>
+          </div>
+
+          <div class="world-focal-stage">
+            <div class="world-planetary-halo halo-purple-bg"></div>
+            <div class="world-orbit-ring"></div>
+            <img 
+              src="assets/courses/algo.png" 
+              alt="Python Foundations Mascot" 
+              class="world-illustration-img float-anim-2"
+              onerror="this.onerror=null; this.src='assets/images/Green_alien_waving_in_UFO.png';"
+            >
+          </div>
+
+          <h3 class="course-world-title">Python Foundations</h3>
+          <p class="course-world-description">
+            Build robust programming fundamentals from scratch using Python. Master variables, branching logic, loops, collections, and algorithms.
+          </p>
+
+          <div class="world-bottom-wrap">
+            <div class="world-meta-quiet">
+              <span class="world-orbit-stat">
+                <i data-lucide="book-open" style="width: 13px; height: 13px; color: #A855F7;"></i>
+                <span>10 Chapters · 40 Lessons</span>
+              </span>
+              <span>Level 1: Foundations</span>
+            </div>
+            <div class="world-minimal-progress">
+              <div class="world-progress-bar world-progress-purple" style="width: 100%;"></div>
+            </div>
+            <a href="/student/course.html?id=course-python-foundations" class="world-explore-btn">
+              <span>Enter World</span>
+              <i data-lucide="arrow-right" style="width: 15px; height: 15px;"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       6. CINEMATIC CODE ORBIT SCENE: "BUILD SOMETHING AMAZING"
+       IDEA → CODE → CREATION: Character + Holographic Code + Living Robot Creation
+       ======================================================================== -->
+  <section class="cinematic-build-section" id="playground-banner-section">
+    <!-- Cinematic Cosmic Ambient Light -->
+    <div class="cinematic-tech-ambient"></div>
+
+    <div class="container">
+      <div class="cinematic-split-grid">
+        <!-- Left: Story Narrative, Idea->Code->Creation flow & CTAs -->
+        <div class="cinematic-story-side">
+          <div class="section-chapter-tag">
+            <span class="chapter-sparkle">✦</span>
+            <span>CREATE</span>
+          </div>
+
+          <h2 class="cinematic-headline">
+            Build Something <span class="highlight-cyan-gradient">Amazing</span>
+          </h2>
+
+          <p class="cinematic-narrative">
+            Turn your ideas into real projects. In Code Orbit, your code breaks out of the screen to become living games, interactive robots, and cosmic web creations.
+          </p>
+
+          <!-- The Visual Concept Trail -->
+          <div class="concept-progression-rail" aria-hidden="true">
+            <div class="concept-step step-idea">
+              <span class="concept-sparkle">✦</span>
+              <span>Idea</span>
+            </div>
+            <span class="concept-connector">──✦──&gt;</span>
+            <div class="concept-step step-code">
+              <span class="concept-sparkle">&lt;/&gt;</span>
+              <span>Code</span>
+            </div>
+            <span class="concept-connector">──✦──&gt;</span>
+            <div class="concept-step step-creation">
+              <span class="concept-sparkle">🤖</span>
+              <span>Creation</span>
+            </div>
+          </div>
+
+          <div class="cinematic-btn-row">
+            <button class="btn-pill btn-primary-cyan" id="btn-open-playground" onclick="openPlaygroundModal()">
+              <span>Enter Playground</span>
+              <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+            </button>
+            <a href="/challenges.html" class="btn-pill btn-glass" id="btn-explore-challenges">
+              <span>Explore Missions</span>
+              <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: The Visual Cinematic Universe Scene -->
+        <div class="cinematic-universe-stage">
+          <!-- Background: Astronaut Cody in Space -->
+          <img 
+            src="assets/images/astronaut_hologram_scene.jpg" 
+            alt="Astronaut Cody interacting with a holographic coding terminal" 
+            class="cinematic-stage-bg"
+            onerror="this.onerror=null; this.src='astronaut_hologram_scene.jpg';"
+          >
+          <div class="cinematic-stage-scrim"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       7. ORBIT INFORMATION RAIL (Transforming Features Strip)
+       A continuous horizontal orbit track with 4 illuminated station nodes
+       ======================================================================== -->
+  <section class="orbit-rail-section" id="trust-pillars-section">
+    <div class="container">
+      <div class="orbit-rail-track-container">
+        <!-- Continuous Horizontal Orbit Rail Line -->
+        <div class="rail-orbit-line" aria-hidden="true"></div>
+
+        <div class="rail-nodes-grid" id="trust-pillars-bar">
+          <!-- Station 01 -->
+          <div class="rail-station-node" id="pillar-project-based">
+            <div class="rail-node-waypoint">
+              <i data-lucide="layers" style="width: 24px; height: 24px;"></i>
+            </div>
+            <span class="rail-station-designation">STATION 01</span>
+            <h4 class="rail-station-title">Project Based</h4>
+            <p class="rail-station-desc">Build real games, apps &amp; robots</p>
+          </div>
+
+          <!-- Station 02 -->
+          <div class="rail-station-node" id="pillar-expert-mentors">
+            <div class="rail-node-waypoint">
+              <i data-lucide="user-check" style="width: 24px; height: 24px;"></i>
+            </div>
+            <span class="rail-station-designation">STATION 02</span>
+            <h4 class="rail-station-title">Expert Mentors</h4>
+            <p class="rail-station-desc">Guided by patient space educators</p>
+          </div>
+
+          <!-- Station 03 -->
+          <div class="rail-station-node" id="pillar-flexible-learning">
+            <div class="rail-node-waypoint">
+              <i data-lucide="zap" style="width: 24px; height: 24px;"></i>
+            </div>
+            <span class="rail-station-designation">STATION 03</span>
+            <h4 class="rail-station-title">Self-Paced Quests</h4>
+            <p class="rail-station-desc">Learn at your comfortable speed</p>
+          </div>
+
+          <!-- Station 04 -->
+          <div class="rail-station-node" id="pillar-safe-supportive">
+            <div class="rail-node-waypoint">
+              <i data-lucide="shield-check" style="width: 24px; height: 24px;"></i>
+            </div>
+            <span class="rail-station-designation">STATION 04</span>
+            <h4 class="rail-station-title">Safe &amp; Inspiring</h4>
+            <p class="rail-station-desc">Kind, kid-first space community</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       7. LIVE INTERACTIVE CODE PLAYGROUND MODAL (Full Orbit Lab)
+       ======================================================================== -->
+  <div class="modal-backdrop" id="playground-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <i data-lucide="terminal" style="color: var(--color-cyan); width: 22px; height: 22px;"></i>
+          <span>Code Orbit Interactive Mission Lab</span>
+        </div>
+        <button class="btn-close-modal" onclick="closePlaygroundModal()" aria-label="Close playground">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="code-editor-box" style="display: flex; flex-direction: column;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+            <span style="font-weight: 750; color: #cbd5e1; font-size: 0.9rem;">Interactive Code Editor</span>
+            <button class="btn-pill btn-primary-cyan" style="padding: 0.35rem 1rem; font-size: 0.82rem;" onclick="runInteractiveCode()">
+              <i data-lucide="play" style="width: 14px; height: 14px;"></i>
+              <span>Run Code</span>
+            </button>
+          </div>
+          <textarea class="code-textarea" id="interactive-code-input" spellcheck="false">&lt;div style="background: #0b112c; padding: 25px; border-radius: 16px; border: 1px solid #38bdf8; font-family: sans-serif; text-align: center;"&gt;
+  &lt;h2 style="color: #38bdf8; margin-top: 0;"&gt;🚀 Hello Future Space Coder!&lt;/h2&gt;
+  &lt;p style="color: #f8fafc; font-size: 15px;"&gt;Welcome aboard the Code Orbit Deep Space Station. You are writing live browser code!&lt;/p&gt;
+  &lt;div style="margin: 20px 0;"&gt;
+    &lt;span style="display: inline-block; padding: 8px 16px; background: rgba(56, 189, 248, 0.2); color: #7dd3fc; border-radius: 20px; font-weight: bold;"&gt;Mission: Star Explorer&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;button style="background: linear-gradient(135deg, #38bdf8, #f472b6); color: #04060f; border: none; padding: 12px 24px; border-radius: 24px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.5);" onclick="alert('🌟 Starlight Booster Activated! You are awesome!')"&gt;Activate Starlight Booster&lt;/button&gt;
+&lt;/div&gt;</textarea>
+        </div>
+
+        <div class="code-preview-box" style="display: flex; flex-direction: column;">
+          <div style="font-size: 0.82rem; font-weight: 750; color: #94a3b8; margin-bottom: 0.8rem; letter-spacing: 0.05em;">LIVE PREVIEW VIEWPORT</div>
+          <iframe class="preview-iframe" id="interactive-preview-frame"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       8. MINIMAL DARK COSMIC SPACE FOOTER
+       ======================================================================== -->
+  <footer class="space-footer" id="main-footer">
+    <div class="container">
+      <div class="footer-top-grid">
+        <!-- Col 1: Brand & Socials -->
+        <div class="footer-brand-col">
+          <a href="/index.html" class="brand-logo" style="margin-bottom: 0.6rem; display: inline-flex;">
+            <div class="brand-orbit-icon" style="width: 30px; height: 30px;">
+              <i data-lucide="orbit" style="width: 30px; height: 30px;"></i>
+            </div>
+            <span>SPS Code Orbit</span>
+          </a>
+          <p class="footer-tagline">Small steps. Big cosmic dreams.</p>
+
+          <!-- Salam Prep Secondary Schools Identity -->
+          <div class="salam-prep-school-footer-badge" style="margin-top: 1rem; padding: 0.85rem 1rem; border-radius: 14px; background: linear-gradient(135deg, rgba(30, 58, 138, 0.3) 0%, rgba(15, 23, 42, 0.6) 100%); border: 1px solid rgba(112, 214, 255, 0.25); display: flex; align-items: center; gap: 0.85rem; position: relative; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+            <div style="position: absolute; right: -10px; top: -10px; opacity: 0.12; pointer-events: none; color: #70D6FF;">
+              <i data-lucide="orbit" style="width: 70px; height: 70px;"></i>
+            </div>
+            <div style="width: 42px; height: 42px; border-radius: 10px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;">
+              <i data-lucide="graduation-cap" style="width: 22px; height: 22px; color: #70D6FF;"></i>
+            </div>
+            <div>
+              <div style="font-size: 0.68rem; font-weight: 800; color: #70D6FF; letter-spacing: 0.06em; text-transform: uppercase;">
+                Official Technology Platform
+              </div>
+              <div style="font-size: 0.88rem; font-weight: 800; color: #FFFFFF; letter-spacing: -0.01em; margin-top: 0.1rem;">
+                Salam Prep Secondary Schools
+              </div>
+            </div>
+          </div>
+
+          <div class="social-icons-row" style="margin-top: 1rem;">
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="YouTube">
+              <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" fill="#EF4444"/>
+                <path d="M9.545 15.568L15.818 12 9.545 8.432v7.136z" fill="#FFFFFF"/>
+              </svg>
+            </a>
+            <a href="https://discord.com" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Discord">
+              <i data-lucide="message-square" style="width: 20px; height: 20px;"></i>
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Instagram">
+              <i data-lucide="instagram" style="width: 20px; height: 20px;"></i>
+            </a>
+            <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="TikTok">
+              <i data-lucide="music" style="width: 20px; height: 20px;"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Col 2: Quick Links -->
+        <div>
+          <h4 class="footer-col-title">Quick Links</h4>
+          <ul class="footer-links-list">
+            <li><a href="/courses.html">Courses</a></li>
+            <li><a href="/challenges.html">Challenges</a></li>
+            <li><a href="/about.html">About</a></li>
+            <li><a href="/about.html#contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Support -->
+        <div>
+          <h4 class="footer-col-title">Support</h4>
+          <ul class="footer-links-list">
+            <li><a href="/about.html">Help Center</a></li>
+            <li><a href="/about.html">Terms of Service</a></li>
+            <li><a href="/about.html">Privacy Policy</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Mascot Motto with Easter Egg -->
+        <div>
+          <div class="footer-planet-box" title="Cosmic greeting">
+            <div class="easter-egg-bubble" id="planet-easter-speech">
+              <code>print("Hello, Orbit explorer! ✨")</code>
+            </div>
+            <img 
+              src="assets/images/Astronaut_robot_holding_star.png" 
+              alt="Code Orbit Planet Mascot" 
+              class="footer-planet-icon"
+              onerror="this.onerror=null; this.src='Violet_planet_character_smiling.png';"
+            >
+            <p class="footer-planet-text">
+              Together we code a brighter future &#9829;
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <p>&copy; 2026 Code Orbit. All rights reserved.</p>
+        <p class="footer-bottom-sub">
+          <span class="motif-code-bracket">{</span>
+          <span class="motif-star-spark">✦</span>
+          <span class="motif-code-bracket">}</span>
+          <span>A cute, vibrant space-tech adventure for young coders.</span>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/js/session.js"></script>
+  <script src="/js/components.js"></script>
+  <script src="/js/mobile-nav.js"></script>
+  <script>
+    // Modal Interactive Code Playground Functions
+    function openPlaygroundModal() {
+      const modal = document.getElementById('playground-modal');
+      if (modal) {
+        modal.classList.add('active');
+        runInteractiveCode();
+      }
+    }
+
+    function closePlaygroundModal() {
+      const modal = document.getElementById('playground-modal');
+      if (modal) {
+        modal.classList.remove('active');
+      }
+    }
+
+    function runInteractiveCode() {
+      const input = document.getElementById('interactive-code-input');
+      const frame = document.getElementById('interactive-preview-frame');
+      if (input && frame) {
+        const doc = frame.contentDocument || frame.contentWindow.document;
+        doc.open();
+        doc.write(`
+          <!DOCTYPE html>
+          <html>
+          <body style="background: #080c1e; color: #ffffff; padding: 20px; font-family: sans-serif;">
+            ${input.value}
+          
+  
+
+</body>
+          </html>
+        `);
+        doc.close();
+      }
+    }
+
+    // Initialize Lucide Icons & Initial Code Execution
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+      runInteractiveCode();
+
+      // Mascot Easter egg messages
+      const planetBox = document.querySelector('.footer-planet-box');
+      const speechBubble = document.getElementById('planet-easter-speech');
+      if (planetBox && speechBubble) {
+        const greetings = [
+          'print("Hello, Orbit explorer! ✨")',
+          'mission_status = "ALL SYSTEMS GO 🚀"',
+          'const galaxies = ["Python", "JS", "CSS"]; 🌌',
+          'while (exploring) { codeFuture(); } ⭐',
+          'console.log("Together we code brighter! 💖")'
+        ];
+        let greetingIdx = 0;
+        planetBox.addEventListener('click', () => {
+          greetingIdx = (greetingIdx + 1) % greetings.length;
+          speechBubble.innerHTML = `<code>${greetings[greetingIdx]}</code>`;
+          speechBubble.style.opacity = '1';
+          speechBubble.style.transform = 'translateY(0)';
+          setTimeout(() => {
+            speechBubble.style.opacity = '';
+            speechBubble.style.transform = '';
+          }, 3200);
+        });
+      }
+    });
+
+    // Close modal on escape or backdrop click
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closePlaygroundModal();
+    });
+    const modalBackdrop = document.getElementById('playground-modal');
+    if (modalBackdrop) {
+      modalBackdrop.addEventListener('click', (e) => {
+        if (e.target === modalBackdrop) closePlaygroundModal();
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Registration - SPS Code Orbit</title>
+  <link rel="stylesheet" href="css/global.css?v=2.0">
+  <link rel="stylesheet" href="css/components.css?v=2.0">
+  <link rel="stylesheet" href="css/responsive.css?v=1.2">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body style="background: #070A14; min-height: 100vh; display: flex; flex-direction: column;">
+
+  <!-- ========================================================================
+       0. IMMERSIVE DEEP-SPACE UNIVERSE & SWIRLING NEBULAE BACKDROP
+       ======================================================================== -->
+  <div class="space-universe-backdrop" aria-hidden="true">
+    <div class="starfield-layer"></div>
+    <div class="starfield-layer-dense"></div>
+    <div class="nebula-swirl-container">
+      <div class="nebula-cloud nebula-blue"></div>
+      <div class="nebula-cloud nebula-purple"></div>
+      <div class="nebula-cloud nebula-pink"></div>
+      <div class="nebula-cloud nebula-cyan-lower"></div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header style="background: rgba(7, 10, 20, 0.65); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 10;">
+    <a href="/index.html" class="landing-logo" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem; color: #FFFFFF; font-weight: 800;">
+      <div class="landing-logo-icon" style="color: #70D6FF; filter: drop-shadow(0 0 8px rgba(112, 214, 255, 0.5));">
+        <i data-lucide="orbit" style="width: 26px; height: 26px;"></i>
+      </div>
+      <span>SPS Code Orbit</span>
+    </a>
+    <a href="/login.html" class="btn btn-pill" style="border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.05); color: #FFFFFF; border-radius: 50px; font-size: 0.85rem; font-weight: 700; padding: 0.5rem 1.25rem;">Already have an account? Log In</a>
+  </header>
+
+  <!-- Form Container -->
+  <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 2.5rem 1.5rem; position: relative; z-index: 10;">
+    <div class="glass-card float-anim-1" style="max-width: 520px; width: 100%; padding: 2.5rem; border-radius: 22px; background: rgba(16, 23, 42, 0.65); border: 1px solid rgba(255, 255, 255, 0.1);">
+      
+      <div style="text-align: center; margin-bottom: 1.75rem;">
+        <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(112, 214, 255, 0.12); color: #70D6FF; border: 1px solid rgba(112, 214, 255, 0.4); box-shadow: 0 0 20px rgba(112, 214, 255, 0.25); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+          <i data-lucide="user-plus" style="width: 26px; height: 26px;"></i>
+        </div>
+        <h1 class="text-gradient-cyan" style="font-size: 1.65rem; font-weight: 800; margin-bottom: 0.35rem;">Join SPS Code Orbit</h1>
+        <p style="font-size: 0.9rem; color: #94A3B8;">Create your student profile and begin your journey.</p>
+      </div>
+
+      <form id="signup-form" onsubmit="handleSignupSubmit(event)" style="display: flex; flex-direction: column; gap: 1.1rem;">
+        <div>
+          <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.35rem;">Full Name</label>
+          <input type="text" id="reg-fullname" class="input-field" placeholder="e.g. Alex Rivera" style="width: 100%; padding: 0.75rem 1rem; border-radius: 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); color: #FFFFFF;" required>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.35rem;">Username</label>
+          <input type="text" id="reg-username" class="input-field" placeholder="Choose a unique username" style="width: 100%; padding: 0.75rem 1rem; border-radius: 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); color: #FFFFFF;" required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.35rem;">Academic Level</label>
+            <select id="reg-academic-group" class="input-field" onchange="handleAcademicLevelChange()" style="width: 100%; padding: 0.75rem 1rem; border-radius: 12px; background: rgba(16, 23, 42, 0.95); border: 1px solid rgba(255, 255, 255, 0.1); color: #FFFFFF;" required>
+            </select>
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.35rem;">Grade</label>
+            <select id="reg-grade" class="input-field" style="width: 100%; padding: 0.75rem 1rem; border-radius: 12px; background: rgba(16, 23, 42, 0.95); border: 1px solid rgba(255, 255, 255, 0.1); color: #FFFFFF;" required>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.35rem;">Class / Section</label>
+          <select id="reg-class" class="input-field" style="width: 100%; padding: 0.75rem 1rem; border-radius: 12px; background: rgba(16, 23, 42, 0.95); border: 1px solid rgba(255, 255, 255, 0.1); color: #FFFFFF;" required>
+          </select>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.35rem;">Password</label>
+            <input type="password" id="reg-password" class="input-field" placeholder="••••••••" style="width: 100%; padding: 0.75rem 1rem; border-radius: 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); color: #FFFFFF;" required>
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.35rem;">Confirm Password</label>
+            <input type="password" id="reg-confirm-password" class="input-field" placeholder="••••••••" style="width: 100%; padding: 0.75rem 1rem; border-radius: 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); color: #FFFFFF;" required>
+          </div>
+        </div>
+
+        <div id="signup-error-alert" style="display: none; padding: 0.75rem 1rem; background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.4); color: #FDA4AF; border-radius: 12px; font-size: 0.85rem;"></div>
+
+        <button type="submit" class="btn btn-primary btn-pill" style="width: 100%; margin-top: 0.5rem; padding: 0.8rem 1.8rem; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.4);" id="btn-submit-signup">
+          <span>Create Account &amp; Start</span>
+          <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/session.js"></script>
+  <script src="/js/theme.js"></script>
+  <script>
+    const ACADEMIC_DATA = {
+      "Primary 3 & 4": ["Primary 3", "Primary 4"],
+      "Primary 5 & 6": ["Primary 5", "Primary 6"],
+      "Preparatory": ["Prep 1", "Prep 2", "Prep 3"],
+      "Secondary": ["Sec 1", "Sec 2", "Sec 3"]
+    };
+
+    const CLASS_SECTIONS = ["A", "B", "C", "A2", "D", "E", "E2"];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.lucide) window.lucide.createIcons();
+      await window.session.requireGuest();
+      initDropdowns();
+    });
+
+    function initDropdowns() {
+      const groupSelect = document.getElementById('reg-academic-group');
+      const classSelect = document.getElementById('reg-class');
+
+      // Populate Academic Level options
+      groupSelect.innerHTML = Object.keys(ACADEMIC_DATA).map(level => 
+        `<option value="${level}">${level}</option>`
+      ).join('');
+
+      // Populate Class / Section options
+      classSelect.innerHTML = CLASS_SECTIONS.map(sec => 
+        `<option value="${sec}">Section ${sec}</option>`
+      ).join('');
+
+      // Initialize Grade dropdown based on first Academic Level
+      handleAcademicLevelChange();
+    }
+
+    function handleAcademicLevelChange() {
+      const groupSelect = document.getElementById('reg-academic-group');
+      const gradeSelect = document.getElementById('reg-grade');
+      const selectedLevel = groupSelect.value;
+      const grades = ACADEMIC_DATA[selectedLevel] || [];
+
+      gradeSelect.innerHTML = grades.map(g => `<option value="${g}">${g}</option>`).join('');
+      if (gradeSelect.options.length > 0) {
+        gradeSelect.selectedIndex = 0;
+      }
+    }
+
+    async function handleSignupSubmit(e) {
+      e.preventDefault();
+      const full_name = document.getElementById('reg-fullname').value.trim();
+      const username = document.getElementById('reg-username').value.trim();
+      const academic_level = document.getElementById('reg-academic-group').value;
+      const grade = document.getElementById('reg-grade').value;
+      const class_section = document.getElementById('reg-class').value;
+      const password = document.getElementById('reg-password').value;
+      const password_confirm = document.getElementById('reg-confirm-password').value;
+
+      const alertBox = document.getElementById('signup-error-alert');
+      alertBox.style.display = 'none';
+
+      if (password !== password_confirm) {
+        showError('Passwords do not match');
+        return;
+      }
+
+      const btn = document.getElementById('btn-submit-signup');
+      btn.disabled = true;
+      btn.querySelector('span').textContent = 'Creating account...';
+
+      try {
+        const res = await fetch('/api/auth/signup.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            full_name,
+            username,
+            password,
+            password_confirm,
+            academic_level,
+            grade,
+            class_section,
+            grade_id: grade,
+            class_id: class_section
+          })
+        });
+        const data = await res.json();
+        if (data.success && data.data && data.data.user) {
+          // Immediate successful registration and authenticated session
+          window.session.user = data.data.user;
+          if (data.data.csrf_token) {
+            window.session.csrfToken = data.data.csrf_token;
+          }
+          window.session.redirectByRole(data.data.user.role || 'student');
+        } else {
+          showError(data.error || 'Signup failed. Please try again.');
+          btn.disabled = false;
+          btn.querySelector('span').textContent = 'Create Account & Start';
+        }
+      } catch (e) {
+        showError('Network error connecting to the server. Please try again.');
+        btn.disabled = false;
+        btn.querySelector('span').textContent = 'Create Account & Start';
+      }
+    }
+
+    function showError(msg) {
+      const alertBox = document.getElementById('signup-error-alert');
+      alertBox.textContent = msg;
+      alertBox.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

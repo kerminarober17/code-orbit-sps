@@ -1,0 +1,6 @@
+{
+  "name": "SPS Code Orbit",
+  "description": "School-wide interactive learning platform for programming, artificial intelligence, robotics, and creative technology.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

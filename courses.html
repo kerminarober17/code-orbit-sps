@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore Courses - SPS Code Orbit</title>
+  
+  <!-- Core Immersive Stylesheet -->
+  <link rel="stylesheet" href="/style.css?v=4.0">
+  <link rel="stylesheet" href="/css/responsive.css?v=1.3">
+  
+  <!-- Lucide Modern Icons Script -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Complete Resilient Header & Navigation Fallbacks */
+    .glass-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 70px;
+      background: rgba(7, 10, 20, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+    }
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      width: 100%;
+    }
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      width: 100%;
+    }
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #ffffff !important;
+      font-size: 1.25rem;
+      font-weight: 800;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .brand-orbit-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(112, 214, 255, 0.2) 0%, rgba(192, 132, 252, 0.2) 100%);
+      border: 1px solid rgba(112, 214, 255, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #70D6FF;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+    .nav-link {
+      color: #94a3b8 !important;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+      position: relative;
+    }
+    .nav-link:hover {
+      color: #ffffff !important;
+    }
+    .nav-auth {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .login-link {
+      color: #cbd5e1 !important;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+    }
+    .btn-white-pill {
+      background: #ffffff !important;
+      color: #070A14 !important;
+      font-weight: 700;
+      padding: 0.55rem 1.4rem;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .page-title {
+      color: #ffffff !important;
+    }
+    .highlight-cyan-gradient {
+      background: linear-gradient(135deg, #70D6FF 0%, #C084FC 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Active State for glass navigation links */
+    .nav-link.active::after {
+      width: 100% !important;
+    }
+    .nav-link.active {
+      color: #ffffff !important;
+      text-shadow: 0 0 14px rgba(56, 189, 248, 0.8) !important;
+    }
+    
+    /* Courses Catalog Section */
+    .courses-catalog-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 8rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .courses-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 2rem;
+    }
+    @media (min-width: 768px) {
+      .courses-grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (min-width: 1024px) {
+      .courses-grid-4 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* Course Glass Cards Override */
+    .course-card.glass-card {
+      background: rgba(16, 23, 42, 0.65) !important;
+      backdrop-filter: blur(16px) saturate(140%) !important;
+      -webkit-backdrop-filter: blur(16px) saturate(140%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      border-radius: 22px !important;
+      padding: 1.75rem !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s ease, box-shadow 0.3s ease !important;
+    }
+
+    .course-card.glass-card:hover {
+      border-color: rgba(112, 214, 255, 0.6) !important;
+      box-shadow: 0 16px 40px -10px rgba(7, 10, 20, 0.8), 0 0 20px rgba(112, 214, 255, 0.25) !important;
+      transform: translateY(-5px) !important;
+    }
+
+    /* Card thumbnail wrap */
+    .course-card-thumb-wrap {
+      width: 100%;
+      height: 170px;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(10, 14, 26, 0.45);
+      position: relative;
+    }
+
+    .course-card-thumb-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .course-card.glass-card:hover .course-card-thumb-wrap img {
+      transform: scale(1.05);
+    }
+
+    /* Primary gradient buttons */
+    .btn-primary-cyan {
+      background: linear-gradient(135deg, #70D6FF 0%, #C084FC 100%);
+      color: #070A14 !important;
+      font-weight: 800;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 4px 15px rgba(112, 214, 255, 0.35);
+      border-radius: 50px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .btn-primary-cyan:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px rgba(112, 214, 255, 0.45), 0 0 30px rgba(192, 132, 252, 0.35);
+      border-color: rgba(255, 255, 255, 0.85);
+      background: linear-gradient(135deg, #99E2FF 0%, #D8B4FE 100%);
+    }
+
+    /* Category Filter Buttons */
+    .btn-category {
+      background: rgba(16, 23, 42, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      font-weight: 700;
+      padding: 0.6rem 1.5rem;
+      border-radius: 50px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+    }
+
+    .btn-category:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-category.active {
+      background: linear-gradient(135deg, #70D6FF 0%, #C084FC 100%);
+      color: #070A14;
+      border-color: rgba(255, 255, 255, 0.35);
+      box-shadow: 0 4px 15px rgba(112, 214, 255, 0.3);
+    }
+
+    /* Mascot Hero Portal */
+    .mascot-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mascot-ring {
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border: 1px dashed rgba(112, 214, 255, 0.2);
+      border-radius: 50%;
+      animation: spin 30s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .split-header-grid {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 2rem !important;
+  width: 100% !important;
+}
+
+.split-header-text {
+  flex: 1 1 60% !important; 
+  max-width: 650px !important;
+}
+
+.split-header-media {
+  flex: 1 1 40% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.split-header-media img {
+  width: 100% !important;
+  max-width: 400px !important;
+  height: auto !important;
+  filter: drop-shadow(0 15px 30px rgba(112, 214, 255, 0.25)) !important;
+  animation: headerFloat 4s ease-in-out infinite !important;
+}
+
+@keyframes headerFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@media (max-width: 768px) {
+  .split-header-grid {
+    flex-direction: column !important;
+    text-align: center !important;
+  }
+  .split-header-text {
+    align-items: center !important;
+  }
+  .split-header-media img {
+    max-width: 200px !important;
+  }
+}
+  </style>
+</head>
+<body style="background: #070A14;">
+
+  <!-- ========================================================================
+       0. IMMERSIVE DEEP-SPACE UNIVERSE & SWIRLING NEBULAE BACKDROP
+       ======================================================================== -->
+  <div class="space-universe-backdrop" aria-hidden="true">
+    <div class="starfield-layer"></div>
+    <div class="starfield-layer-dense"></div>
+    <div class="nebula-swirl-container">
+      <div class="nebula-cloud nebula-blue"></div>
+      <div class="nebula-cloud nebula-purple"></div>
+      <div class="nebula-cloud nebula-pink"></div>
+      <div class="nebula-cloud nebula-cyan-lower"></div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       2. FIXED GLASS NAVIGATION HEADER
+       ======================================================================== -->
+  <header class="glass-header" id="main-nav-header">
+    <div class="container nav-container">
+      <a href="/index.html" class="brand-logo" id="brand-logo-link">
+        <div class="brand-orbit-icon">
+          <i data-lucide="orbit" style="width: 28px; height: 28px;"></i>
+        </div>
+        <span>SPS Code Orbit</span>
+      </a>
+
+      <nav class="nav-links" id="primary-nav-links" aria-label="Main">
+        <a href="/courses.html" class="nav-link" id="nav-link-courses">Courses</a>
+        <a href="/challenges.html" class="nav-link" id="nav-link-challenges">Challenges</a>
+        <a href="/about.html" class="nav-link" id="nav-link-about">About</a>
+        <div class="mobile-drawer-actions" id="mobile-drawer-actions">
+          <a href="/login.html" class="btn-pill btn-glass drawer-link">Log In</a>
+          <a href="/signup.html" class="btn-pill btn-primary-cyan drawer-link">Get Started</a>
+        </div>
+      </nav>
+
+      <div class="nav-auth" id="header-auth-group">
+        <a href="/login.html" class="login-link" id="nav-btn-login">Log In</a>
+        <a href="/signup.html" class="btn-pill btn-white-pill" id="nav-btn-get-started">Get Started</a>
+      </div>
+
+      <button type="button" class="mobile-nav-btn" id="mobile-nav-btn" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav-links">
+        <i data-lucide="menu" style="width: 22px; height: 22px;"></i>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-nav-backdrop" id="mobile-nav-backdrop" hidden></div>
+
+  <!-- ========================================================================
+       3. MAJESTIC HERO HEADER
+       ======================================================================== -->
+  <div class="container" style="position: relative; z-index: 10; padding: 6.5rem 1.5rem 2rem;">
+    <div class="split-header-grid">
+      <!-- Column 1 (Left): Text, Badges & Filter Buttons -->
+      <div class="split-header-text">
+        <span class="badge-pill" style="margin-bottom: 1.25rem; display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(112, 214, 255, 0.12); border: 1px solid rgba(112, 214, 255, 0.25); border-radius: 50px; padding: 0.4rem 1rem; color: #70D6FF; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.05em;">
+          <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i>
+          <span>CURRICULUM DIRECTORY</span>
+        </span>
+        
+        <h1 class="page-title" style="font-size: clamp(2.25rem, 5vw, 3.5rem); line-height: 1.15; font-weight: 900; margin-bottom: 1rem; letter-spacing: -0.03em; color: #ffffff !important;">
+          Explore Our <span class="highlight-cyan-gradient">Cosmic Curriculum</span>
+        </h1>
+        
+        <p class="page-subtitle" style="font-size: 1.15rem; color: #cbd5e1; max-width: 600px; line-height: 1.6; margin-bottom: 2rem;">
+          From early visual block-based adventures to advanced algorithmic problem solving, artificial intelligence, and robotics. Empowering young creators.
+        </p>
+ 
+        <!-- Category Tabs / Filter Pills -->
+        <div class="header-actions" style="display: flex; gap: 0.75rem; flex-wrap: wrap;" id="category-filter-tabs">
+          <button class="btn-category active" data-filter="all" onclick="filterByGroup('all', this)">All Courses <span id="count-all" style="font-size: 0.85em; opacity: 0.85;">(2)</span></button>
+          <button class="btn-category" data-filter="foundation" onclick="filterByGroup('foundation', this)">Foundation Track</button>
+          <button class="btn-category" data-filter="python" onclick="filterByGroup('python', this)">Python Track</button>
+        </div>
+      </div>
+ 
+      <!-- Column 2 (Right): Compact Mascot Image -->
+      <div class="split-header-media">
+        <img src="/assets/images/Astronaut_robot_holding_star.png" alt="Code Orbit Mascot" onerror="this.onerror=null; this.src='/assets/images/Astronaut_floating_with_pastel_p.png';">
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       4. COURSE CATALOG GRID
+       ======================================================================== -->
+  <div class="courses-catalog-container">
+    <div class="courses-grid-4" id="catalog-courses-grid">
+      <!-- Injected Dynamically -->
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       5. SCRIPTS
+       ======================================================================== -->
+  <script src="/js/session.js?v=5.0"></script>
+  <script src="/data/programming_foundations_curriculum.js?v=5.0"></script>
+  <script src="/data/python_foundations_curriculum.js?v=5.0"></script>
+  <script src="/data/python_level2_curriculum.js?v=5.0"></script>
+  <script src="/data/python_level2_exams.js?v=5.0"></script>
+  <script src="/data/curriculum_index.js?v=5.0"></script>
+  <script src="/data/courses.js?v=5.0"></script>
+  <script src="/js/components.js?v=4.0"></script>
+  <script src="/js/mobile-nav.js"></script>
+  <script src="/js/theme.js?v=4.0"></script>
+  <script>
+    let activeFilter = 'all';
+    let loadedCourses = [];
+    let currentUser = null;
+
+    function sanitizeCourses(list) {
+      if (!Array.isArray(list)) return [];
+      const legacyIds = ['course-1', 'course-2', 'course-3', 'course-4', 'intro-programming', 'course-code-quest', 'course-game-makers'];
+      const legacyKeywords = ['code quest', 'game makers', 'web magic', 'visual coding'];
+      return list.filter(c => {
+        if (!c) return false;
+        const id = String(c.id || '').toLowerCase();
+        const title = String(c.title || '').toLowerCase();
+        if (legacyIds.includes(id)) return false;
+        if (legacyKeywords.some(kw => id.includes(kw) || title.includes(kw))) return false;
+        return true;
+      });
+    }
+
+    function updateFilterPillCounts() {
+      const allCount = loadedCourses.length;
+      const elAll = document.getElementById('count-all');
+      if (elAll) elAll.textContent = `(${allCount})`;
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.COURSES_DATA && window.COURSES_DATA.length > 0) {
+        loadedCourses = sanitizeCourses(window.COURSES_DATA);
+        updateFilterPillCounts();
+        renderCatalog();
+      }
+      try {
+        currentUser = await window.session.fetchUser();
+      } catch (e) {}
+      await fetchCourses();
+      updateFilterPillCounts();
+      renderCatalog();
+    });
+
+    async function fetchCourses() {
+      try {
+        const response = await fetch('/api/courses/list.php?_t=' + Date.now(), { cache: 'no-store' });
+        const result = await response.json();
+        if (result.success && result.data && result.data.length > 0) {
+          const valid = sanitizeCourses(result.data);
+          if (valid.length > 0) {
+            loadedCourses = valid;
+            updateFilterPillCounts();
+            renderCatalog();
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch courses from API:', err);
+      }
+    }
+
+    function renderCatalog() {
+      const grid = document.getElementById('catalog-courses-grid');
+      const courses = loadedCourses.filter(c => {
+        if (activeFilter === 'all') return true;
+        const slug = (c.slug || '').toLowerCase();
+        const title = (c.title || '').toLowerCase();
+        const track = (c.track || c.academic_group_name || '').toLowerCase();
+        const level = (c.level || '').toLowerCase();
+
+        if (activeFilter === 'foundation') {
+          return slug.includes('foundation') || level.includes('foundation') || title.includes('foundation') || track.includes('foundation');
+        }
+        if (activeFilter === 'python') {
+          return slug.includes('python') || title.includes('python') || track.includes('python');
+        }
+        if (activeFilter === 'frontend') {
+          return slug.includes('web') || slug.includes('frontend') || slug.includes('html') || title.includes('frontend') || title.includes('web');
+        }
+        if (activeFilter === 'js' || activeFilter === 'javascript') {
+          return slug.includes('js') || slug.includes('javascript') || title.includes('javascript');
+        }
+        if (activeFilter === 'level1') {
+          return level.includes('level 1') || title.includes('level 1') || c.level_number === 1;
+        }
+        if (activeFilter === 'level2') {
+          return level.includes('level 2') || title.includes('level 2') || c.level_number === 2;
+        }
+        if (activeFilter === 'level3') {
+          return level.includes('level 3') || title.includes('level 3') || c.level_number === 3;
+        }
+        return true;
+      });
+
+      if (courses.length === 0) {
+        if (activeFilter === 'primary_3_4') {
+          grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; color: #94a3b8; padding: 4rem 1.5rem;" class="glass-card">
+              <i data-lucide="sparkles" style="width: 48px; height: 48px; color: #F59E0B; margin: 0 auto 1rem; opacity: 0.85;"></i>
+              <h3 style="font-size: 1.35rem; font-weight: 800; color: #ffffff; margin-bottom: 0.5rem;">Primary 3 &amp; 4 Curriculum In Design</h3>
+              <p style="font-size: 0.95rem; color: #cbd5e1; max-width: 520px; margin: 0 auto 1.5rem; line-height: 1.6;">
+                Primary 3 &amp; 4 currently has no active courses while a brand-new cosmic curriculum is being designed. Check out courses in Primary 5 &amp; 6, Preparatory, and Secondary!
+              </p>
+              <button onclick="filterByGroup('all', document.querySelector('[data-filter=all]'))" class="btn-primary-cyan btn-pill btn-sm" style="padding: 0.6rem 1.5rem; border-radius: 50px; cursor: pointer;">
+                <span>View All Active Courses</span>
+              </button>
+            </div>
+          `;
+        } else {
+          grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; color: #94a3b8; padding: 4rem 1.5rem;" class="glass-card">
+              <i data-lucide="compass" style="width: 48px; height: 48px; color: #94a3b8; margin: 0 auto 1rem; opacity: 0.5;"></i>
+              <p style="font-size: 1.1rem; font-weight: 600;">No courses found in this quadrant.</p>
+              <p style="font-size: 0.9rem; color: #64748b; margin-top: 0.25rem;">Select another path or check back soon!</p>
+            </div>
+          `;
+        }
+        if (window.lucide) window.lucide.createIcons();
+        return;
+      }
+
+      grid.innerHTML = courses.map(c => {
+        const isEnrolled = c.is_enrolled || false;
+        const chaptersCount = c.chaptersCount || c.chapters_count || 10;
+        const lessonsCount = c.lessonsCount || c.lessons_count || 40;
+        const levelBadge = c.level || (c.level_number ? 'Level ' + c.level_number : 'Foundation');
+
+        let buttonHtml = '';
+        if (isEnrolled) {
+          buttonHtml = `
+            <a href="/student/course.html?id=${c.id}" class="btn-primary-cyan btn-pill btn-sm" style="width: 100%; padding: 0.8rem 1rem; border-radius: 50px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+              <span>Continue Course</span>
+              <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+            </a>
+          `;
+        } else {
+          buttonHtml = `
+            <button onclick="handleCourseEnrollment('${c.id}', this)" class="btn-primary-cyan btn-pill btn-sm" style="width: 100%; padding: 0.8rem 1rem; border-radius: 50px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; background: linear-gradient(135deg, #38BDF8 0%, #818CF8 100%);">
+              <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i>
+              <span>Enroll Now</span>
+            </button>
+          `;
+        }
+
+        return `
+          <div class="course-card glass-card" id="catalog-card-${c.id}">
+            <div class="course-card-thumb-wrap">
+              <img src="${c.image_url || c.image || '/assets/courses/prog.png'}" alt="${c.title}" onerror="this.onerror=null; this.src='/assets/courses/prog.png';">
+            </div>
+            <div class="course-card-body" style="padding: 0; display: flex; flex-direction: column; flex-grow: 1;">
+              <div class="course-card-header" style="margin-bottom: 0.5rem;">
+                <h3 class="course-card-title" style="font-size: 1.35rem; font-weight: 800; color: #ffffff; letter-spacing: -0.01em;">${c.title}</h3>
+              </div>
+              <p style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 1.5rem; line-height: 1.5; min-height: 54px; flex-grow: 1;">
+                ${c.description}
+              </p>
+              
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; background: rgba(255, 255, 255, 0.03); padding: 0.65rem 1rem; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.05);">
+                <span class="badge" style="background: rgba(112, 214, 255, 0.12); color: #70D6FF; border: 1px solid rgba(112, 214, 255, 0.25); border-radius: 12px; padding: 0.35rem 0.75rem; font-size: 0.75rem; font-weight: 700;">${levelBadge}</span>
+                <div style="display: flex; align-items: center; gap: 0.85rem; font-size: 0.8rem; color: #94a3b8;">
+                  <span style="display: inline-flex; align-items: center; gap: 0.35rem;"><i data-lucide="book-open" style="width: 14px; height: 14px; color: #70D6FF;"></i> ${chaptersCount} Ch</span>
+                  <span style="display: inline-flex; align-items: center; gap: 0.35rem;"><i data-lucide="play-circle" style="width: 14px; height: 14px; color: #C084FC;"></i> ${lessonsCount} Les</span>
+                </div>
+              </div>
+
+              ${buttonHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    async function handleCourseEnrollment(courseId, btnElement) {
+      if (!currentUser) {
+        window.location.href = `/login.html?redirect=/student/course.html?id=${encodeURIComponent(courseId)}`;
+        return;
+      }
+
+      btnElement.disabled = true;
+      btnElement.innerHTML = `
+        <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
+          <i data-lucide="loader-2" class="spin-icon" style="width: 16px; height: 16px; animation: spin 1s linear infinite;"></i>
+          <span>Enrolling...</span>
+        </span>
+      `;
+      if (window.lucide) window.lucide.createIcons();
+
+      try {
+        const res = await window.apiFetch('/api/courses/enroll.php', {
+          method: 'POST',
+          body: JSON.stringify({ course_id: courseId })
+        });
+        
+        let data = null;
+        try {
+          data = await res.json();
+        } catch (jsonErr) {}
+
+        if (res.ok || (data && (data.success || data.already_enrolled)) || res.status === 409) {
+          try {
+            const stored = JSON.parse(localStorage.getItem('sps_orbit_enrolled_courses') || '[]');
+            if (!stored.includes(courseId)) {
+              stored.push(courseId);
+              localStorage.setItem('sps_orbit_enrolled_courses', JSON.stringify(stored));
+            }
+          } catch(err) {}
+
+          // Find course and update
+          const course = loadedCourses.find(c => c.id === courseId);
+          if (course) {
+            course.is_enrolled = true;
+          }
+
+          btnElement.style.background = 'linear-gradient(135deg, #10B981 0%, #059669 100%)';
+          btnElement.style.color = '#FFFFFF';
+          btnElement.innerHTML = `
+            <i data-lucide="check" style="width: 16px; height: 16px;"></i>
+            <span>Enrolled! Launching...</span>
+          `;
+          if (window.lucide) window.lucide.createIcons();
+
+          if (window.showToast) {
+            window.showToast('Successfully enrolled! Loading My Courses...', 'success');
+          }
+
+          setTimeout(() => {
+            window.location.href = `/student/courses.html`;
+          }, 600);
+        } else {
+          const msg = (data && (data.message || data.error)) || 'Enrollment failed. Please try again.';
+          alert(msg);
+          btnElement.disabled = false;
+          btnElement.innerHTML = `<span>Enroll</span>`;
+        }
+      } catch (e) {
+        console.error('Enrollment error', e);
+        // Guaranteed fallback redirect
+        window.location.href = `/student/courses.html`;
+      }
+    }
+
+    function filterByGroup(group, btn) {
+      activeFilter = group;
+      document.querySelectorAll('#category-filter-tabs button').forEach(b => {
+        b.className = 'btn-category';
+      });
+      btn.className = 'btn-category active';
+      renderCatalog();
+    }
+  </script>
+</body>
+</html>
