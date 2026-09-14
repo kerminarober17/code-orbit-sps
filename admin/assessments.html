@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assessment Management - SPS Code Orbit Admin</title>
+  <link rel="stylesheet" href="../css/global.css?v=2.0">
+  <link rel="stylesheet" href="../css/components.css?v=2.0">
+  <link rel="stylesheet" href="../css/responsive.css?v=1.2">
+  <link rel="stylesheet" href="../css/dashboard.css?v=2.0">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000; padding: 1rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal-dialog {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      width: 100%; max-width: 750px; max-height: 90vh;
+      display: flex; flex-direction: column;
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+      transform: scale(0.95); transition: transform 0.25s ease;
+    }
+    .modal-overlay.active .modal-dialog { transform: scale(1); }
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-light);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .modal-header h3 { font-size: 1.2rem; font-weight: 800; color: var(--text-main); margin: 0; }
+    .modal-body {
+      padding: 1.5rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1.25rem;
+    }
+    .modal-footer {
+      padding: 1.25rem 1.5rem;
+      border-top: 1px solid var(--border-light);
+      display: flex; justify-content: flex-end; gap: 0.75rem;
+      background: var(--bg-surface-secondary);
+    }
+    .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+    .form-group label { font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    
+    .question-card {
+      background: var(--bg-surface-secondary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+    }
+
+    .tab-btn {
+      padding: 0.6rem 1.25rem;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-btn.active {
+      color: var(--color-primary, #3B82F6);
+      border-bottom-color: var(--color-primary, #3B82F6);
+    }
+  </style>
+</head>
+<body style="background: #070A14;">
+
+  <!-- ========================================================================
+       0. IMMERSIVE DEEP-SPACE UNIVERSE & SWIRLING NEBULAE BACKDROP
+       ======================================================================== -->
+  <div class="space-universe-backdrop" aria-hidden="true">
+    <div class="starfield-layer"></div>
+    <div class="starfield-layer-dense"></div>
+    <div class="nebula-swirl-container">
+      <div class="nebula-cloud nebula-blue"></div>
+      <div class="nebula-cloud nebula-purple"></div>
+      <div class="nebula-cloud nebula-pink"></div>
+      <div class="nebula-cloud nebula-cyan-lower"></div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       1. THE "ORBIT" EFFECT: WINDING NEON ORBITAL PATHS CONNECTING SECTIONS
+       ======================================================================== -->
+  <svg class="orbital-paths-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 3200" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="cyanPurpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#38bdf8" />
+        <stop offset="50%" stop-color="#818cf8" />
+        <stop offset="100%" stop-color="#c084fc" />
+      </linearGradient>
+      <linearGradient id="purplePinkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#c084fc" />
+        <stop offset="50%" stop-color="#f472b6" />
+        <stop offset="100%" stop-color="#38bdf8" />
+      </linearGradient>
+    </defs>
+    <path 
+      d="M 1200 250 C 1050 480, 750 620, 350 780 S -50 1020, 280 1220 S 980 1280, 1150 1480" 
+      class="orbital-path-line orbital-path-cyan"
+    />
+  </svg>
+
+  <!-- Navbar -->
+  <header style="background: rgba(7, 10, 20, 0.65); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 10;">
+    <div style="display: flex; align-items: center; gap: 1.5rem;">
+      <a href="/index.html" class="landing-logo" style="text-decoration: none;">
+        <div class="landing-logo-icon">
+          <i data-lucide="orbit" style="width: 26px; height: 26px;"></i>
+        </div>
+        <span>SPS Code Orbit</span>
+      </a>
+      <span class="badge badge-secondary-track">System Administrator</span>
+    </div>
+
+    <!-- Admin Navigation Links -->
+    <nav style="display: flex; align-items: center; gap: 0.5rem;">
+      <a href="/admin/dashboard.html" class="btn btn-sm btn-outline" style="text-decoration: none;">
+        <i data-lucide="layout-dashboard" style="width: 14px; height: 14px;"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="/admin/teachers.html" class="btn btn-sm btn-outline" style="text-decoration: none;">
+        <i data-lucide="user-check" style="width: 14px; height: 14px;"></i>
+        <span>Teachers</span>
+      </a>
+      <a href="/admin/students.html" class="btn btn-sm btn-outline" style="text-decoration: none;">
+        <i data-lucide="users" style="width: 14px; height: 14px;"></i>
+        <span>Students</span>
+      </a>
+      <a href="/admin/assessments.html" class="btn btn-sm" style="background: rgba(59, 130, 246, 0.2); color: #60A5FA; border: 1px solid rgba(59, 130, 246, 0.4); text-decoration: none; font-weight: 700;">
+        <i data-lucide="award" style="width: 14px; height: 14px;"></i>
+        <span>Assessments</span>
+      </a>
+    </nav>
+
+    <div style="display: flex; align-items: center; gap: 1.25rem;">
+      <div style="text-align: right;">
+        <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem;">System Administrator</div>
+        <div style="font-size: 0.8rem; color: var(--text-secondary);">Assessments &amp; Challenges</div>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="window.session.logout()" style="padding: 0.4rem 0.8rem;">
+        <i data-lucide="log-out" style="width: 15px; height: 15px;"></i>
+        <span>Logout</span>
+      </button>
+    </div>
+  </header>
+
+  <main style="max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem 5rem;">
+    
+    <!-- Navigation Tabs (Exams vs Projects) -->
+    <div style="display: flex; gap: 1rem; border-bottom: 1px solid var(--border-light); margin-bottom: 1.5rem;">
+      <button class="tab-btn active" id="tab-btn-exams" onclick="switchAssessmentTab('exams')">
+        <i data-lucide="file-text" style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i>
+        <span>Chapter Exams &amp; Quizzes</span>
+      </button>
+      <button class="tab-btn" id="tab-btn-projects" onclick="switchAssessmentTab('projects')">
+        <i data-lucide="code" style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i>
+        <span>Practical Coding Projects</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: EXAMS -->
+    <div id="tab-content-exams" class="card" style="padding: 2rem; border-radius: var(--radius-xl);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 style="font-size: 1.35rem; font-weight: 800; color: var(--text-main);">Exam Architecture &amp; Assessments</h2>
+          <p style="font-size: 0.875rem; color: var(--text-secondary);">Create chapter assessments, question pools, and auto-grading keys.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openCreateExamModal()">
+          <i data-lucide="plus" style="width: 18px; height: 18px;"></i>
+          <span>Create New Exam</span>
+        </button>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+          <thead>
+            <tr style="border-bottom: 1.5px solid var(--border-light); color: var(--text-secondary);">
+              <th style="padding: 0.75rem 1rem;">Exam Title</th>
+              <th style="padding: 0.75rem 1rem;">Course &amp; Chapter</th>
+              <th style="padding: 0.75rem 1rem;">Academic Tier</th>
+              <th style="padding: 0.75rem 1rem;">Questions</th>
+              <th style="padding: 0.75rem 1rem;">Passing Score</th>
+              <th style="padding: 0.75rem 1rem;">Total Attempts</th>
+            </tr>
+          </thead>
+          <tbody id="admin-exams-tbody">
+            <tr><td colspan="6" style="padding: 2rem; text-align: center; color: var(--text-secondary);">Loading exams...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 2: PRACTICAL PROJECTS -->
+    <div id="tab-content-projects" class="card" style="padding: 2rem; border-radius: var(--radius-xl); display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 style="font-size: 1.35rem; font-weight: 800; color: var(--text-main);">Practical Coding Challenges</h2>
+          <p style="font-size: 0.875rem; color: var(--text-secondary);">Create computational challenges with requirements for manual teacher grading.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openCreateProjectModal()">
+          <i data-lucide="plus" style="width: 18px; height: 18px;"></i>
+          <span>Create Practical Challenge</span>
+        </button>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+          <thead>
+            <tr style="border-bottom: 1.5px solid var(--border-light); color: var(--text-secondary);">
+              <th style="padding: 0.75rem 1rem;">Project Title</th>
+              <th style="padding: 0.75rem 1rem;">Associated Course</th>
+              <th style="padding: 0.75rem 1rem;">XP Reward</th>
+              <th style="padding: 0.75rem 1rem;">Created At</th>
+            </tr>
+          </thead>
+          <tbody id="admin-projects-tbody">
+            <tr><td colspan="4" style="padding: 2rem; text-align: center; color: var(--text-secondary);">Loading projects...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- 1. Create Exam Modal -->
+  <div class="modal-overlay" id="modal-create-exam">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Create New Chapter Exam</h3>
+        <button class="btn btn-sm btn-outline" onclick="closeModal('modal-create-exam')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Course *</label>
+            <select id="exam-course-select" class="input-field" onchange="handleExamCourseChange()">
+              <option value="">Select Course...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Chapter *</label>
+            <select id="exam-chapter-select" class="input-field">
+              <option value="">Select Chapter...</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Exam Title *</label>
+            <input type="text" id="exam-title-input" class="input-field" placeholder="e.g. Python Variables &amp; Types Quiz">
+          </div>
+          <div class="form-group">
+            <label>Passing Score (%) *</label>
+            <input type="number" id="exam-pass-input" class="input-field" min="1" max="100" value="70">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Exam Description</label>
+          <textarea id="exam-desc-input" class="input-field" rows="2" placeholder="Brief instructions for students..."></textarea>
+        </div>
+
+        <div style="border-top: 1px solid var(--border-light); padding-top: 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <label style="font-weight: 700; color: var(--text-main); font-size: 0.95rem;">Questions List (<span id="exam-question-count">1</span>)</label>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="addQuestionField()">
+              <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
+              <span>Add Question</span>
+            </button>
+          </div>
+
+          <div id="exam-questions-container" style="display: flex; flex-direction: column; gap: 1rem;">
+            <!-- Questions rendered here -->
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modal-create-exam')">Cancel</button>
+        <button class="btn btn-primary" id="btn-save-exam" onclick="submitCreateExam()">Publish Exam</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Create Practical Challenge Modal -->
+  <div class="modal-overlay" id="modal-create-project">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Create Practical Coding Challenge</h3>
+        <button class="btn btn-sm btn-outline" onclick="closeModal('modal-create-project')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Course *</label>
+          <select id="project-course-select" class="input-field">
+            <option value="">Select Course...</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Challenge Title *</label>
+          <input type="text" id="project-title-input" class="input-field" placeholder="e.g. Spacecraft Trajectory Calculator">
+        </div>
+
+        <div class="form-group">
+          <label>Short Description</label>
+          <textarea id="project-desc-input" class="input-field" rows="2" placeholder="Summary of what the student will build..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Step-by-Step Requirements &amp; Instructions *</label>
+          <textarea id="project-inst-input" class="input-field" rows="4" placeholder="1. Initialize variables&#10;2. Calculate orbital thrust&#10;3. Print formatted mission results"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>XP Reward</label>
+          <input type="number" id="project-xp-input" class="input-field" min="10" max="500" value="75">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modal-create-project')">Cancel</button>
+        <button class="btn btn-primary" id="btn-save-project" onclick="submitCreateProject()">Create Challenge</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/session.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/components.js"></script>
+  <script>
+    let coursesData = [];
+    let examsData = [];
+    let projectsData = [];
+    let questionCounter = 0;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.lucide) window.lucide.createIcons();
+      const user = await window.session.requireAuth(['admin']);
+      if (!user) return;
+
+      await loadCourses();
+      await loadExams();
+      await loadProjects();
+    });
+
+    async function loadCourses() {
+      try {
+        const res = await fetch('/api/courses/list.php?all=1');
+        const data = await res.json();
+        if (data.success && data.data) {
+          coursesData = data.data;
+          
+          const examCourseSelect = document.getElementById('exam-course-select');
+          examCourseSelect.innerHTML = '<option value="">Select Course...</option>' + 
+            coursesData.map(c => `<option value="${c.id}">${c.title}</option>`).join('');
+
+          const projCourseSelect = document.getElementById('project-course-select');
+          projCourseSelect.innerHTML = '<option value="">Select Course...</option>' + 
+            coursesData.map(c => `<option value="${c.id}">${c.title}</option>`).join('');
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function loadExams() {
+      try {
+        const res = await fetch('/api/exams/list.php');
+        const data = await res.json();
+        const tbody = document.getElementById('admin-exams-tbody');
+        if (data.success && data.data && data.data.exams) {
+          examsData = data.data.exams;
+          if (examsData.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="padding: 2rem; text-align: center; color: var(--text-secondary);">No exams created yet. Click "Create New Exam" above.</td></tr>';
+            return;
+          }
+
+          tbody.innerHTML = examsData.map(e => `
+            <tr style="border-bottom: 1px solid var(--border-light);">
+              <td style="padding: 0.85rem 1rem; font-weight: 700; color: var(--text-main);">${e.title}</td>
+              <td style="padding: 0.85rem 1rem; color: var(--text-secondary);">${e.course_title} &bull; Ch. ${e.chapter_number}</td>
+              <td style="padding: 0.85rem 1rem;"><span class="badge badge-secondary-track" style="font-size: 0.75rem;">${e.academic_group_name || 'Tier'}</span></td>
+              <td style="padding: 0.85rem 1rem; font-weight: 700; color: #3B82F6;">${e.questions_count} Questions</td>
+              <td style="padding: 0.85rem 1rem;">${e.passing_score_percent}%</td>
+              <td style="padding: 0.85rem 1rem;">${e.attempts_count} (${e.passed_count} Passed)</td>
+            </tr>
+          `).join('');
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function loadProjects() {
+      try {
+        const res = await fetch('/api/projects/list.php');
+        const data = await res.json();
+        const tbody = document.getElementById('admin-projects-tbody');
+        if (data.success && data.data && data.data.projects) {
+          projectsData = data.data.projects;
+          if (projectsData.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="padding: 2rem; text-align: center; color: var(--text-secondary);">No practical challenges created yet.</td></tr>';
+            return;
+          }
+
+          tbody.innerHTML = projectsData.map(p => `
+            <tr style="border-bottom: 1px solid var(--border-light);">
+              <td style="padding: 0.85rem 1rem; font-weight: 700; color: var(--text-main);">${p.title}</td>
+              <td style="padding: 0.85rem 1rem; color: var(--text-secondary);">${p.course_title}</td>
+              <td style="padding: 0.85rem 1rem;"><span style="color: #F59E0B; font-weight: 700;">+${p.xp_reward} XP</span></td>
+              <td style="padding: 0.85rem 1rem; color: var(--text-muted); font-size: 0.85rem;">${p.created_at || 'Recently'}</td>
+            </tr>
+          `).join('');
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function switchAssessmentTab(tabKey) {
+      document.getElementById('tab-btn-exams').classList.toggle('active', tabKey === 'exams');
+      document.getElementById('tab-btn-projects').classList.toggle('active', tabKey === 'projects');
+      document.getElementById('tab-content-exams').style.display = (tabKey === 'exams') ? 'block' : 'none';
+      document.getElementById('tab-content-projects').style.display = (tabKey === 'projects') ? 'block' : 'none';
+    }
+
+    function handleExamCourseChange() {
+      const courseId = document.getElementById('exam-course-select').value;
+      const chapterSelect = document.getElementById('exam-chapter-select');
+      chapterSelect.innerHTML = '<option value="">Select Chapter...</option>';
+
+      const course = coursesData.find(c => c.id === courseId);
+      if (course && course.chapters) {
+        course.chapters.forEach(ch => {
+          chapterSelect.innerHTML += `<option value="${ch.id}">Ch ${ch.chapter_number}: ${ch.title}</option>`;
+        });
+      }
+    }
+
+    function openCreateExamModal() {
+      document.getElementById('exam-title-input').value = '';
+      document.getElementById('exam-desc-input').value = '';
+      document.getElementById('exam-pass-input').value = 70;
+      document.getElementById('exam-course-select').value = '';
+      document.getElementById('exam-chapter-select').innerHTML = '<option value="">Select Chapter...</option>';
+
+      document.getElementById('exam-questions-container').innerHTML = '';
+      questionCounter = 0;
+      addQuestionField(); // start with 1 question
+
+      openModal('modal-create-exam');
+    }
+
+    function addQuestionField() {
+      questionCounter++;
+      const qIndex = questionCounter;
+      const container = document.getElementById('exam-questions-container');
+
+      const card = document.createElement('div');
+      card.className = 'question-card';
+      card.id = `q-card-${qIndex}`;
+      card.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-weight: 700; font-size: 0.85rem; color: #3B82F6;">Question #${qIndex}</span>
+          ${qIndex > 1 ? `<button type="button" class="btn btn-sm btn-outline-danger" style="padding: 0.2rem 0.5rem;" onclick="document.getElementById('q-card-${qIndex}').remove()">✕ Remove</button>` : ''}
+        </div>
+
+        <div class="form-group">
+          <label>Question Prompt *</label>
+          <input type="text" class="input-field q-prompt" placeholder="e.g. Which keyword defines a function in Python?">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+          <input type="text" class="input-field q-opt-0" placeholder="Option A (e.g. def)">
+          <input type="text" class="input-field q-opt-1" placeholder="Option B (e.g. function)">
+          <input type="text" class="input-field q-opt-2" placeholder="Option C (e.g. fun)">
+          <input type="text" class="input-field q-opt-3" placeholder="Option D (e.g. lambda)">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Correct Answer *</label>
+            <select class="input-field q-correct">
+              <option value="0">Option A</option>
+              <option value="1">Option B</option>
+              <option value="2">Option C</option>
+              <option value="3">Option D</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Explanation / Feedback</label>
+            <input type="text" class="input-field q-explanation" placeholder="e.g. 'def' is the Python keyword for functions.">
+          </div>
+        </div>
+      `;
+
+      container.appendChild(card);
+      document.getElementById('exam-question-count').textContent = document.querySelectorAll('.question-card').length;
+    }
+
+    async function submitCreateExam() {
+      const chapter_id = document.getElementById('exam-chapter-select').value;
+      const title = document.getElementById('exam-title-input').value.trim();
+      const description = document.getElementById('exam-desc-input').value.trim();
+      const passing_score_percent = parseInt(document.getElementById('exam-pass-input').value) || 70;
+
+      if (!chapter_id || !title) {
+        alert('Please select a Course & Chapter, and enter an Exam Title.');
+        return;
+      }
+
+      const qCards = document.querySelectorAll('.question-card');
+      if (qCards.length === 0) {
+        alert('Please add at least one question.');
+        return;
+      }
+
+      const questions = [];
+      for (const card of qCards) {
+        const prompt = card.querySelector('.q-prompt').value.trim();
+        const opt0 = card.querySelector('.q-opt-0').value.trim();
+        const opt1 = card.querySelector('.q-opt-1').value.trim();
+        const opt2 = card.querySelector('.q-opt-2').value.trim();
+        const opt3 = card.querySelector('.q-opt-3').value.trim();
+        const correctIndex = parseInt(card.querySelector('.q-correct').value);
+        const explanation = card.querySelector('.q-explanation').value.trim();
+
+        if (!prompt) {
+          alert('All questions must have a prompt.');
+          return;
+        }
+
+        const options = [opt0, opt1, opt2, opt3].filter(o => o !== '');
+        if (options.length < 2) {
+          alert('Each question must have at least 2 options.');
+          return;
+        }
+
+        const correctAnswerValue = options[correctIndex] || options[0];
+
+        questions.push({
+          question_text: prompt,
+          question_type: 'multiple_choice',
+          options: options,
+          correct_answer: correctAnswerValue,
+          explanation: explanation,
+          points: 1
+        });
+      }
+
+      const btn = document.getElementById('btn-save-exam');
+      btn.disabled = true;
+      btn.textContent = 'Publishing...';
+
+      try {
+        const csrfToken = await window.session.getCsrfToken();
+        const res = await fetch('/api/exams/create.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken
+          },
+          body: JSON.stringify({
+            chapter_id,
+            title,
+            description,
+            passing_score_percent,
+            questions
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          closeModal('modal-create-exam');
+          await loadExams();
+        } else {
+          alert(data.error || 'Failed to create exam');
+        }
+      } catch (e) {
+        console.error(e);
+        alert('Network error creating exam.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Publish Exam';
+      }
+    }
+
+    function openCreateProjectModal() {
+      document.getElementById('project-course-select').value = '';
+      document.getElementById('project-title-input').value = '';
+      document.getElementById('project-desc-input').value = '';
+      document.getElementById('project-inst-input').value = '';
+      document.getElementById('project-xp-input').value = 75;
+      openModal('modal-create-project');
+    }
+
+    async function submitCreateProject() {
+      const course_id = document.getElementById('project-course-select').value;
+      const title = document.getElementById('project-title-input').value.trim();
+      const description = document.getElementById('project-desc-input').value.trim();
+      const instructions = document.getElementById('project-inst-input').value.trim();
+      const xp_reward = parseInt(document.getElementById('project-xp-input').value) || 75;
+
+      if (!course_id || !title || !instructions) {
+        alert('Course, Title, and Instructions are required.');
+        return;
+      }
+
+      const btn = document.getElementById('btn-save-project');
+      btn.disabled = true;
+      btn.textContent = 'Creating...';
+
+      try {
+        const csrfToken = await window.session.getCsrfToken();
+        const res = await fetch('/api/projects/create.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken
+          },
+          body: JSON.stringify({
+            course_id,
+            title,
+            description,
+            instructions,
+            xp_reward
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          closeModal('modal-create-project');
+          await loadProjects();
+        } else {
+          alert(data.error || 'Failed to create project challenge');
+        }
+      } catch (e) {
+        console.error(e);
+        alert('Network error creating challenge.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Create Challenge';
+      }
+    }
+
+    function openModal(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.add('active');
+    }
+
+    function closeModal(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.remove('active');
+    }
+  </script>
+</body>
+</html>

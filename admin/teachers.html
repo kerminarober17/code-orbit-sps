@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Management - SPS Code Orbit Admin</title>
+  <link rel="stylesheet" href="../css/global.css?v=2.0">
+  <link rel="stylesheet" href="../css/components.css?v=2.0">
+  <link rel="stylesheet" href="../css/responsive.css?v=1.2">
+  <link rel="stylesheet" href="../css/dashboard.css?v=2.0">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000; padding: 1rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1; pointer-events: auto;
+    }
+    .modal-dialog {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      width: 100%; max-width: 600px; max-height: 90vh;
+      display: flex; flex-direction: column;
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+      transform: scale(0.95); transition: transform 0.25s ease;
+    }
+    .modal-overlay.active .modal-dialog { transform: scale(1); }
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-light);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .modal-header h3 { font-size: 1.2rem; font-weight: 800; color: var(--text-main); margin: 0; }
+    .modal-body {
+      padding: 1.5rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1.15rem;
+    }
+    .modal-footer {
+      padding: 1.25rem 1.5rem;
+      border-top: 1px solid var(--border-light);
+      display: flex; justify-content: flex-end; gap: 0.75rem;
+      background: var(--bg-surface-secondary);
+    }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group label { font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    
+    .level-checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.85rem 1rem;
+      border: 1.5px solid var(--border-light);
+      background: var(--bg-surface-secondary);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .level-checkbox-item:hover {
+      border-color: rgba(59, 130, 246, 0.5);
+      background: rgba(59, 130, 246, 0.08);
+    }
+    .level-checkbox-item:has(input:checked) {
+      border-color: #3B82F6;
+      background: rgba(59, 130, 246, 0.12);
+    }
+    .level-checkbox-item input[type="checkbox"] {
+      width: 18px; height: 18px; accent-color: #3B82F6; cursor: pointer;
+    }
+
+    .teacher-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      cursor: pointer;
+    }
+    .teacher-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+  </style>
+</head>
+<body style="background: #070A14;">
+
+  <!-- ========================================================================
+       0. IMMERSIVE DEEP-SPACE UNIVERSE & SWIRLING NEBULAE BACKDROP
+       ======================================================================== -->
+  <div class="space-universe-backdrop" aria-hidden="true">
+    <div class="starfield-layer"></div>
+    <div class="starfield-layer-dense"></div>
+    <div class="nebula-swirl-container">
+      <div class="nebula-cloud nebula-blue"></div>
+      <div class="nebula-cloud nebula-purple"></div>
+      <div class="nebula-cloud nebula-pink"></div>
+      <div class="nebula-cloud nebula-cyan-lower"></div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       1. THE "ORBIT" EFFECT: WINDING NEON ORBITAL PATHS CONNECTING SECTIONS
+       ======================================================================== -->
+  <svg class="orbital-paths-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 3200" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="cyanPurpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#38bdf8" />
+        <stop offset="50%" stop-color="#818cf8" />
+        <stop offset="100%" stop-color="#c084fc" />
+      </linearGradient>
+      <linearGradient id="purplePinkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#c084fc" />
+        <stop offset="50%" stop-color="#f472b6" />
+        <stop offset="100%" stop-color="#38bdf8" />
+      </linearGradient>
+    </defs>
+    <path 
+      d="M 1200 250 C 1050 480, 750 620, 350 780 S -50 1020, 280 1220 S 980 1280, 1150 1480" 
+      class="orbital-path-line orbital-path-cyan"
+    />
+  </svg>
+
+  <!-- Navbar -->
+  <header style="background: rgba(7, 10, 20, 0.65); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 10;">
+    <div style="display: flex; align-items: center; gap: 1.5rem;">
+      <a href="/index.html" class="landing-logo" style="text-decoration: none;">
+        <div class="landing-logo-icon">
+          <i data-lucide="orbit" style="width: 26px; height: 26px;"></i>
+        </div>
+        <span>SPS Code Orbit</span>
+      </a>
+      <span class="badge badge-secondary-track">System Administrator</span>
+    </div>
+
+    <!-- Admin Navigation Links -->
+    <nav style="display: flex; align-items: center; gap: 0.5rem;">
+      <a href="/admin/dashboard.html" class="btn btn-sm btn-outline" style="text-decoration: none;">
+        <i data-lucide="layout-dashboard" style="width: 14px; height: 14px;"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="/admin/teachers.html" class="btn btn-sm" style="background: rgba(59, 130, 246, 0.2); color: #60A5FA; border: 1px solid rgba(59, 130, 246, 0.4); text-decoration: none; font-weight: 700;">
+        <i data-lucide="user-check" style="width: 14px; height: 14px;"></i>
+        <span>Teachers</span>
+      </a>
+      <a href="/admin/students.html" class="btn btn-sm btn-outline" style="text-decoration: none;">
+        <i data-lucide="users" style="width: 14px; height: 14px;"></i>
+        <span>Students</span>
+      </a>
+      <a href="/admin/assessments.html" class="btn btn-sm btn-outline" style="text-decoration: none;">
+        <i data-lucide="award" style="width: 14px; height: 14px;"></i>
+        <span>Assessments</span>
+      </a>
+    </nav>
+
+    <div style="display: flex; align-items: center; gap: 1.25rem;">
+      <div style="text-align: right;">
+        <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem;">System Administrator</div>
+        <div style="font-size: 0.8rem; color: var(--text-secondary);">Teacher Operations Hub</div>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="window.session.logout()" style="padding: 0.4rem 0.8rem;">
+        <i data-lucide="log-out" style="width: 15px; height: 15px;"></i>
+        <span>Logout</span>
+      </button>
+    </div>
+  </header>
+
+  <main style="max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem 5rem;">
+    
+    <!-- Top Metrics -->
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2rem;">
+      <div class="card" style="padding: 1.5rem; border-radius: var(--radius-lg);">
+        <div style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 700; margin-bottom: 0.5rem;">TOTAL INSTRUCTORS</div>
+        <div style="font-size: 2rem; font-weight: 800; color: var(--text-main);" id="stat-teachers-count">0</div>
+        <div style="font-size: 0.8rem; color: #3B82F6; margin-top: 0.25rem;">Active Accounts</div>
+      </div>
+
+      <div class="card" style="padding: 1.5rem; border-radius: var(--radius-lg);">
+        <div style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 700; margin-bottom: 0.5rem;">SUPERVISED STUDENTS</div>
+        <div style="font-size: 2rem; font-weight: 800; color: #10B981;" id="stat-supervised-students">0</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Across Assigned Levels</div>
+      </div>
+
+      <div class="card" style="padding: 1.5rem; border-radius: var(--radius-lg);">
+        <div style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 700; margin-bottom: 0.5rem;">ACADEMIC TIERS</div>
+        <div style="font-size: 2rem; font-weight: 800; color: var(--text-main);" id="stat-groups-count">4</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Primary to Secondary</div>
+      </div>
+
+      <div class="card" style="padding: 1.5rem; border-radius: var(--radius-lg);">
+        <div style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 700; margin-bottom: 0.5rem;">SUBMISSIONS GRADED</div>
+        <div style="font-size: 2rem; font-weight: 800; color: #F59E0B;" id="stat-graded-count">0</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Teacher Reviews</div>
+      </div>
+    </div>
+
+    <!-- Teacher Directory Card -->
+    <div class="card" style="padding: 2rem; border-radius: var(--radius-xl);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 style="font-size: 1.35rem; font-weight: 800; color: var(--text-main);">Faculty &amp; Teacher Directory</h2>
+          <p style="font-size: 0.875rem; color: var(--text-secondary);">Manage instructor profiles, level assignments, and student supervision scopes.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openCreateTeacherModal()">
+          <i data-lucide="user-plus" style="width: 18px; height: 18px;"></i>
+          <span>Create Teacher Account</span>
+        </button>
+      </div>
+
+      <!-- Teachers List -->
+      <div id="teachers-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.25rem;">
+        <div style="grid-column: 1/-1; padding: 3rem; text-align: center; color: var(--text-secondary);">
+          Loading faculty directory...
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- 1. Create Teacher Modal -->
+  <div class="modal-overlay" id="modal-create-teacher">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Create New Teacher Account</h3>
+        <button class="btn btn-sm btn-outline" onclick="closeModal('modal-create-teacher')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">
+          Public teacher registration is disabled. Create verified instructor accounts with specific academic tier permissions below.
+        </p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" id="teacher-form-name" class="input-field" placeholder="e.g. Sarah Connor" required>
+          </div>
+          <div class="form-group">
+            <label>Username *</label>
+            <input type="text" id="teacher-form-username" class="input-field" placeholder="e.g. teacher_sarah" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Temporary Password *</label>
+          <input type="password" id="teacher-form-password" class="input-field" placeholder="Min 6 characters" required>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">The instructor can change this password upon their first login.</span>
+        </div>
+
+        <div class="form-group" style="margin-top: 0.25rem;">
+          <label style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Assign Academic Levels (Checkbox Group) *</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Select 1 or more</span>
+          </label>
+          <div id="academic-levels-checkboxes" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.25rem;">
+            <label class="level-checkbox-item">
+              <input type="checkbox" name="create_academic_level" value="Primary 3 & 4">
+              <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-main);">Primary 3 &amp; 4</span>
+            </label>
+            <label class="level-checkbox-item">
+              <input type="checkbox" name="create_academic_level" value="Primary 5 & 6">
+              <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-main);">Primary 5 &amp; 6</span>
+            </label>
+            <label class="level-checkbox-item">
+              <input type="checkbox" name="create_academic_level" value="Preparatory">
+              <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-main);">Preparatory</span>
+            </label>
+            <label class="level-checkbox-item">
+              <input type="checkbox" name="create_academic_level" value="Secondary">
+              <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-main);">Secondary</span>
+            </label>
+          </div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Teacher will strictly supervise and grade students enrolled within selected levels.</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modal-create-teacher')">Cancel</button>
+        <button class="btn btn-primary" id="btn-submit-teacher" onclick="submitCreateTeacher()">Create Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Teacher Detail & Level Editor Modal -->
+  <div class="modal-overlay" id="modal-teacher-detail">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="detail-modal-title">Teacher Profile &amp; Level Assignment</h3>
+        <button class="btn btn-sm btn-outline" onclick="closeModal('modal-teacher-detail')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="detail-teacher-id">
+
+        <!-- Top Teacher Profile Card -->
+        <div style="display: flex; align-items: center; gap: 1rem; background: var(--bg-surface-secondary); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
+          <img id="detail-teacher-avatar" src="https://ui-avatars.com/api/?name=Teacher" alt="Avatar" style="width: 52px; height: 52px; border-radius: 50%; border: 2px solid #3B82F6;">
+          <div style="flex: 1;">
+            <div style="font-weight: 800; font-size: 1.1rem; color: var(--text-main);" id="detail-teacher-fullname">Teacher Name</div>
+            <div style="font-size: 0.85rem; color: var(--text-secondary);" id="detail-teacher-user-email">@username</div>
+          </div>
+          <span class="badge badge-primary">Instructor</span>
+        </div>
+
+        <!-- Supervised Stats -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div style="padding: 0.85rem; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: var(--radius-md);">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">STUDENTS SUPERVISED</div>
+            <div style="font-size: 1.4rem; font-weight: 800; color: #60A5FA;" id="detail-teacher-students-count">0</div>
+          </div>
+          <div style="padding: 0.85rem; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: var(--radius-md);">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">SUBMISSIONS GRADED</div>
+            <div style="font-size: 1.4rem; font-weight: 800; color: #F59E0B;" id="detail-teacher-graded-count">0</div>
+          </div>
+        </div>
+
+        <!-- Edit Assigned Academic Levels -->
+        <div class="form-group">
+          <label style="font-size: 0.9rem;">Assigned Academic Levels:</label>
+          <div id="detail-edit-levels-checkboxes" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.25rem;">
+            <!-- Dynamic checkboxes -->
+          </div>
+        </div>
+
+        <!-- Deletion Danger Zone -->
+        <div style="margin-top: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 0.85rem; font-weight: 700; color: #EF4444;">Deactivate Account</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Permanently remove teacher account and permissions.</div>
+          </div>
+          <button class="btn btn-sm btn-outline-danger" onclick="deleteCurrentTeacher()">Delete Teacher</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modal-teacher-detail')">Close</button>
+        <button class="btn btn-primary" id="btn-save-teacher-levels" onclick="saveTeacherLevels()">Save Level Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/session.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/components.js"></script>
+  <script>
+    let teachersData = [];
+    let academicGroups = [];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.lucide) window.lucide.createIcons();
+      const user = await window.session.requireAuth(['admin']);
+      if (!user) return;
+
+      await loadTeachers();
+    });
+
+    async function loadTeachers() {
+      try {
+        const res = await window.apiFetch('/api/admin/teachers.php');
+        const json = await res.json();
+        if (json.success && json.data) {
+          teachersData = json.data.teachers || [];
+          academicGroups = json.data.academic_groups || [];
+          
+          renderMetrics();
+          renderTeachersGrid();
+          populateCreateLevelCheckboxes();
+        } else {
+          document.getElementById('teachers-grid').innerHTML = '<div style="grid-column: 1/-1; padding: 2rem; text-align: center; color: #EF4444;">Failed to load teachers.</div>';
+        }
+      } catch (e) {
+        console.error('Error fetching teachers', e);
+        document.getElementById('teachers-grid').innerHTML = '<div style="grid-column: 1/-1; padding: 2rem; text-align: center; color: #EF4444;">Network error loading teachers.</div>';
+      }
+    }
+
+    function renderMetrics() {
+      document.getElementById('stat-teachers-count').textContent = teachersData.length;
+      document.getElementById('stat-groups-count').textContent = academicGroups.length;
+
+      let totalStudents = 0;
+      let totalGraded = 0;
+      teachersData.forEach(t => {
+        totalStudents += parseInt(t.students_count || 0);
+        totalGraded += parseInt(t.graded_submissions_count || 0);
+      });
+
+      document.getElementById('stat-supervised-students').textContent = totalStudents;
+      document.getElementById('stat-graded-count').textContent = totalGraded;
+    }
+
+    function renderTeachersGrid() {
+      const grid = document.getElementById('teachers-grid');
+      if (teachersData.length === 0) {
+        grid.innerHTML = '<div style="grid-column: 1/-1; padding: 3rem; text-align: center; color: var(--text-secondary);">No teacher accounts found. Click "Create Teacher Account" above to register faculty.</div>';
+        return;
+      }
+
+      grid.innerHTML = teachersData.map(t => {
+        const levelsHtml = (t.academic_levels && t.academic_levels.length > 0)
+          ? t.academic_levels.map(l => `<span class="badge badge-secondary-track" style="font-size: 0.75rem; padding: 0.2rem 0.6rem;">${l.name}</span>`).join(' ')
+          : '<span style="font-size: 0.8rem; color: var(--text-muted); font-style: italic;">No levels assigned</span>';
+
+        return `
+          <div class="teacher-card" onclick="openTeacherDetailModal('${t.id}')">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1rem;">
+                <img src="${t.avatar_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(t.full_name)}" style="width: 46px; height: 46px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.15);" alt="${t.full_name}">
+                <div style="overflow: hidden;">
+                  <div style="font-weight: 800; font-size: 1.05rem; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${t.full_name}</div>
+                  <div style="font-size: 0.8rem; color: var(--text-secondary);">@${t.username}</div>
+                </div>
+              </div>
+
+              <div style="margin-bottom: 1rem;">
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; margin-bottom: 0.35rem;">ASSIGNED ACADEMIC TIERS</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.35rem;">
+                  ${levelsHtml}
+                </div>
+              </div>
+            </div>
+
+            <div style="border-top: 1px solid var(--border-light); padding-top: 0.85rem; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <span style="font-weight: 800; color: #60A5FA; font-size: 1.05rem;">${t.students_count || 0}</span>
+                <span style="font-size: 0.8rem; color: var(--text-secondary); margin-left: 3px;">Students</span>
+              </div>
+              <div>
+                <span style="font-weight: 800; color: #F59E0B; font-size: 1.05rem;">${t.graded_submissions_count || 0}</span>
+                <span style="font-size: 0.8rem; color: var(--text-secondary); margin-left: 3px;">Graded</span>
+              </div>
+              <button class="btn btn-outline btn-sm" style="padding: 0.3rem 0.75rem;" onclick="event.stopPropagation(); openTeacherDetailModal('${t.id}')">
+                Manage
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    const CANONICAL_LEVELS = [
+      { value: "Primary 3 & 4", label: "Primary 3 & 4", desc: "Ages 8-10 • Beginner" },
+      { value: "Primary 5 & 6", label: "Primary 5 & 6", desc: "Ages 10-12 • Intermediate" },
+      { value: "Preparatory", label: "Preparatory", desc: "Ages 12-15 • Advanced" },
+      { value: "Secondary", label: "Secondary", desc: "Ages 15-18 • Expert" }
+    ];
+
+    function populateCreateLevelCheckboxes() {
+      const container = document.getElementById('academic-levels-checkboxes');
+      if (!container) return;
+      container.innerHTML = CANONICAL_LEVELS.map(lvl => `
+        <label class="level-checkbox-item">
+          <input type="checkbox" name="create_academic_level" value="${lvl.value}">
+          <div>
+            <div style="font-size: 0.875rem; font-weight: 700; color: var(--text-main);">${lvl.label}</div>
+            <div style="font-size: 0.725rem; color: var(--text-secondary);">${lvl.desc}</div>
+          </div>
+        </label>
+      `).join('');
+    }
+
+    function openCreateTeacherModal() {
+      document.getElementById('teacher-form-name').value = '';
+      document.getElementById('teacher-form-username').value = '';
+      document.getElementById('teacher-form-password').value = '';
+      
+      document.querySelectorAll('input[name="create_academic_level"]').forEach(cb => cb.checked = false);
+      openModal('modal-create-teacher');
+    }
+
+    async function submitCreateTeacher() {
+      const full_name = document.getElementById('teacher-form-name').value.trim();
+      const username = document.getElementById('teacher-form-username').value.trim();
+      const password = document.getElementById('teacher-form-password').value;
+
+      const checkedBoxes = document.querySelectorAll('input[name="create_academic_level"]:checked');
+      const academic_group_ids = Array.from(checkedBoxes).map(cb => cb.value);
+
+      if (!full_name || !username || !password) {
+        alert('Please fill in Full Name, Username, and Temporary Password.');
+        return;
+      }
+
+      if (password.length < 6) {
+        alert('Password must be at least 6 characters.');
+        return;
+      }
+
+      if (academic_group_ids.length === 0) {
+        if (!confirm('No academic levels were selected. This teacher will not supervise any students until levels are assigned. Continue?')) {
+          return;
+        }
+      }
+
+      const btn = document.getElementById('btn-submit-teacher');
+      btn.disabled = true;
+      btn.textContent = 'Creating...';
+
+      try {
+        const res = await (window.apiFetch ? window.apiFetch('/api/admin/teachers.php', {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'create',
+            full_name,
+            username,
+            password,
+            academic_group_ids
+          })
+        }) : fetch('/api/admin/teachers.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': window.session?.csrfToken || sessionStorage.getItem('csrf_token') || ''
+          },
+          body: JSON.stringify({
+            action: 'create',
+            full_name,
+            username,
+            password,
+            academic_group_ids
+          })
+        }));
+
+        const data = await res.json();
+        if (data.success) {
+          closeModal('modal-create-teacher');
+          await loadTeachers();
+        } else {
+          alert(data.error || 'Failed to create teacher account');
+        }
+      } catch (e) {
+        console.error(e);
+        alert('An unexpected error occurred while creating teacher.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Create Account';
+      }
+    }
+
+    function openTeacherDetailModal(teacherId) {
+      const teacher = teachersData.find(t => t.id === teacherId);
+      if (!teacher) return;
+
+      document.getElementById('detail-teacher-id').value = teacher.id;
+      document.getElementById('detail-teacher-fullname').textContent = teacher.full_name;
+      document.getElementById('detail-teacher-user-email').textContent = `@${teacher.username}`;
+      document.getElementById('detail-teacher-avatar').src = teacher.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(teacher.full_name)}`;
+      document.getElementById('detail-teacher-students-count').textContent = teacher.students_count || 0;
+      document.getElementById('detail-teacher-graded-count').textContent = teacher.graded_submissions_count || 0;
+
+      const assignedNormalized = (teacher.academic_levels || []).map(l => (l.name || '').toLowerCase().replace(/[^a-z0-9]/g, ''));
+
+      const container = document.getElementById('detail-edit-levels-checkboxes');
+      container.innerHTML = CANONICAL_LEVELS.map(lvl => {
+        const normLvl = lvl.value.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const isChecked = assignedNormalized.some(n => 
+          n === normLvl || 
+          (n.includes('primary3') && normLvl.includes('primary3')) || 
+          (n.includes('primary5') && normLvl.includes('primary5'))
+        );
+
+        return `
+          <label class="level-checkbox-item">
+            <input type="checkbox" name="edit_academic_level" value="${lvl.value}" ${isChecked ? 'checked' : ''}>
+            <div>
+              <div style="font-size: 0.875rem; font-weight: 700; color: var(--text-main);">${lvl.label}</div>
+              <div style="font-size: 0.725rem; color: var(--text-secondary);">${lvl.desc}</div>
+            </div>
+          </label>
+        `;
+      }).join('');
+
+      openModal('modal-teacher-detail');
+    }
+
+    async function saveTeacherLevels() {
+      const teacherId = document.getElementById('detail-teacher-id').value;
+      const checkedBoxes = document.querySelectorAll('input[name="edit_academic_level"]:checked');
+      const academic_group_ids = Array.from(checkedBoxes).map(cb => cb.value);
+
+      const btn = document.getElementById('btn-save-teacher-levels');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      try {
+        const res = await (window.apiFetch ? window.apiFetch('/api/admin/teachers.php', {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'update_levels',
+            teacher_id: teacherId,
+            academic_group_ids
+          })
+        }) : fetch('/api/admin/teachers.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': window.session?.csrfToken || sessionStorage.getItem('csrf_token') || ''
+          },
+          body: JSON.stringify({
+            action: 'update_levels',
+            teacher_id: teacherId,
+            academic_group_ids
+          })
+        }));
+
+        const data = await res.json();
+        if (data.success) {
+          closeModal('modal-teacher-detail');
+          await loadTeachers();
+        } else {
+          alert(data.error || 'Failed to update academic level assignments');
+        }
+      } catch (e) {
+        console.error(e);
+        alert('Network error updating teacher levels.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save Level Changes';
+      }
+    }
+
+    async function deleteCurrentTeacher() {
+      const teacherId = document.getElementById('detail-teacher-id').value;
+      const teacherName = document.getElementById('detail-teacher-fullname').textContent;
+
+      if (!confirm(`Are you sure you want to permanently delete the teacher account for "${teacherName}"?`)) {
+        return;
+      }
+
+      try {
+        const res = await (window.apiFetch ? window.apiFetch('/api/admin/teachers.php', {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'delete',
+            teacher_id: teacherId
+          })
+        }) : fetch('/api/admin/teachers.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': window.session?.csrfToken || sessionStorage.getItem('csrf_token') || ''
+          },
+          body: JSON.stringify({
+            action: 'delete',
+            teacher_id: teacherId
+          })
+        }));
+
+        const data = await res.json();
+        if (data.success) {
+          closeModal('modal-teacher-detail');
+          await loadTeachers();
+        } else {
+          alert(data.error || 'Failed to delete teacher account');
+        }
+      } catch (e) {
+        console.error(e);
+        alert('Network error deleting teacher.');
+      }
+    }
+
+    function openModal(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.add('active');
+    }
+
+    function closeModal(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.remove('active');
+    }
+  </script>
+</body>
+</html>
